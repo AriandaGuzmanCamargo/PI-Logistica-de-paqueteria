@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Sistema de Logística</title>
+  <link rel="stylesheet" href="/piWeb/styles/dashboard.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__contenedor">
+      <div class="header__logo">
+        <img src="images/logoSinFondo.png" alt="Sistema de Logística" />
+      </div>
+      <nav class="header__nav">
+        <a href="#" class="header__nav-item">Rastrear</a>
+        <a href="#" class="header__nav-item header__nav-item--dropdown">
+          Enviar <span class="dropdown-icon">▼</span>
+        </a>
+        <a href="#" class="header__nav-item">Cotización</a>
+        <a href="#" class="header__nav-item header__nav-item--dropdown">
+          Ayuda <span class="dropdown-icon">▼</span>
+        </a>
+      </nav>
+      <div class="header__usuario">
+        <button class="header__idioma">ES</button>
+        <div class="header__perfil">
+          <img src="images/user-avatar.png" alt="Usuario" class="header__avatar" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="contenedor-principal">
+    <!-- Sección Rastrear -->
+    <section class="seccion-rastrear">
+      <h1>Rastree su Envío</h1>
+      <div class="buscador-rastreo">
+        <input 
+          type="text" 
+          class="buscador-rastreo__input" 
+          placeholder="Ingresar el o los número de rastreo"
+        />
+        <button class="boton-rastrear">Rastrear</button>
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="estadisticas">
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-estadistica__icono">📦</div>
+          <div class="tarjeta-estadistica__contenido">
+            <p class="tarjeta-estadistica__numero">2</p>
+            <p class="tarjeta-estadistica__label">Envíos Activos</p>
+          </div>
+        </div>
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-estadistica__icono">✓</div>
+          <div class="tarjeta-estadistica__contenido">
+            <p class="tarjeta-estadistica__numero">15</p>
+            <p class="tarjeta-estadistica__label">Entregas</p>
+          </div>
+        </div>
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-estadistica__icono">☆</div>
+          <div class="tarjeta-estadistica__contenido">
+            <p class="tarjeta-estadistica__numero">1</p>
+            <p class="tarjeta-estadistica__label">Mar</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contenedor Servicios y Sidebar -->
+    <div class="contenedor-servicios">
+      <!-- Tarjetas de Servicios -->
+      <section class="servicios">
+        <div class="tarjeta-servicio">
+          <div class="tarjeta-servicio__icono">🚚</div>
+          <h3 class="tarjeta-servicio__titulo">Enviar Ahora</h3>
+          <p class="tarjeta-servicio__descripcion">Encuentre el servicio correcto</p>
+          <button class="boton boton--secundario">Nuevo Envío</button>
+        </div>
+
+        <div class="tarjeta-servicio">
+          <div class="tarjeta-servicio__icono">📋</div>
+          <h3 class="tarjeta-servicio__titulo">Obtenga una cotización</h3>
+          <p class="tarjeta-servicio__descripcion">Calcule el costo para comparar y comprar</p>
+          <button class="boton boton--secundario">Cotizar Envío</button>
+        </div>
+
+        <div class="tarjeta-servicio">
+          <div class="tarjeta-servicio__icono">📦</div>
+          <h3 class="tarjeta-servicio__titulo">Solicitar una cuenta comercial</h3>
+          <p class="tarjeta-servicio__descripcion">Tarifas especiales y beneficios</p>
+          <button class="boton boton--dorado">Ver Más</button>
+        </div>
+      </section>
+
+      <!-- Sidebar Consejos -->
+      <aside class="sidebar-consejos">
+        <h3>Consejos para el Envío</h3>
+        <div class="consejos-contenido">
+          <div class="icono-caja">📦</div>
+          <p>Empaque bien, pese correctamente, y selecciona el servicio adecuado para obtener la mejor experiencia de envío.</p>
+          <a href="#" class="enlace-consejos">Leer Consejos ></a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Tabla de Envíos Recientes -->
+    <section class="envios-recientes">
+      <div class="envios-recientes__header">
+        <h2>Mis Envíos Recientes</h2>
+        <a href="#" class="enlace-ver-todo">Ver Todo ></a>
+      </div>
+
+      <div class="tabla-envios">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Destinatario</th>
+              <th>Estado</th>
+              <th>Servicio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PAK123456789</td>
+              <td>Ana Martinez</td>
+              <td><span class="estado en-transito">● En Tránsito</span></td>
+              <td>Exprés</td>
+              <td><button class="boton-detalles">Ver Detalles</button></td>
+            </tr>
+            <tr>
+              <td>PAK987654321</td>
+              <td>Carlos Ramirez</td>
+              <td><span class="estado en-transito">● En Tránsito</span></td>
+              <td>Económico</td>
+              <td><button class="boton-detalles">Ver Detalles</button></td>
+            </tr>
+            <tr>
+              <td>PAK456123789</td>
+              <td>Juan Pérez</td>
+              <td><span class="estado en-transito">● En Tránsito</span></td>
+              <td>Exprés</td>
+              <td><button class="boton-detalles">Ver Detalles</button></td>
+            </tr>
+            <tr>
+              <td>PAK789654123</td>
+              <td>Laura Gómez</td>
+              <td><span class="estado pendiente">● Pendiente</span></td>
+              <td>Estándar</td>
+              <td><button class="boton-detalles">Ver Detalles</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="pie-pagina">
+    <p class="derechos-reservados">© 2026 Sistema de Logística de Paquetería. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrarse</title>
+  <link rel="stylesheet" href="/piWeb/styles/stylesLogueo.css">
+</head>
+<body>
+  <div class="contenedor-pagina">
+    <main class="contenedor-inicio">
+      <section class="contenedor-inicio__izquierda">
+        <div class="bloque-marca">
+          <div class="marca">
+            <img src="images/logoSinFondo.png" alt="Sistema de Logistica" />
+          </div>
+          <h1>
+            Sistema de Logistica<br />
+            de Transporte de Paqueteria
+          </h1>
+        </div>
+      </section>
+
+      <section class="contenedor-inicio__derecha">
+        <div class="tarjeta-formulario">
+          <h2>Registrarse</h2>
+          <p class="tarjeta-formulario__subtitulo">Crea tu cuenta para continuar.</p>
+
+          <div class="grupo-campo">
+            <span class="grupo-campo__icono">
+              <img src="images/usuario.png  " alt="Nombre" />
+            </span>
+            <input type="text" placeholder="Nombre completo" />
+          </div>
+
+          <div class="grupo-campo">
+            <span class="grupo-campo__icono">
+              <img src="images/gmail.png" alt="Correo" />
+            </span>
+            <input type="email" placeholder="Correo electronico" />
+          </div>
+
+          <div class="grupo-campo grupo-campo--contrasena">
+            <span class="grupo-campo__icono">
+              <img src="images/candado.png" alt="Contrase\u00f1a" />
+            </span>
+            <input type="password" placeholder="Contrasena" class="input-contrasena" />
+            <button class="grupo-campo__ojo" type="button" aria-label="Mostrar/ocultar contrase\u00f1a">
+              <img src="images/ojo-abierto.png" alt="Ver contrase\u00f1a" class="ojo-abierto" />
+              <img src="images/ojo.png" alt="Ocultar contrase\u00f1a" class="ojo-cerrado" style="display: none;" />
+            </button>
+          </div>
+
+          <div class="grupo-campo grupo-campo--contrasena">
+            <span class="grupo-campo__icono">
+              <img src="images/candado.png" alt="Confirmar contrase\u00f1a" />
+            </span>
+            <input type="password" placeholder="Confirmar contrasena" class="input-confirmar-contrasena" />
+            <button class="grupo-campo__ojo" type="button" aria-label="Mostrar/ocultar contrase\u00f1a">
+              <img src="images/ojo-abierto.png" alt="Ver contrase\u00f1a" class="ojo-abierto" />
+              <img src="images/ojo.png" alt="Ocultar contrase\u00f1a" class="ojo-cerrado" style="display: none;" />
+            </button>
+          </div>
+
+          <button class="boton boton--primario">Registrarse</button>
+
+          <p class="tarjeta-formulario__nota">¿Ya tienes cuenta? <a href="login.html">Inicia sesion</a></p>
+          <div class="tarjeta-formulario__divisor">o</div>
+
+          <button class="boton boton--social boton--google">
+            <span class="boton__icono">G</span>
+            Registrarse con Google
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pie-pagina">
+      <p class="derechos-reservados">
+        2026 Sistema de Logistica de Transporte de Paqueteria. Todos los derechos reservados.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const ojoBotones = document.querySelectorAll('.grupo-campo__ojo');
+    ojoBotones.forEach(boton => {
+      boton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const grupo = boton.closest('.grupo-campo');
+        const input = grupo.querySelector('input[type="password"], input[type="text"]');
+        const ojoAbierto = boton.querySelector('.ojo-abierto');
+        const ojoCerrado = boton.querySelector('.ojo-cerrado');
+        
+        if (input && input.type === 'password') {
+          input.type = 'text';
+          ojoAbierto.style.display = 'none';
+          ojoCerrado.style.display = 'block';
+        } else if (input) {
+          input.type = 'password';
+          ojoAbierto.style.display = 'block';
+          ojoCerrado.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

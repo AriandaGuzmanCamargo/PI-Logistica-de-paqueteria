@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Operador - Sistema de Logística</title>
+  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
+  <link rel="stylesheet" href="/piWeb/styles/enviosOperador.css">
+</head>
+<body>
+  <div class="tablero-operador">
+    <aside class="barra-lateral barra-lateral--izquierda">
+      <div class="barra-lateral__marca-bloque">
+        <div class="encabezado__logo">
+          <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+        </div>
+        <h2 class="barra-lateral__marca">METZVIA</h2>
+      </div>
+
+      <nav class="barra-lateral__menu">
+        <a href="/piWeb/src/pages/operadorLogistico/dashboardOperador.html" class="barra-lateral__item">Dashboard</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item barra-lateral__item--activo">Envíos</a>
+        <a href="/piWeb/src/pages/operadorLogistico/registrarPaquete.html" class="barra-lateral__item">Registrar Paquete</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Escaneo</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Retracciones</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Incidencias</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Mi Cuenta</a>
+      </nav>
+
+      <div class="barra-lateral__pie">
+        <a href="/piWeb/login.html" class="barra-lateral__item barra-lateral__item--salir">↪ Salir</a>
+      </div>
+    </aside>
+
+    <main class="panel-principal">
+      <header class="barra-superior">
+        <h1 class="barra-superior__titulo">Envíos</h1>
+        <div class="barra-superior__perfil">
+          <img src="/piWeb/images/usuario.png" alt="Operador" class="barra-superior__avatar" />
+          <span class="barra-superior__estado"></span>
+        </div>
+      </header>
+
+      <section class="modulo-envios">
+        <div class="envios-encabezado">
+          <h2 class="envios-encabezado__titulo">// Envíos</h2>
+          <a href="#" class="envios-encabezado__ver">Ver Todo</a>
+        </div>
+
+        <div class="filtros-envios">
+          <div class="filtros-envios__fila">
+            <div class="campo-filtro">
+              <label for="filtro-estado">Estado</label>
+              <select id="filtro-estado">
+                <option>Estado</option>
+                <option>Pendiente</option>
+                <option>En Tránsito</option>
+                <option>Retrasado</option>
+              </select>
+            </div>
+            <div class="campo-filtro campo-filtro--fecha">
+              <label for="filtro-fecha">Fecha:</label>
+              <input id="filtro-fecha" type="text" value="24/04/2024 - 24/04/2024" />
+            </div>
+            <div class="buscador-envios">
+              <input type="text" placeholder="Buscar ID o destinatario..." />
+              <button>Buscar</button>
+            </div>
+          </div>
+
+          <div class="tabla-envios">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Estado</th>
+                  <th>Prioridad</th>
+                  <th>Ruta</th>
+                  <th>Última Actualización</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PAK123456789</td>
+                  <td><strong>Ana Martínez</strong></td>
+                  <td><span class="estado estado--pendiente">● Pendiente</span></td>
+                  <td><span class="prioridad prioridad--expres">□ Exprés</span></td>
+                  <td>CDMX-015</td>
+                  <td><strong>Hoy; 12:45 PM</strong></td>
+                  <td><a class="boton-detalles" href="/piWeb/src/pages/operadorLogistico/detalleEnvio.html?id=PAK123456789">Ver Detalles</a></td>
+                </tr>
+                <tr>
+                  <td>PAK987654321</td>
+                  <td><strong>Carlos Ramírez</strong></td>
+                  <td><span class="estado estado--transito">● En Tránsito</span></td>
+                  <td><span class="prioridad prioridad--normal">□ Normal</span></td>
+                  <td>GDL-024</td>
+                  <td><strong>Hoy; 12:32 PM</strong></td>
+                  <td><a class="boton-detalles" href="/piWeb/src/pages/operadorLogistico/detalleEnvio.html?id=PAK987654321">Ver Detalles</a></td>
+                </tr>
+                <tr>
+                  <td>PAK456123789</td>
+                  <td><strong>Juan Pérez</strong></td>
+                  <td><span class="estado estado--retrasado">● Retrasado</span></td>
+                  <td><span class="prioridad prioridad--expres">□ Exprés</span></td>
+                  <td>CDMX-030</td>
+                  <td><strong>Hoy; 11:54 AM</strong></td>
+                  <td><a class="boton-detalles" href="/piWeb/src/pages/operadorLogistico/detalleEnvio.html?id=PAK456123789">Ver Detalles</a></td>
+                </tr>
+                <tr>
+                  <td>PAK789654123</td>
+                  <td><strong>Lorena Morales</strong></td>
+                  <td><span class="estado estado--pendiente">● Pendiente</span></td>
+                  <td><span class="prioridad prioridad--normal">□ Normal</span></td>
+                  <td>MTY-042</td>
+                  <td><strong>Hoy; 09:51 AM</strong></td>
+                  <td><a class="boton-detalles" href="/piWeb/src/pages/operadorLogistico/detalleEnvio.html?id=PAK789654123">Ver Detalles</a></td>
+                </tr>
+                <tr>
+                  <td>PAK654987213</td>
+                  <td><strong>Samuel Torres</strong></td>
+                  <td><span class="estado estado--transito">● En Tránsito</span></td>
+                  <td><span class="prioridad prioridad--normal">□ Normal</span></td>
+                  <td>QRO-018</td>
+                  <td><strong>Pasa 2 días ago, 3:45 PM</strong></td>
+                  <td><a class="boton-detalles" href="/piWeb/src/pages/operadorLogistico/detalleEnvio.html?id=PAK654987213">Ver Detalles</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+</body>
+</html>

@@ -34,7 +34,7 @@
 
     <main class="panel-principal">
       <header class="barra-superior">
-        <h1 class="barra-superior__titulo">Mi Cuenta</h1>
+        <h1 class="barra-superior__titulo">Mi cuenta</h1>
         <div class="barra-superior__perfil">
           <img src="/piWeb/images/usuario.png" alt="Operador" class="barra-superior__avatar" />
           <span class="barra-superior__estado"></span>
@@ -42,67 +42,38 @@
       </header>
 
       <section class="modulo-cuenta">
-        <div class="cuenta-encabezado">
-          <span class="cuenta-encabezado__icono">▣</span>
-          <h2>Información de Perfil</h2>
+        <div class="cuenta-fondo-superior"></div>
+
+        <div class="cuenta-perfil-principal">
+          <img src="/piWeb/images/usuario.png" alt="Foto de perfil" class="cuenta-perfil-principal__avatar" />
+          <h2>Juan Pérez</h2>
+          <p class="cuenta-perfil-principal__estado">
+            <span class="cuenta-perfil-principal__punto"></span>
+            Operador Logístico
+          </p>
         </div>
 
-        <div class="cuenta-contenido">
-          <aside class="perfil-tarjeta">
-            <img src="/piWeb/images/usuario.png" alt="Foto de perfil" class="perfil-tarjeta__avatar" />
-            <h3>Alejandro Ríos</h3>
-            <p>Operador logístico</p>
-            <button type="button" class="boton-secundario">Cambiar foto</button>
-          </aside>
-
-          <article class="datos-tarjeta">
-            <h3>Datos Personales</h3>
-            <div class="grupo-campos grupo-campos--dos">
-              <label>
-                Nombre
-                <input type="text" value="Alejandro" />
-              </label>
-              <label>
-                Apellido
-                <input type="text" value="Ríos" />
-              </label>
-            </div>
-
-            <div class="grupo-campos grupo-campos--dos">
-              <label>
-                Correo electrónico
-                <input type="email" value="alejandro.rios@email.com" />
-              </label>
-              <label>
-                Teléfono
-                <input type="tel" value="+52 55 9876 5432" />
-              </label>
-            </div>
-
-            <div class="grupo-campos grupo-campos--uno">
-              <label>
-                Dirección
-                <input type="text" value="Av. Revolución 456, CDMX" />
-              </label>
-            </div>
-
-            <h3 class="seccion-secundaria">Seguridad</h3>
-            <div class="grupo-campos grupo-campos--dos">
-              <label>
-                Nueva contraseña
-                <input type="password" placeholder="••••••••" />
-              </label>
-              <label>
-                Confirmar contraseña
-                <input type="password" placeholder="••••••••" />
-              </label>
-            </div>
-
-            <div class="acciones-cuenta">
-              <a href="/piWeb/src/pages/operadorLogistico/dashboardOperador.html" class="boton-secundario">Cancelar</a>
-              <button type="button" class="boton-primario">Guardar cambios</button>
-            </div>
-          </article>
+        <div class="cuenta-datos">
+          <div class="cuenta-datos__fila">
+            <span class="cuenta-datos__etiqueta">Trabajo:</span>
+            <span class="cuenta-datos__valor">Operador Logístico</span>
+          </div>
+          <div class="cuenta-datos__fila">
+            <span class="cuenta-datos__etiqueta">Email:</span>
+            <span class="cuenta-datos__valor">juanperes@email.com</span>
+          </div>
+          <div class="cuenta-datos__fila">
+            <span class="cuenta-datos__etiqueta">Teléfono:</span>
+            <span class="cuenta-datos__valor">+52 55 1234 5678</span>
+          </div>
+          <div class="cuenta-datos__fila cuenta-datos__fila--select">
+            <label for="centro-distribucion" class="cuenta-datos__etiqueta">Centro de Distribución:</label>
+            <select id="centro-distribucion" class="cuenta-datos__selector">
+              <option selected>🇲🇽 CDMX-CD01</option>
+              <option>🇲🇽 GDL-CD02</option>
+              <option>🇲🇽 MTY-CD03</option>
+            </select>
+          </div>
         </div>
       </section>
     </main>

@@ -18,6 +18,21 @@
   margin-bottom: 10px;
 }
 
+.alerta-registro {
+  border: 1px solid #c8e6d5;
+  background: #eaf8f0;
+  color: #2f7a54;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.alerta-registro--oculta {
+  display: none;
+}
+
 .envios-encabezado__titulo {
   margin: 0;
   font-size: 28px;

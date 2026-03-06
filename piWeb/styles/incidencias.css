@@ -1,0 +1,121 @@
+.modulo-incidencias {
+  max-width: 1260px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #d9e0f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(45, 66, 116, 0.08);
+  overflow: hidden;
+}
+
+.incidencias-encabezado {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e6ecfb;
+  background: #f7f9ff;
+}
+
+.incidencias-encabezado__icono {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: #4f72c1;
+  font-size: 14px;
+}
+
+.incidencias-encabezado h2 {
+  margin: 0;
+  font-size: 30px;
+  color: #445585;
+}
+
+.incidencias-resumen {
+  margin: 14px;
+  height: 74px;
+  border: 1px solid #d9e0f8;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+}
+
+.tabla-incidencias {
+  margin: 0 14px 14px;
+  border: 1px solid #d9e0f8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tabla-incidencias table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-incidencias thead {
+  background: #eef2ff;
+}
+
+.tabla-incidencias th,
+.tabla-incidencias td {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #48567f;
+  border-bottom: 1px solid #edf1fb;
+}
+
+.tabla-incidencias th {
+  font-weight: 700;
+  color: #405080;
+}
+
+.tabla-incidencias tbody tr:hover {
+  background: #fafcff;
+}
+
+.estado-incidencia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
+}
+
+.repartidor-celda {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repartidor-celda img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (max-width: 1200px) {
+  .tabla-incidencias {
+    overflow-x: auto;
+  }
+
+  .tabla-incidencias table {
+    min-width: 980px;
+  }
+}
+
+@media (max-width: 768px) {
+  .incidencias-encabezado h2 {
+    font-size: 24px;
+  }
+}

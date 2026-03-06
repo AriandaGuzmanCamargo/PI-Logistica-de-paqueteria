@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incidencias - Operador Logístico</title>
+  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
+  <link rel="stylesheet" href="/piWeb/styles/incidencias.css">
+</head>
+<body>
+  <div class="tablero-operador">
+    <aside class="barra-lateral barra-lateral--izquierda">
+      <div class="barra-lateral__marca-bloque">
+        <div class="encabezado__logo">
+          <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+        </div>
+        <h2 class="barra-lateral__marca">METZVIA</h2>
+      </div>
+
+      <nav class="barra-lateral__menu">
+        <a href="/piWeb/src/pages/operadorLogistico/dashboardOperador.html" class="barra-lateral__item">Dashboard</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Envíos</a>
+        <a href="/piWeb/src/pages/operadorLogistico/registrarPaquete.html" class="barra-lateral__item">Registrar Paquete</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Escaneo</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Retracciones</a>
+        <a href="/piWeb/src/pages/operadorLogistico/incidencias.html" class="barra-lateral__item barra-lateral__item--activo">Incidencias</a>
+        <a href="/piWeb/src/pages/operadorLogistico/miCuenta.html" class="barra-lateral__item">Mi Cuenta</a>
+      </nav>
+
+      <div class="barra-lateral__pie">
+        <a href="/piWeb/login.html" class="barra-lateral__item barra-lateral__item--salir">↪ Salir</a>
+      </div>
+    </aside>
+
+    <main class="panel-principal">
+      <header class="barra-superior">
+        <h1 class="barra-superior__titulo">Incidencias</h1>
+        <div class="barra-superior__perfil">
+          <img src="/piWeb/images/usuario.png" alt="Operador" class="barra-superior__avatar" />
+          <span class="barra-superior__estado"></span>
+        </div>
+      </header>
+
+      <section class="modulo-incidencias">
+        <div class="incidencias-encabezado">
+          <span class="incidencias-encabezado__icono">▣</span>
+          <h2>Incidencias</h2>
+        </div>
+
+        <div class="tabla-incidencias">
+          <table>
+            <thead>
+              <tr>
+                <th>Número de Guía</th>
+                <th>Estado</th>
+                <th>Repartidor</th>
+                <th>Motivo</th>
+                <th>Reportado el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>PAK00281356</strong></td>
+                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td>
+                  <div class="repartidor-celda">
+                    <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
+                    <span>Javier Torres</span>
+                  </div>
+                </td>
+                <td>Dirección incorrecta, cliente no encontrado</td>
+                <td>Hoy, 9:30 AM</td>
+              </tr>
+              <tr>
+                <td><strong>PAK00271234</strong></td>
+                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td>
+                  <div class="repartidor-celda">
+                    <img src="/piWeb/images/usuario.png" alt="Juan Morales" />
+                    <span>Juan Morales</span>
+                  </div>
+                </td>
+                <td>Destinatario no estaba disponible</td>
+                <td>Ayer, 3:45 PM</td>
+              </tr>
+              <tr>
+                <td><strong>PAK00236290</strong></td>
+                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td>
+                  <div class="repartidor-celda">
+                    <img src="/piWeb/images/usuario.png" alt="Miguel López" />
+                    <span>Miguel López</span>
+                  </div>
+                </td>
+                <td>Rechazo de entrega por el cliente</td>
+                <td>Ayer, 10:20 AM</td>
+              </tr>
+              <tr>
+                <td><strong>PAK00196745</strong></td>
+                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td>
+                  <div class="repartidor-celda">
+                    <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
+                    <span>Javier Torres</span>
+                  </div>
+                </td>
+                <td>Paquete dañado durante el trayecto</td>
+                <td>22/04/2024, 7:00 PM</td>
+              </tr>
+              <tr>
+                <td><strong>PAK00193210</strong></td>
+                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td>
+                  <div class="repartidor-celda">
+                    <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
+                    <span>Javier Torres</span>
+                  </div>
+                </td>
+                <td>Cliente solicitó reprogramación de entrega</td>
+                <td>22/04/2024, 2:18 PM</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

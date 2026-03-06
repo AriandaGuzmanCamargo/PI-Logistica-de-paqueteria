@@ -50,9 +50,44 @@
   color: #34497a;
 }
 
-.seccion-formulario {
+.pasos-formulario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   border-top: 1px solid #e6ecfb;
-  padding-top: 12px;
+  border-bottom: 1px solid #e6ecfb;
+  padding: 10px 0;
+  margin-bottom: 12px;
+}
+
+.paso-chip {
+  border: 1px solid #d6ddfa;
+  background: #f7f9ff;
+  color: #5b6994;
+  height: 34px;
+  border-radius: 999px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.paso-chip--activo {
+  background: #4f72c1;
+  border-color: #4f72c1;
+  color: #ffffff;
+}
+
+.seccion-formulario {
+  padding-top: 4px;
+}
+
+.paso-formulario {
+  display: none;
+}
+
+.paso-formulario--activo {
+  display: block;
 }
 
 .seccion-formulario__titulo {
@@ -78,6 +113,10 @@
 
 .grupo-campos--tres {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grupo-campos--cuatro {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 label {
@@ -116,7 +155,7 @@ select:focus {
 
 .boton-secundario,
 .boton-primario {
-  min-width: 128px;
+  min-width: 90px;
   height: 38px;
   border-radius: 6px;
   font-size: 14px;
@@ -138,6 +177,140 @@ select:focus {
   background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
   color: #ffffff;
   cursor: pointer;
+  font-size: 20px;
+  min-width: 96px;
+}
+
+.boton-primario--texto {
+  font-size: 14px;
+  min-width: 126px;
+}
+
+.bloque-registro {
+  border: 1px solid #d9e0f8;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  padding: 12px;
+}
+
+.bloque-registro + .bloque-registro {
+  margin-top: 12px;
+}
+
+.bloque-registro__titulo {
+  margin: 0 0 12px;
+  color: #3f507f;
+  font-size: 24px;
+}
+
+.bloque-registro--secundario {
+  margin-top: 14px;
+}
+
+.checks-linea,
+.opciones-linea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.check-item,
+.radio-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #556390;
+  font-weight: 600;
+}
+
+.check-item input,
+.radio-item input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  box-shadow: none;
+}
+
+.subbloque {
+  margin-bottom: 12px;
+}
+
+.subbloque:last-child {
+  margin-bottom: 0;
+}
+
+.campo-titulo {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #556390;
+  font-weight: 600;
+}
+
+.modal-exito {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 33, 62, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 18px;
+}
+
+.modal-exito--oculto {
+  display: none;
+}
+
+.modal-exito__tarjeta {
+  width: min(470px, 100%);
+  background: linear-gradient(180deg, #f7f9ff 0%, #f3f6ff 100%);
+  border: 1px solid #d7dff8;
+  border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(36, 57, 104, 0.26);
+  text-align: center;
+  padding: 20px 18px 18px;
+}
+
+.modal-exito__check {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #5dc48f;
+}
+
+.modal-exito__tarjeta h2 {
+  margin: 0;
+  color: #2d5078;
+  font-size: 34px;
+}
+
+.modal-exito__tarjeta p {
+  margin: 10px auto 0;
+  max-width: 380px;
+  color: #5c678f;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-exito__acciones {
+  margin-top: 16px;
+  border-top: 1px solid #e2e8fb;
+  padding-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-exito__acciones .boton-primario {
+  min-width: 140px;
 }
 
 @media (max-width: 1100px) {
@@ -153,14 +326,23 @@ select:focus {
     font-size: 20px;
   }
 
+  .pasos-formulario {
+    flex-wrap: wrap;
+  }
+
   .grupo-campos--tres {
     grid-template-columns: 1fr;
+  }
+
+  .grupo-campos--cuatro {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .grupo-campos--dos,
-  .grupo-campos--tres {
+  .grupo-campos--tres,
+  .grupo-campos--cuatro {
     grid-template-columns: 1fr;
   }
 
@@ -171,5 +353,9 @@ select:focus {
   .boton-secundario,
   .boton-primario {
     width: 100%;
+  }
+
+  .modal-exito__tarjeta h2 {
+    font-size: 28px;
   }
 }

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Cuenta - Operador Logístico</title>
+  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
+  <link rel="stylesheet" href="/piWeb/styles/miCuenta.css">
+</head>
+<body>
+  <div class="tablero-operador">
+    <aside class="barra-lateral barra-lateral--izquierda">
+      <div class="barra-lateral__marca-bloque">
+        <div class="encabezado__logo">
+          <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+        </div>
+        <h2 class="barra-lateral__marca">METZVIA</h2>
+      </div>
+
+      <nav class="barra-lateral__menu">
+        <a href="/piWeb/src/pages/operadorLogistico/dashboardOperador.html" class="barra-lateral__item">Dashboard</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Envíos</a>
+        <a href="/piWeb/src/pages/operadorLogistico/registrarPaquete.html" class="barra-lateral__item">Registrar Paquete</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Escaneo</a>
+        <a href="/piWeb/src/pages/operadorLogistico/enviosOperador.html" class="barra-lateral__item">Retracciones</a>
+        <a href="/piWeb/src/pages/operadorLogistico/incidencias.html" class="barra-lateral__item">Incidencias</a>
+        <a href="/piWeb/src/pages/operadorLogistico/miCuenta.html" class="barra-lateral__item barra-lateral__item--activo">Mi Cuenta</a>
+      </nav>
+
+      <div class="barra-lateral__pie">
+        <a href="/piWeb/login.html" class="barra-lateral__item barra-lateral__item--salir">↪ Salir</a>
+      </div>
+    </aside>
+
+    <main class="panel-principal">
+      <header class="barra-superior">
+        <h1 class="barra-superior__titulo">Mi Cuenta</h1>
+        <div class="barra-superior__perfil">
+          <img src="/piWeb/images/usuario.png" alt="Operador" class="barra-superior__avatar" />
+          <span class="barra-superior__estado"></span>
+        </div>
+      </header>
+
+      <section class="modulo-cuenta">
+        <div class="cuenta-encabezado">
+          <span class="cuenta-encabezado__icono">▣</span>
+          <h2>Información de Perfil</h2>
+        </div>
+
+        <div class="cuenta-contenido">
+          <aside class="perfil-tarjeta">
+            <img src="/piWeb/images/usuario.png" alt="Foto de perfil" class="perfil-tarjeta__avatar" />
+            <h3>Alejandro Ríos</h3>
+            <p>Operador logístico</p>
+            <button type="button" class="boton-secundario">Cambiar foto</button>
+          </aside>
+
+          <article class="datos-tarjeta">
+            <h3>Datos Personales</h3>
+            <div class="grupo-campos grupo-campos--dos">
+              <label>
+                Nombre
+                <input type="text" value="Alejandro" />
+              </label>
+              <label>
+                Apellido
+                <input type="text" value="Ríos" />
+              </label>
+            </div>
+
+            <div class="grupo-campos grupo-campos--dos">
+              <label>
+                Correo electrónico
+                <input type="email" value="alejandro.rios@email.com" />
+              </label>
+              <label>
+                Teléfono
+                <input type="tel" value="+52 55 9876 5432" />
+              </label>
+            </div>
+
+            <div class="grupo-campos grupo-campos--uno">
+              <label>
+                Dirección
+                <input type="text" value="Av. Revolución 456, CDMX" />
+              </label>
+            </div>
+
+            <h3 class="seccion-secundaria">Seguridad</h3>
+            <div class="grupo-campos grupo-campos--dos">
+              <label>
+                Nueva contraseña
+                <input type="password" placeholder="••••••••" />
+              </label>
+              <label>
+                Confirmar contraseña
+                <input type="password" placeholder="••••••••" />
+              </label>
+            </div>
+
+            <div class="acciones-cuenta">
+              <a href="/piWeb/src/pages/operadorLogistico/dashboardOperador.html" class="boton-secundario">Cancelar</a>
+              <button type="button" class="boton-primario">Guardar cambios</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

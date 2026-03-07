@@ -53,6 +53,37 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     marginTop: 4,
   },
+  roleLabel: {
+    color: '#586487',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  roleRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 14,
+  },
+  roleBtn: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface2,
+    borderRadius: 10,
+    paddingVertical: 10,
+  },
+  roleBtnActive: {
+    borderColor: colors.gold,
+    backgroundColor: '#FFF3D4',
+  },
+  roleBtnText: {
+    textAlign: 'center',
+    color: '#5B6484',
+    fontWeight: '600',
+  },
+  roleBtnTextActive: {
+    color: '#8A6511',
+    fontWeight: '700',
+  },
   input: {
     backgroundColor: colors.surface2,
     borderWidth: 1,
@@ -87,17 +118,6 @@ const styles = StyleSheet.create({
   linkStrong: {
     color: colors.gold,
     fontWeight: '700',
-  },
-  googleBtn: {
-    textAlign: 'center',
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 10,
-    paddingVertical: 12,
-    color: '#5B6484',
-    fontWeight: '600',
-    backgroundColor: '#FFFFFF',
   },
 });
 

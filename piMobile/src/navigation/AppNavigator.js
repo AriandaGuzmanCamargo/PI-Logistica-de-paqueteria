@@ -24,6 +24,7 @@ import FormRemitenteScreen from '../screens/FormRemitenteScreen';
 import FormDestinatarioScreen from '../screens/FormDestinatarioScreen';
 import FormPaqueteScreen from '../screens/FormPaqueteScreen';
 import FormResumenEnvioScreen from '../screens/FormResumenEnvioScreen';
+import DashboardR from '../repartidor/screens/DashboardR';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Registro" component={RegistroScreen} />
       <Stack.Screen name="RecuperacionContrasena" component={RecuperacionContrasenaScreen} />
       <Stack.Screen name="Dashboard" component={DashboardScreen} />
+      <Stack.Screen name="DashboardR" component={DashboardR} />
       <Stack.Screen name="MenuUsuario" component={MenuUsuarioScreen} />
       <Stack.Screen name="RastrearEnvio" component={RastrearEnvioScreen} />
       <Stack.Screen name="DetalleEnvio" component={DetalleEnvioScreen} />

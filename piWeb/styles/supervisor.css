@@ -1,0 +1,348 @@
+
+
+/* ── Bienvenida del supervisor ── */
+.bienvenida-sv {
+  max-width: 1260px;
+  margin: 0 auto 14px;
+  background: #ffffff;
+  border: 1px solid #d8dff8;
+  border-radius: 12px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+}
+.bienvenida-sv__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid #f2c44e;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px rgba(242,196,78,0.25);
+}
+.bienvenida-sv__info h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #2b3552;
+  font-weight: 400;
+}
+.bienvenida-sv__info h2 strong { font-weight: 700; }
+.bienvenida-sv__estado {
+  color: #4caf50;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── Badge en servicio (header) ── */
+.header-sv__punto-verde {
+  width: 8px;
+  height: 8px;
+  background: #4caf50;
+  border-radius: 50%;
+  display: inline-block;
+}
+.badge-servicio {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #d0f0c0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Tarjetas resumen ── */
+.resumen-sv {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.tarjeta-sv {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+  border: 1px solid #dbe2fa;
+}
+.tarjeta-sv__icono {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.tarjeta-sv--azul .tarjeta-sv__icono { background: #dce8ff; color: #3b6aaa; }
+.tarjeta-sv--amarillo .tarjeta-sv__icono { background: #fff3cd; color: #c49000; }
+.tarjeta-sv--rojo .tarjeta-sv__icono { background: #fdd; color: #d32f2f; }
+.tarjeta-sv--gris .tarjeta-sv__icono { background: #e0e8f0; color: #5a6a80; }
+.tarjeta-sv--morado .tarjeta-sv__icono { background: #e8daf8; color: #7b1fa2; }
+.tarjeta-sv__numero {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2b3552;
+  line-height: 1;
+}
+.tarjeta-sv__label {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #6b7393;
+}
+
+/* ── Contenido grid ── */
+.contenido-sv {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+
+/* ── Panel de envíos activos ── */
+.envios-sv {
+  background: #fff;
+  border: 1px solid #d9e0f8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+}
+.envios-sv__header {
+  padding: 16px 18px 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.envios-sv__header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #2b3552;
+  white-space: nowrap;
+}
+.envios-sv__buscar-wrap {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.envios-sv__busqueda {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #ccd6f6;
+  border-radius: 6px;
+  background: #f7f9ff;
+  color: #4f5b7f;
+  padding: 0 12px;
+  font-size: 13px;
+}
+.envios-sv__btn-todos {
+  background: #3b6aaa;
+  color: #fff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Filtros ── */
+.envios-sv__filtros {
+  display: flex;
+  gap: 6px;
+  padding: 6px 18px 12px;
+  flex-wrap: wrap;
+}
+.filtro-sv {
+  background: transparent;
+  border: 1px solid #d8e0f0;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: #4c5880;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+}
+.filtro-sv:hover { background: #eef2ff; }
+.filtro-sv--activo { background: #3b6aaa; color: #fff; border-color: #3b6aaa; }
+.filtro-sv__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.filtro-sv__dot--amarillo { background: #f2c44e; }
+.filtro-sv__dot--verde { background: #4caf50; }
+.filtro-sv__dot--rojo { background: #e53935; }
+.filtro-sv__dot--teal { background: #26a69a; }
+.filtro-sv--more {
+  border: none;
+  font-size: 18px;
+  padding: 2px 8px;
+  color: #6b7393;
+}
+
+/* ── Tarjetas de envío ── */
+.envios-sv__lista {
+  max-height: 520px;
+  overflow-y: auto;
+}
+.envio-card {
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef2fa;
+  transition: background 0.15s;
+}
+.envio-card:hover { background: #f8faff; }
+.envio-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.envio-card__info { display: flex; align-items: center; gap: 6px; }
+.envio-card__id {
+  font-weight: 700;
+  font-size: 14px;
+  color: #2b3552;
+}
+.envio-card__dots {
+  font-size: 6px;
+  color: #26a69a;
+  letter-spacing: 2px;
+}
+.envio-card__horario {
+  font-size: 13px;
+  color: #6b7393;
+}
+.envio-card__body { margin-bottom: 6px; }
+.envio-card__nombre {
+  margin: 0;
+  font-size: 14px;
+  color: #2b3552;
+}
+.envio-card__repartidor {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #8a94b0;
+}
+.envio-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.envio-card__estado {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+.envio-card__estado--pendiente { background: #fff3cd; color: #c49000; }
+.envio-card__estado--enruta { background: #d0f0d0; color: #2e7d32; }
+.envio-card__estado--retrasado { background: #fdd; color: #d32f2f; }
+.envio-card__estado--entregado { background: #d0ece8; color: #00796b; }
+.envio-card__acciones { display: flex; gap: 6px; }
+.envio-card__btn {
+  background: #f0f3fc;
+  border: 1px solid #d8e0f0;
+  color: #4c5880;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.envio-card__btn:hover { background: #dde4fa; }
+
+/* ── Panel derecho: estadísticas ── */
+.stats-sv {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.stats-sv__header {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.stats-sv__filtro-btn,
+.stats-sv__export-btn {
+  background: #fff;
+  border: 1px solid #d8e0f0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #4c5880;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stats-sv__filtro-btn:hover,
+.stats-sv__export-btn:hover { background: #f0f3fc; }
+.stats-sv__card {
+  background: #fff;
+  border: 1px solid #d9e0f8;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+}
+.stats-sv__label {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7393;
+}
+.stats-sv__valor {
+  margin: 6px 0 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #2b3552;
+  line-height: 1;
+}
+.stats-sv__card--resumen {
+  background: linear-gradient(135deg, #1a2d50 0%, #2a4a7a 50%, #3b6aaa 100%);
+  border: none;
+  color: #fff;
+}
+.stats-sv__card--resumen .stats-sv__label { color: #c8d8f8; }
+.stats-sv__card--resumen .stats-sv__valor { color: #fff; }
+.stats-sv__cumpl {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #b0d0a0;
+}
+.stats-sv__reporte-btn {
+  background: #f2c44e;
+  border: none;
+  color: #1a2d50;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+.stats-sv__reporte-btn:hover { background: #d4a235; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .resumen-sv { grid-template-columns: repeat(3, 1fr); }
+  .contenido-sv { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .resumen-sv { grid-template-columns: repeat(2, 1fr); }
+}

@@ -54,21 +54,24 @@ export default function DashboardR({ navigation }) {
 				</View>
 
 				<View style={styles.statsRow}>
-					<View style={styles.statCard}>
+					<TouchableOpacity style={styles.statCard} onPress={() => navigation.navigate('EntregasR')}>
 						<View style={styles.statIconBlue}><Text style={styles.statIconText}>OK</Text></View>
 						<View>
 							<Text style={styles.statTitle}>Entregas</Text>
 							<Text style={styles.statValue}>9</Text>
 						</View>
-					</View>
+					</TouchableOpacity>
 
-					<View style={styles.statCard}>
+					<TouchableOpacity
+						style={styles.statCard}
+						onPress={() => navigation.navigate('EntregasR', { initialFilter: 'Pendientes' })}
+					>
 						<View style={styles.statIconGold}><Text style={styles.statIconText}>..</Text></View>
 						<View>
 							<Text style={styles.statTitle}>Pendientes</Text>
 							<Text style={styles.statValue}>6</Text>
 						</View>
-					</View>
+					</TouchableOpacity>
 				</View>
 
 				<View style={styles.singleBox} />

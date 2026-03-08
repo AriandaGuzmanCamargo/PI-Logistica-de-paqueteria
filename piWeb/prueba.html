@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navegación - Prueba</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a2d50 0%, #2a4a7a 25%, #3b6aaa 50%, #4a7ec0 75%, #5a90d0 100%);
+    }
+    .contenedor {
+      text-align: center;
+    }
+    .contenedor h1 {
+      color: #f0f5ff;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      letter-spacing: 0.5px;
+    }
+    .botones {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 140px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .btn__icono {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .btn--login {
+      background: linear-gradient(135deg, #f2c44e 0%, #d4a235 100%);
+    }
+    .btn--operador {
+      background: linear-gradient(135deg, #1a2d50 0%, #3b6aaa 100%);
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    .btn--supervisor {
+      background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Sistema de Logística de Paquetería</h1>
+    <div class="botones">
+      <a class="btn btn--login" href="login.html">
+        <span class="btn__icono">🔑</span>
+        Login
+      </a>
+      <a class="btn btn--operador" href="src/pages/operadorLogistico/dashboardOperador.html">
+        <span class="btn__icono">📦</span>
+        Operador Logístico
+      </a>
+      <a class="btn btn--supervisor" href="#">
+        <span class="btn__icono">👤</span>
+        Supervisores
+      </a>
+    </div>
+  </div>
+</body>
+</html>

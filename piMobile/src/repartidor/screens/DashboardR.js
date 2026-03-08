@@ -13,10 +13,11 @@ import {
 } from 'react-native';
 import colors from '../../theme/colors';
 import getDashboardRStyles from '../styles/DashboardRStyles';
+import BottomNavR from '../components/BottomNavR';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-export default function DashboardR() {
+export default function DashboardR({ navigation }) {
 	const { width } = useWindowDimensions();
 	const isWeb = Platform.OS === 'web';
 	const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
@@ -29,7 +30,6 @@ export default function DashboardR() {
 			<SafeAreaView
 				style={[
 					styles.safeArea,
-					isWeb && styles.webPhoneFrame,
 					isWeb && {
 						width: phoneWidth,
 						height: '100%',
@@ -142,28 +142,7 @@ export default function DashboardR() {
 				</View>
 			</ScrollView>
 
-			<View style={styles.bottomNav}>
-				<TouchableOpacity style={styles.navItem}>
-					<View style={[styles.navDot, styles.navDotActive]} />
-					<Text style={[styles.navLabel, styles.navLabelActive]}>Inicio</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.navItem}>
-					<View style={styles.navDot} />
-					<Text style={styles.navLabel}>Entregas</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.navItem}>
-					<View style={styles.navDot} />
-					<Text style={styles.navLabel}>Ruta</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.navItem}>
-					<View style={styles.navDot} />
-					<Text style={styles.navLabel}>Alertas</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.navItem}>
-					<View style={styles.navDot} />
-					<Text style={styles.navLabel}>Perfil</Text>
-				</TouchableOpacity>
-			</View>
+			<BottomNavR navigation={navigation} s={s} activeTab="Inicio" />
 			</SafeAreaView>
 		</View>
 	);

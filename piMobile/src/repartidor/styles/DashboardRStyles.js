@@ -13,17 +13,6 @@ export default function getDashboardRStyles(s) {
 			justifyContent: 'center',
 			paddingVertical: s(12),
 		},
-		webPhoneFrame: {
-			borderRadius: s(22),
-			overflow: 'hidden',
-			borderWidth: 1,
-			borderColor: '#C3CEE6',
-			shadowColor: '#1E2E56',
-			shadowOpacity: 0.16,
-			shadowRadius: s(20),
-			shadowOffset: { width: 0, height: s(8) },
-			elevation: 10,
-		},
 		safeArea: {
 			flex: 1,
 			backgroundColor: colors.primaryDark,
@@ -329,38 +318,6 @@ export default function getDashboardRStyles(s) {
 			color: colors.primaryDark,
 			fontWeight: '700',
 			fontSize: s(14),
-		},
-		bottomNav: {
-			height: s(58),
-			borderTopWidth: 1,
-			borderTopColor: '#D5DDEF',
-			backgroundColor: '#ECF1FB',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'space-around',
-		},
-		navItem: {
-			alignItems: 'center',
-			gap: s(2),
-		},
-		navDot: {
-			width: s(12),
-			height: s(12),
-			borderRadius: s(7),
-			borderWidth: 2,
-			borderColor: '#8D9DC1',
-		},
-		navDotActive: {
-			backgroundColor: '#3D64A7',
-			borderColor: '#3D64A7',
-		},
-		navLabel: {
-			color: '#7081A7',
-			fontSize: s(10),
-			fontWeight: '600',
-		},
-		navLabelActive: {
-			color: '#355A9C',
 		},
 	});
 }

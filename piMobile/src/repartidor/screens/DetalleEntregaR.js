@@ -12,16 +12,20 @@ import {
 import colors from '../../theme/colors';
 import getDetalleEntregaRStyles from '../styles/DetalleEntregaRStyles';
 import BottomNavR from '../components/BottomNavR';
+import UserAvatarR from '../components/UserAvatarR';
+import HeaderLogoR from '../components/HeaderLogoR';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export default function DetalleEntregaR({ navigation }) {
 	const { width } = useWindowDimensions();
+	const { isDarkMode } = useDarkMode();
 	const isWeb = Platform.OS === 'web';
 	const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
 	const s = (size) => Math.round(size * scale);
-	const styles = getDetalleEntregaRStyles(s);
+	const styles = getDetalleEntregaRStyles(s, isDarkMode);
 
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
@@ -43,12 +47,11 @@ export default function DetalleEntregaR({ navigation }) {
 						<TouchableOpacity onPress={() => navigation.goBack()}>
 							<Text style={styles.backText}>{'<'}</Text>
 						</TouchableOpacity>
+						<HeaderLogoR s={s} />
 						<Text style={styles.topHeaderTitle}>Detalle de Entrega</Text>
 					</View>
 
-					<View style={styles.avatarCircle}>
-						<Text style={styles.avatarText}>JP</Text>
-					</View>
+					<UserAvatarR s={s} />
 				</View>
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.content}>
@@ -89,13 +92,13 @@ export default function DetalleEntregaR({ navigation }) {
 							</TouchableOpacity>
 						</View>
 
-						<TouchableOpacity style={styles.reportBtn}>
+						<TouchableOpacity style={styles.reportBtn} onPress={() => navigation.navigate('IncidenciasR')}>
 							<Text style={styles.actionText}>Reportar Incidencia</Text>
 						</TouchableOpacity>
 					</View>
 				</ScrollView>
 
-				<BottomNavR navigation={navigation} s={s} activeTab="Historial" showRutaBadge fourthLabel="Historial" />
+				<BottomNavR navigation={navigation} s={s} activeTab="Entregas" showRutaBadge />
 			</SafeAreaView>
 		</View>
 	);

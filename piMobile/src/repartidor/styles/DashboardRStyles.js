@@ -1,102 +1,78 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../theme/colors';
 
-export default function getDashboardRStyles(s) {
+export default function getDashboardRStyles(s, isDarkMode = false) {
+	const bgApp = isDarkMode ? '#0F1626' : '#EAF0FA';
+	const bgWeb = isDarkMode ? '#0B1220' : '#DCE4F3';
+	const cardBg = isDarkMode ? '#1D2740' : '#EEF2FB';
+	const panelBorder = isDarkMode ? '#2E3C5D' : '#D9E0EF';
+	const textPrimary = isDarkMode ? '#E4ECFF' : '#2D467C';
+	const textSecondary = isDarkMode ? '#B8C5E2' : '#8090B8';
+	const textMuted = isDarkMode ? '#AAB8D7' : '#7583A6';
+	const cardBase = {
+		borderRadius: s(10),
+		borderWidth: 1,
+		borderColor: panelBorder,
+	};
+	const iconBase = {
+		width: s(24),
+		height: s(24),
+		borderRadius: s(8),
+		alignItems: 'center',
+		justifyContent: 'center',
+	};
+	const rowBetween = {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	};
+
 	return StyleSheet.create({
 		nativeRoot: {
 			flex: 1,
 		},
 		webRoot: {
 			flex: 1,
-			backgroundColor: '#DCE4F3',
+			backgroundColor: bgWeb,
 			alignItems: 'center',
 			justifyContent: 'center',
 			paddingVertical: s(12),
 		},
 		safeArea: {
-			flex: 1,
+			flex: 15,
 			backgroundColor: colors.primaryDark,
 		},
 		header: {
 			height: s(56),
 			backgroundColor: colors.primaryDark,
 			paddingHorizontal: s(12),
-			flexDirection: 'row',
-			justifyContent: 'space-between',
+			...rowBetween,
 			alignItems: 'center',
 		},
 		brandWrap: {
 			flexDirection: 'row',
 			alignItems: 'center',
-			gap: s(4),
-		},
-		headerLogo: {
-			width: s(90),
-			height: s(34),
+			gap: s(8),
 		},
 		brandText: {
 			color: colors.white,
 			fontSize: s(16),
-			fontWeight: '600',
-			letterSpacing: 0.6,
+			fontWeight: '700',
+			letterSpacing: 0.2,
 		},
 		headerRight: {
 			flexDirection: 'row',
 			alignItems: 'center',
 			gap: s(8),
 		},
-		bellWrap: {
-			width: s(20),
-			height: s(20),
-			alignItems: 'center',
-			justifyContent: 'center',
-			position: 'relative',
-		},
-		bellText: {
-			color: '#D9E4FF',
-			fontSize: s(12),
-			fontWeight: '700',
-		},
-		bellBadge: {
-			position: 'absolute',
-			top: -1,
-			right: -2,
-			width: s(11),
-			height: s(11),
-			borderRadius: s(6),
-			backgroundColor: colors.gold,
-			alignItems: 'center',
-			justifyContent: 'center',
-		},
-		bellBadgeText: {
-			color: colors.white,
-			fontSize: s(7),
-			fontWeight: '700',
-		},
-		avatarCircle: {
-			width: s(30),
-			height: s(30),
-			borderRadius: s(15),
-			backgroundColor: '#D6E3FB',
-			borderColor: colors.white,
-			borderWidth: 2,
-			alignItems: 'center',
-			justifyContent: 'center',
-		},
-		avatarText: {
-			color: colors.primaryDark,
-			fontWeight: '700',
-			fontSize: s(10),
-		},
 		content: {
-			backgroundColor: '#EAF0FA',
+			backgroundColor: bgApp,
 			paddingHorizontal: s(10),
 			paddingTop: s(10),
 			paddingBottom: s(12),
 			gap: s(8),
 		},
 		welcome: {
-			color: '#2D467C',
+			color: textPrimary,
 			fontSize: s(24),
 			fontWeight: '700',
 		},
@@ -113,7 +89,7 @@ export default function getDashboardRStyles(s) {
 			backgroundColor: '#4CB36C',
 		},
 		serviceText: {
-			color: '#8090B8',
+			color: textSecondary,
 			fontSize: s(12),
 		},
 		statsRow: {
@@ -124,8 +100,8 @@ export default function getDashboardRStyles(s) {
 			flex: 1,
 			borderRadius: s(9),
 			borderWidth: 1,
-			borderColor: '#D9E1F1',
-			backgroundColor: '#F6F8FE',
+			borderColor: isDarkMode ? '#324566' : '#D9E1F1',
+			backgroundColor: isDarkMode ? '#1F2B45' : '#F6F8FE',
 			flexDirection: 'row',
 			alignItems: 'center',
 			gap: s(8),
@@ -133,20 +109,12 @@ export default function getDashboardRStyles(s) {
 			paddingVertical: s(8),
 		},
 		statIconBlue: {
-			width: s(24),
-			height: s(24),
-			borderRadius: s(8),
+			...iconBase,
 			backgroundColor: '#61A2D8',
-			alignItems: 'center',
-			justifyContent: 'center',
 		},
 		statIconGold: {
-			width: s(24),
-			height: s(24),
-			borderRadius: s(8),
+			...iconBase,
 			backgroundColor: '#F1D078',
-			alignItems: 'center',
-			justifyContent: 'center',
 		},
 		statIconText: {
 			color: colors.white,
@@ -154,30 +122,27 @@ export default function getDashboardRStyles(s) {
 			fontSize: s(9),
 		},
 		statTitle: {
-			color: '#2A4D8C',
+			color: isDarkMode ? '#D5E2FF' : '#2A4D8C',
 			fontWeight: '700',
 			fontSize: s(13),
 			lineHeight: s(15),
 		},
 		statValue: {
-			color: '#365484',
+			color: isDarkMode ? '#E8F0FF' : '#365484',
 			fontWeight: '700',
 			fontSize: s(16),
 			lineHeight: s(18),
 		},
 		card: {
-			borderRadius: s(10),
-			borderWidth: 1,
-			borderColor: '#D9E0EF',
-			backgroundColor: '#EEF2FB',
+			...cardBase,
+			backgroundColor: cardBg,
 			padding: s(9),
 		},
 		singleBox: {
 			height: s(170),
-			borderRadius: s(10),
-			borderWidth: 1,
-			borderColor: '#D1D8E5',
-			backgroundColor: '#DDE3EE',
+			...cardBase,
+			borderColor: isDarkMode ? '#334363' : '#D1D8E5',
+			backgroundColor: isDarkMode ? '#24314A' : '#DDE3EE',
 		},
 		searchRow: {
 			marginBottom: s(8),
@@ -185,21 +150,21 @@ export default function getDashboardRStyles(s) {
 		searchInputWrap: {
 			flex: 1,
 			borderWidth: 1,
-			borderColor: '#D6DEEE',
+			borderColor: isDarkMode ? '#324360' : '#D6DEEE',
 			borderRadius: s(8),
-			backgroundColor: '#F5F8FE',
+			backgroundColor: isDarkMode ? '#18233A' : '#F5F8FE',
 			flexDirection: 'row',
 			alignItems: 'center',
 			paddingHorizontal: s(8),
 		},
 		searchPrefix: {
-			color: '#7A88A8',
+			color: textMuted,
 			fontSize: s(11),
 			fontWeight: '700',
 		},
 		searchInput: {
 			flex: 1,
-			color: '#4A5D85',
+			color: isDarkMode ? '#D5E3FF' : '#4A5D85',
 			fontSize: s(12),
 			paddingHorizontal: s(6),
 			paddingVertical: s(8),
@@ -208,21 +173,18 @@ export default function getDashboardRStyles(s) {
 			marginBottom: s(8),
 		},
 		sortText: {
-			color: '#7583A6',
+			color: textMuted,
 			fontSize: s(11),
 		},
 		singleRecord: {
 			paddingVertical: s(8),
 			gap: s(5),
-			borderRadius: s(10),
-			borderWidth: 1,
-			borderColor: '#D9E0EF',
-			backgroundColor: '#E8EDF8',
+			...cardBase,
+			backgroundColor: isDarkMode ? '#1B2941' : '#E8EDF8',
 			paddingHorizontal: s(8),
 		},
 		recordTopRow: {
-			flexDirection: 'row',
-			justifyContent: 'space-between',
+			...rowBetween,
 			alignItems: 'center',
 		},
 		recordIdWrap: {
@@ -238,17 +200,16 @@ export default function getDashboardRStyles(s) {
 			borderColor: '#EAA729',
 		},
 		recordId: {
-			color: '#5B6B90',
+			color: isDarkMode ? '#B9C6E4' : '#5B6B90',
 			fontSize: s(10),
 		},
 		recordTime: {
-			color: '#4F6795',
+			color: isDarkMode ? '#C9D8F7' : '#4F6795',
 			fontWeight: '600',
 			fontSize: s(12),
 		},
 		recordBottomRow: {
-			flexDirection: 'row',
-			justifyContent: 'space-between',
+			...rowBetween,
 			alignItems: 'flex-end',
 			gap: s(8),
 		},
@@ -256,13 +217,13 @@ export default function getDashboardRStyles(s) {
 			flex: 1,
 		},
 		recordName: {
-			color: '#27467B',
+			color: isDarkMode ? '#E1EAFE' : '#27467B',
 			fontWeight: '700',
 			fontSize: s(16),
 			lineHeight: s(19),
 		},
 		recordAddress: {
-			color: '#4F638D',
+			color: isDarkMode ? '#B5C4E3' : '#4F638D',
 			fontSize: s(11),
 		},
 		recordActionBtn: {
@@ -289,13 +250,13 @@ export default function getDashboardRStyles(s) {
 			paddingRight: s(8),
 		},
 		tipTitle: {
-			color: '#405D8E',
+			color: isDarkMode ? '#DCE8FF' : '#405D8E',
 			fontWeight: '700',
 			fontSize: s(15),
 			marginBottom: s(3),
 		},
 		tipBody: {
-			color: '#617399',
+			color: isDarkMode ? '#B8C4DE' : '#617399',
 			fontSize: s(11),
 			marginBottom: s(5),
 		},
@@ -303,21 +264,6 @@ export default function getDashboardRStyles(s) {
 			color: '#3F67A8',
 			fontWeight: '600',
 			fontSize: s(12),
-		},
-		tipAvatar: {
-			width: s(52),
-			height: s(52),
-			borderRadius: s(26),
-			borderWidth: 2,
-			borderColor: '#C6D4EE',
-			backgroundColor: '#D8E3F8',
-			alignItems: 'center',
-			justifyContent: 'center',
-		},
-		tipAvatarText: {
-			color: colors.primaryDark,
-			fontWeight: '700',
-			fontSize: s(14),
 		},
 	});
 }

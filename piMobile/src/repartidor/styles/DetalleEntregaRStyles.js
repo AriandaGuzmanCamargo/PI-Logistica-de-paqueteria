@@ -1,12 +1,16 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../theme/colors';
 
-export default function getDetalleEntregaRStyles(s) {
+export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
+  const bgWeb = isDarkMode ? '#0B1220' : '#DCE5F5';
+  const bgApp = isDarkMode ? '#0F1626' : '#EAF0FA';
+  const border = isDarkMode ? '#2E3C5D' : '#D8DFEF';
+
   return StyleSheet.create({
     nativeRoot: { flex: 1 },
     webRoot: {
       flex: 1,
-      backgroundColor: '#DCE5F5',
+      backgroundColor: bgWeb,
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: s(12),
@@ -44,24 +48,9 @@ export default function getDetalleEntregaRStyles(s) {
       fontSize: s(16),
       fontWeight: '700',
     },
-    avatarCircle: {
-      width: s(30),
-      height: s(30),
-      borderRadius: s(15),
-      backgroundColor: '#D6E3FB',
-      borderColor: colors.white,
-      borderWidth: 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    avatarText: {
-      color: '#2B4A87',
-      fontWeight: '700',
-      fontSize: s(10),
-    },
     content: {
       flex: 1,
-      backgroundColor: '#EAF0FA',
+      backgroundColor: bgApp,
       paddingHorizontal: s(8),
       paddingTop: s(8),
       paddingBottom: s(10),
@@ -82,15 +71,15 @@ export default function getDetalleEntregaRStyles(s) {
       borderColor: '#E8EEF9',
     },
     idText: {
-      color: '#2D4A82',
+      color: isDarkMode ? '#E4ECFF' : '#2D4A82',
       fontWeight: '700',
       fontSize: s(22),
     },
     card: {
       borderRadius: s(10),
       borderWidth: 1,
-      borderColor: '#D8DFEF',
-      backgroundColor: '#F3F7FE',
+      borderColor: border,
+      backgroundColor: isDarkMode ? '#1D2740' : '#F3F7FE',
       paddingHorizontal: s(10),
       paddingVertical: s(10),
       gap: s(8),
@@ -122,23 +111,23 @@ export default function getDetalleEntregaRStyles(s) {
       gap: s(3),
     },
     receiverName: {
-      color: '#2D4A82',
+      color: isDarkMode ? '#E4ECFF' : '#2D4A82',
       fontWeight: '700',
       fontSize: s(20),
       lineHeight: s(24),
     },
     addressText: {
-      color: '#586D97',
+      color: isDarkMode ? '#B8C5E2' : '#586D97',
       fontSize: s(12),
       lineHeight: s(17),
     },
     phoneText: {
-      color: '#3B4E76',
+      color: isDarkMode ? '#D7E2FF' : '#3B4E76',
       fontWeight: '700',
       fontSize: s(19),
     },
     infoLine: {
-      color: '#60739B',
+      color: isDarkMode ? '#B4C3E3' : '#60739B',
       fontSize: s(12),
       lineHeight: s(16),
     },
@@ -150,8 +139,8 @@ export default function getDetalleEntregaRStyles(s) {
       height: s(150),
       borderRadius: s(8),
       borderWidth: 1,
-      borderColor: '#D4DCEC',
-      backgroundColor: '#DDE5F0',
+      borderColor: isDarkMode ? '#324360' : '#D4DCEC',
+      backgroundColor: isDarkMode ? '#24314A' : '#DDE5F0',
       marginTop: s(2),
       marginBottom: s(6),
     },
@@ -162,7 +151,7 @@ export default function getDetalleEntregaRStyles(s) {
       paddingHorizontal: s(4),
     },
     metricText: {
-      color: '#697A9F',
+      color: isDarkMode ? '#B4C3E3' : '#697A9F',
       fontSize: s(12),
     },
     actionRow: {

@@ -1,19 +1,24 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import getBottomNavRStyles from '../styles/BottomNavRStyles';
+import { useDarkMode } from '../context/DarkModeContext';
 
-function NavItem({ label, isActive, onPress, styles, showBadge }) {
+function NavItem({ label, isActive, onPress, styles, showBadge, iconSource, hideLabel = false }) {
   return (
     <TouchableOpacity style={styles.navItem} onPress={onPress}>
       <View style={styles.navDotWrap}>
-        <View style={[styles.navDot, isActive && styles.navDotActive]} />
+        {iconSource ? (
+          <Image source={iconSource} style={styles.navIcon} resizeMode="contain" />
+        ) : (
+          <View style={[styles.navDot, isActive && styles.navDotActive]} />
+        )}
         {showBadge ? (
           <View style={styles.navBadge}>
             <Text style={styles.navBadgeText}>1</Text>
           </View>
         ) : null}
       </View>
-      <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>{label}</Text>
+      {!hideLabel ? <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>{label}</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -23,16 +28,15 @@ export default function BottomNavR({
   s,
   activeTab,
   showRutaBadge = false,
-  fourthLabel = 'Alertas',
 }) {
-  const styles = getBottomNavRStyles(s);
+  const { isDarkMode } = useDarkMode();
+  const styles = getBottomNavRStyles(s, isDarkMode);
 
   const items = [
     { label: 'Inicio', route: 'DashboardR' },
     { label: 'Entregas', route: 'EntregasR' },
     { label: 'Ruta', route: 'RutaR', showBadge: showRutaBadge },
-    { label: fourthLabel, route: null },
-    { label: 'Perfil', route: null },
+    { label: 'Perfil', route: 'NotificacionesR', iconSource: require('../../../images/bell_9972125.png'), hideLabel: true },
   ];
 
   return (
@@ -45,6 +49,8 @@ export default function BottomNavR({
           onPress={item.route ? () => navigation.navigate(item.route) : undefined}
           styles={styles}
           showBadge={Boolean(item.showBadge)}
+          iconSource={item.iconSource}
+          hideLabel={Boolean(item.hideLabel)}
         />
       ))}
     </View>

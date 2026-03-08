@@ -1,12 +1,20 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../theme/colors';
 
-export default function getEntregasRStyles(s) {
+export default function getEntregasRStyles(s, isDarkMode = false) {
+  const bgWeb = isDarkMode ? '#0A101C' : '#DCE5F5';
+  const bgApp = isDarkMode ? '#0E1524' : '#EAF0FA';
+  const cardBg = isDarkMode ? '#1A253A' : '#EDF2FC';
+  const itemBg = isDarkMode ? '#182338' : '#F6F9FF';
+  const border = isDarkMode ? '#344766' : '#D7DFEF';
+  const textPrimary = isDarkMode ? '#E4ECFF' : '#2C4A8A';
+  const textSecondary = isDarkMode ? '#B8C5E2' : '#556A95';
+
   return StyleSheet.create({
     nativeRoot: { flex: 1 },
     webRoot: {
       flex: 1,
-      backgroundColor: '#DCE5F5',
+      backgroundColor: bgWeb,
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: s(12),
@@ -23,24 +31,19 @@ export default function getEntregasRStyles(s) {
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    topHeaderLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: s(8),
+    },
     topHeaderTitle: {
       color: colors.white,
       fontSize: s(16),
       fontWeight: '700',
     },
-    avatarCircle: {
-      width: s(30),
-      height: s(30),
-      borderRadius: s(15),
-      backgroundColor: '#D6E3FB',
-      borderWidth: 2,
-      borderColor: colors.white,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     content: {
       flex: 1,
-      backgroundColor: '#EAF0FA',
+      backgroundColor: bgApp,
       paddingHorizontal: s(10),
       paddingTop: s(10),
     },
@@ -51,16 +54,16 @@ export default function getEntregasRStyles(s) {
       marginBottom: s(10),
     },
     secondTitle: {
-      color: '#2C4A8A',
+      color: textPrimary,
       fontSize: s(30),
       fontWeight: '700',
       lineHeight: s(32),
     },
     searchWrap: {
       borderWidth: 1,
-      borderColor: '#D5DEEF',
+      borderColor: isDarkMode ? '#344766' : '#D5DEEF',
       borderRadius: s(8),
-      backgroundColor: '#F3F7FE',
+      backgroundColor: isDarkMode ? '#151F33' : '#F3F7FE',
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: s(10),
@@ -68,7 +71,7 @@ export default function getEntregasRStyles(s) {
     },
     searchInput: {
       flex: 1,
-      color: '#556A95',
+      color: textSecondary,
       fontSize: s(13),
       paddingHorizontal: s(8),
       paddingVertical: s(9),
@@ -76,8 +79,8 @@ export default function getEntregasRStyles(s) {
     filtersRow: {
       borderRadius: s(8),
       borderWidth: 1,
-      borderColor: '#D6DEEE',
-      backgroundColor: '#ECF2FD',
+      borderColor: isDarkMode ? '#344766' : '#D6DEEE',
+      backgroundColor: isDarkMode ? '#151F33' : '#ECF2FD',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -87,12 +90,12 @@ export default function getEntregasRStyles(s) {
       gap: s(10),
     },
     filterText: {
-      color: '#3F5E98',
+      color: isDarkMode ? '#DFE9FF' : '#3F5E98',
       fontWeight: '700',
       fontSize: s(12),
     },
     filterTextMuted: {
-      color: '#4E679D',
+      color: isDarkMode ? '#BFD0EE' : '#4E679D',
       fontWeight: '600',
       fontSize: s(12),
     },
@@ -100,13 +103,13 @@ export default function getEntregasRStyles(s) {
       flex: 1,
       borderRadius: s(10),
       borderWidth: 1,
-      borderColor: '#D9E1F0',
-      backgroundColor: '#EDF2FC',
+      borderColor: isDarkMode ? '#344766' : '#D9E1F0',
+      backgroundColor: cardBg,
       paddingHorizontal: s(8),
       paddingTop: s(10),
     },
     sectionTitle: {
-      color: '#2F4E8D',
+      color: isDarkMode ? '#ECF2FF' : '#2F4E8D',
       fontSize: s(22),
       fontWeight: '700',
       marginBottom: s(8),
@@ -118,8 +121,8 @@ export default function getEntregasRStyles(s) {
     deliveryCard: {
       borderRadius: s(10),
       borderWidth: 1,
-      borderColor: '#D7DFEF',
-      backgroundColor: '#F6F9FF',
+      borderColor: border,
+      backgroundColor: itemBg,
       paddingHorizontal: s(10),
       paddingVertical: s(10),
       gap: s(6),
@@ -157,7 +160,7 @@ export default function getEntregasRStyles(s) {
       backgroundColor: '#3E5F9A',
     },
     deliveryCode: {
-      color: '#667AA6',
+      color: isDarkMode ? '#D3DFF5' : '#667AA6',
       fontSize: s(14),
       fontWeight: '500',
     },
@@ -179,15 +182,44 @@ export default function getEntregasRStyles(s) {
       fontSize: s(14),
     },
     deliveryName: {
-      color: '#2B4579',
+      color: isDarkMode ? '#E4ECFF' : '#2B4579',
       fontSize: s(21),
       fontWeight: '700',
       lineHeight: s(24),
     },
     deliveryAddress: {
-      color: '#536A95',
+      color: isDarkMode ? '#C3D0E8' : '#536A95',
       fontSize: s(13),
       lineHeight: s(18),
+    },
+    incidentTypeSummary: {
+      color: isDarkMode ? '#D4E1FF' : '#385890',
+      fontSize: s(13),
+      fontWeight: '700',
+      lineHeight: s(18),
+      marginTop: s(2),
+    },
+    detailsBtn: {
+      alignSelf: 'flex-start',
+      marginTop: s(4),
+      borderRadius: s(8),
+      backgroundColor: '#3D64A7',
+      paddingVertical: s(7),
+      paddingHorizontal: s(14),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    detailsBtnText: {
+      color: colors.white,
+      fontSize: s(13),
+      fontWeight: '700',
+    },
+    emptyText: {
+      color: isDarkMode ? '#B7C6E6' : '#5C7099',
+      textAlign: 'center',
+      fontSize: s(13),
+      fontWeight: '600',
+      paddingVertical: s(14),
     },
   });
 }

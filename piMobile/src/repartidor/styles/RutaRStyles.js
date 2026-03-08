@@ -1,12 +1,16 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../theme/colors';
 
-export default function getRutaRStyles(s) {
+export default function getRutaRStyles(s, isDarkMode = false) {
+	const bgWeb = isDarkMode ? '#0B1220' : '#DCE5F5';
+	const bgApp = isDarkMode ? '#0F1626' : '#EAF0FA';
+	const border = isDarkMode ? '#2E3C5D' : '#D7DFEF';
+
 	return StyleSheet.create({
 		nativeRoot: { flex: 1 },
 		webRoot: {
 			flex: 1,
-			backgroundColor: '#DCE5F5',
+			backgroundColor: bgWeb,
 			alignItems: 'center',
 			justifyContent: 'center',
 			paddingVertical: s(12),
@@ -14,8 +18,15 @@ export default function getRutaRStyles(s) {
 		topHeader: {
 			height: s(56),
 			backgroundColor: colors.primaryDark,
+			paddingHorizontal: s(12),
+			flexDirection: 'row',
 			alignItems: 'center',
-			justifyContent: 'center',
+			justifyContent: 'space-between',
+		},
+		topHeaderLeft: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			gap: s(8),
 		},
 		topHeaderTitle: {
 			color: colors.white,
@@ -24,7 +35,7 @@ export default function getRutaRStyles(s) {
 		},
 		content: {
 			flex: 1,
-			backgroundColor: '#EAF0FA',
+			backgroundColor: bgApp,
 		},
 		contentContainer: {
 			paddingHorizontal: s(10),
@@ -36,15 +47,15 @@ export default function getRutaRStyles(s) {
 			height: s(200),
 			borderRadius: s(10),
 			borderWidth: 1,
-			borderColor: '#D7DFEF',
-			backgroundColor: '#DDE5F0',
+			borderColor: border,
+			backgroundColor: isDarkMode ? '#24314A' : '#DDE5F0',
 			overflow: 'hidden',
 		},
 		card: {
 			borderRadius: s(10),
 			borderWidth: 1,
-			borderColor: '#D7DFEF',
-			backgroundColor: '#F4F7FD',
+			borderColor: border,
+			backgroundColor: isDarkMode ? '#1D2740' : '#F4F7FD',
 			paddingHorizontal: s(12),
 			paddingVertical: s(11),
 		},
@@ -70,18 +81,18 @@ export default function getRutaRStyles(s) {
 			gap: s(2),
 		},
 		clientName: {
-			color: '#304D82',
+			color: isDarkMode ? '#E4ECFF' : '#304D82',
 			fontSize: s(28) > 28 ? 28 : s(22),
 			fontWeight: '700',
 			lineHeight: s(26),
 		},
 		clientAddress: {
-			color: '#5B6F96',
+			color: isDarkMode ? '#B8C5E2' : '#5B6F96',
 			fontSize: s(12),
 			lineHeight: s(18),
 		},
 		phone: {
-			color: '#3D4E73',
+			color: isDarkMode ? '#D9E4FF' : '#3D4E73',
 			fontWeight: '700',
 			fontSize: s(32) > 32 ? 32 : s(24),
 			marginBottom: s(7),
@@ -93,11 +104,11 @@ export default function getRutaRStyles(s) {
 			marginBottom: s(10),
 		},
 		metricText: {
-			color: '#7A88A8',
+			color: isDarkMode ? '#B0C0E0' : '#7A88A8',
 			fontSize: s(11),
 		},
 		metricStrong: {
-			color: '#3F4E73',
+			color: isDarkMode ? '#E2EBFF' : '#3F4E73',
 			fontWeight: '700',
 		},
 		startBtn: {

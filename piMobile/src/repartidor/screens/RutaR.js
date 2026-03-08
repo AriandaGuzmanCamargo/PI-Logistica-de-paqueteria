@@ -12,16 +12,20 @@ import {
 import colors from '../../theme/colors';
 import getRutaRStyles from '../styles/RutaRStyles';
 import BottomNavR from '../components/BottomNavR';
+import UserAvatarR from '../components/UserAvatarR';
+import HeaderLogoR from '../components/HeaderLogoR';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export default function RutaR({ navigation }) {
 	const { width } = useWindowDimensions();
+	const { isDarkMode } = useDarkMode();
 	const isWeb = Platform.OS === 'web';
 	const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
 	const s = (size) => Math.round(size * scale);
-	const styles = getRutaRStyles(s);
+	const styles = getRutaRStyles(s, isDarkMode);
 
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
@@ -39,7 +43,11 @@ export default function RutaR({ navigation }) {
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
 				<View style={styles.topHeader}>
-					<Text style={styles.topHeaderTitle}>Ruta del Dia</Text>
+					<View style={styles.topHeaderLeft}>
+						<HeaderLogoR s={s} />
+						<Text style={styles.topHeaderTitle}>Ruta del Dia</Text>
+					</View>
+					<UserAvatarR s={s} />
 				</View>
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>

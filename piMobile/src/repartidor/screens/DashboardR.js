@@ -1,29 +1,25 @@
 import React from 'react';
 import {
-	Image,
-	Platform,
-	SafeAreaView,
-	ScrollView,
-	StatusBar,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-	useWindowDimensions,
+	Platform,SafeAreaView,ScrollView,StatusBar,Text,TextInput,
+	TouchableOpacity,View,useWindowDimensions,
 } from 'react-native';
 import colors from '../../theme/colors';
 import getDashboardRStyles from '../styles/DashboardRStyles';
 import BottomNavR from '../components/BottomNavR';
+import UserAvatarR from '../components/UserAvatarR';
+import HeaderLogoR from '../components/HeaderLogoR';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export default function DashboardR({ navigation }) {
 	const { width } = useWindowDimensions();
+	const { isDarkMode } = useDarkMode();
 	const isWeb = Platform.OS === 'web';
 	const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
 	const s = (size) => Math.round(size * scale);
-	const styles = getDashboardRStyles(s);
+	const styles = getDashboardRStyles(s, isDarkMode);
 
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
@@ -41,25 +37,12 @@ export default function DashboardR({ navigation }) {
 
 			<View style={styles.header}>
 				<View style={styles.brandWrap}>
-					<Image
-						source={require('../../../images/logoSinFondo.png')}
-						style={styles.headerLogo}
-						resizeMode="contain"
-					/>
+					<HeaderLogoR s={s} />
 					<Text style={styles.brandText}>METZVIA</Text>
 				</View>
 
 				<View style={styles.headerRight}>
-					<View style={styles.bellWrap}>
-						<Text style={styles.bellText}>o</Text>
-						<View style={styles.bellBadge}>
-							<Text style={styles.bellBadgeText}>1</Text>
-						</View>
-					</View>
-
-					<View style={styles.avatarCircle}>
-						<Text style={styles.avatarText}>JP</Text>
-					</View>
+					<UserAvatarR s={s} />
 				</View>
 			</View>
 

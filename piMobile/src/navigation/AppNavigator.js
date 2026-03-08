@@ -28,6 +28,12 @@ import DashboardR from '../repartidor/screens/DashboardR';
 import EntregasR from '../repartidor/screens/EntregasR';
 import RutaR from '../repartidor/screens/RutaR';
 import DetalleEntregaR from '../repartidor/screens/DetalleEntregaR';
+import IncidenciasR from '../repartidor/screens/IncidenciasR';
+import DetalleIncidenciaR from '../repartidor/screens/DetalleIncidenciaR';
+import NotificacionesR from '../repartidor/screens/notificaciones';
+import PerfilR from '../repartidor/screens/PerfilR';
+import ConfiguracionR from '../repartidor/screens/ConfiguracionR';
+import CambiarContrasenaR from '../repartidor/screens/CambiarContrasenaR';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +48,12 @@ export default function AppNavigator() {
       <Stack.Screen name="EntregasR" component={EntregasR} />
       <Stack.Screen name="RutaR" component={RutaR} />
       <Stack.Screen name="DetalleEntregaR" component={DetalleEntregaR} />
+      <Stack.Screen name="IncidenciasR" component={IncidenciasR} />
+      <Stack.Screen name="DetalleIncidenciaR" component={DetalleIncidenciaR} />
+      <Stack.Screen name="NotificacionesR" component={NotificacionesR} />
+      <Stack.Screen name="PerfilR" component={PerfilR} />
+      <Stack.Screen name="ConfiguracionR" component={ConfiguracionR} />
+      <Stack.Screen name="CambiarContrasenaR" component={CambiarContrasenaR} />
       <Stack.Screen name="MenuUsuario" component={MenuUsuarioScreen} />
       <Stack.Screen name="RastrearEnvio" component={RastrearEnvioScreen} />
       <Stack.Screen name="DetalleEnvio" component={DetalleEnvioScreen} />

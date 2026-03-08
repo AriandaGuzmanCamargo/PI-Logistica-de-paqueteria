@@ -183,7 +183,7 @@ body {
 
 .barra-superior {
   height: 80px;
-  background: linear-gradient(135deg,#365a8c 0%,#4a6fa5 100%);
+  background: linear-gradient(135deg, #1a2d50 0%, #2a4a7a 25%, #3b6aaa 50%, #4a7ec0 75%, #5a90d0 100%);
   margin: 0 -26px 18px;
   padding: 0 28px;
   display: flex;
@@ -201,28 +201,59 @@ body {
 .barra-superior__titulo {
   margin: 0;
   color: #f0f5ff;
-  font-size: 32px;
-  font-weight: 300;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.5px;
 }
 
-.barra-superior__perfil { display:flex; align-items:center; gap:10px }
+.barra-superior__perfil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 30px;
+  transition: background 0.2s;
+}
+.barra-superior__perfil:hover {
+  background: rgba(255,255,255,0.1);
+}
 
-.barra-superior__avatar{ width:50px; height:50px; border-radius:50%; border:3px solid #f2c44e; object-fit:cover; box-shadow:0 4px 14px rgba(8,20,48,0.16) }
+.barra-superior__avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 3px solid #f2c44e;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px rgba(242,196,78,0.25), 0 4px 16px rgba(8,20,48,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.barra-superior__perfil:hover .barra-superior__avatar {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 4px rgba(242,196,78,0.35), 0 6px 20px rgba(8,20,48,0.3);
+}
 
-.barra-superior__chevron { color: #d0dbf0; font-size: 16px; cursor: pointer; }
+.barra-superior__chevron {
+  color: #e0e8ff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.barra-superior__perfil:hover .barra-superior__chevron {
+  transform: translateY(2px);
+}
 
 /* ── Logo en el header que sobresale ── */
 .header-logo {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 95px;
+  height: 95px;
   flex-shrink: 0;
 }
 .header-logo img {
-  width: 90px;
-  height: 90px;
+  width: 130px;
+  height: 130px;
   object-fit: contain;
   position: absolute;
   top: 50%;
@@ -320,8 +351,8 @@ body {
   color: #fff;
 }
 .menu-hamburguesa__logo {
-  width: 70px;
-  height: 70px;
+  width: 120px;
+  height: 120px;
   margin: 0 auto 4px;
   position: relative;
 }

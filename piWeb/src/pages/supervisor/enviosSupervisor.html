@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Envíos - Supervisor</title>
+  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
+  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
+  <style>
+    /* ── Gestión de Envíos ── */
+    .genv-titulo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a2d50;
+      margin: 24px 0 18px;
+    }
+
+    /* Barra de búsqueda y filtros */
+    .genv-barra {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .genv-buscar {
+      flex: 1;
+      min-width: 240px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #d0d8e8;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+    .genv-buscar__icono {
+      color: #8899b4;
+      font-size: 18px;
+    }
+    .genv-buscar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 14px;
+      color: #2b3552;
+      width: 100%;
+    }
+    .genv-buscar input::placeholder { color: #9aa8c0; }
+
+    /* Chips de estado */
+    .genv-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+    .genv-chip:hover { opacity: 0.85; }
+    .genv-chip--todos {
+      background: #3b6aaa;
+    }
+    .genv-chip--pendiente {
+      background: #f5a623;
+    }
+    .genv-chip--retrasado {
+      background: #e53935;
+    }
+    .genv-chip--entregado {
+      background: #43a047;
+    }
+    .genv-chip__flecha { font-size: 11px; }
+
+    .genv-filtro-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid #d0d8e8;
+      background: rgba(255,255,255,0.7);
+      font-size: 14px;
+      font-weight: 600;
+      color: #3b5585;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .genv-filtro-btn:hover { background: #fff; }
+
+    /* Ordenar por */
+    .genv-ordenar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #5a6d8a;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .genv-ordenar span { font-weight: 600; color: #1a2d50; }
+    .genv-ordenar select {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      color: #3b5585;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+    .genv-ordenar__dots {
+      margin-left: auto;
+      font-size: 22px;
+      color: #8899b4;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+
+    /* Tabla */
+    .genv-tabla-wrap {
+      background: rgba(230,237,250,0.45);
+      border-radius: 14px;
+      overflow-x: auto;
+      border: 1px solid rgba(200,215,240,0.4);
+    }
+    .genv-tabla {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+    .genv-tabla thead th {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #3b5585;
+      border-bottom: 2px solid rgba(180,200,230,0.4);
+    }
+    .genv-tabla tbody tr {
+      border-bottom: 1px solid rgba(200,215,240,0.35);
+      transition: background 0.15s;
+    }
+    .genv-tabla tbody tr:hover {
+      background: rgba(220,232,250,0.35);
+    }
+    .genv-tabla tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #2b3552;
+      vertical-align: top;
+    }
+    .genv-guia {
+      font-weight: 600;
+      color: #1a2d50;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+    .genv-cliente {
+      font-weight: 700;
+      color: #1a2d50;
+    }
+    .genv-direccion {
+      font-size: 13px;
+      color: #5a6d8a;
+    }
+    .genv-direccion::before {
+      content: '● ';
+      color: #43a047;
+      font-size: 10px;
+    }
+    .genv-sub {
+      font-size: 12px;
+      color: #8899b4;
+    }
+    .genv-hora {
+      font-weight: 600;
+      color: #2b3552;
+    }
+    .genv-repartidor {
+      color: #2b3552;
+      font-weight: 500;
+    }
+
+    /* Badges de estado */
+    .genv-estado {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .genv-estado--pendiente {
+      background: #fff3e0;
+      color: #e68a00;
+    }
+    .genv-estado--enruta {
+      background: #e0f2f1;
+      color: #00897b;
+    }
+    .genv-estado--retrasado {
+      background: #fbe9e7;
+      color: #e53935;
+    }
+    .genv-estado--entregado {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .genv-ver-btn {
+      padding: 5px 14px;
+      border-radius: 6px;
+      border: 1px solid #d0d8e8;
+      background: rgba(255,255,255,0.7);
+      font-size: 13px;
+      color: #3b5585;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .genv-ver-btn:hover { background: #fff; }
+
+    /* Paginación */
+    .genv-paginacion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .genv-paginacion__info {
+      font-size: 14px;
+      color: #5a6d8a;
+    }
+    .genv-paginacion__paginas {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .genv-pag-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: 1px solid #d0d8e8;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      color: #3b5585;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .genv-pag-btn:hover { background: #e8f0fb; }
+    .genv-pag-btn--activo {
+      background: #3b6aaa;
+      color: #fff;
+      border-color: #3b6aaa;
+    }
+    .genv-pag-btn--dots {
+      border: none;
+      background: none;
+      cursor: default;
+    }
+
+    @media (max-width: 768px) {
+      .genv-barra { flex-direction: column; align-items: stretch; }
+      .genv-buscar { min-width: auto; }
+      .genv-filtro-btn { margin-left: 0; }
+      .genv-paginacion { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tablero-operador tablero-operador--sin-sidebar">
+
+    <!-- Contenedor del menú hamburguesa -->
+    <div id="menuContainer" class="menu-overlay"></div>
+    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+
+    <main class="panel-principal panel-principal--full">
+      <header class="barra-superior barra-superior--con-logo">
+        <div class="barra-superior__left">
+          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-logo">
+            <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+          </div>
+          <h1 class="barra-superior__titulo">Supervisor</h1>
+        </div>
+        <div class="barra-superior__perfil">
+          <span class="badge-servicio">
+            <span class="header-sv__punto-verde"></span> En servicio
+          </span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
+          <span class="barra-superior__chevron">&#9662;</span>
+        </div>
+      </header>
+
+      <!-- Contenido Gestión de Envíos -->
+      <h2 class="genv-titulo">Gestión de Envíos</h2>
+
+      <!-- Barra búsqueda + filtros -->
+      <div class="genv-barra">
+        <div class="genv-buscar">
+          <span class="genv-buscar__icono">&#128269;</span>
+          <input type="text" placeholder="Buscar dirección o número de guía" />
+        </div>
+        <button class="genv-chip genv-chip--todos">Todos <span class="genv-chip__flecha">&#9662;</span></button>
+        <button class="genv-chip genv-chip--pendiente">&#9201; Pendiente</button>
+        <button class="genv-chip genv-chip--retrasado">&#9888; Retrasado</button>
+        <button class="genv-chip genv-chip--entregado">&#10004; Entregado</button>
+        <button class="genv-filtro-btn">&#9776; Filtro</button>
+      </div>
+
+      <!-- Ordenar por -->
+      <div class="genv-ordenar">
+        <span>Ordenar por:</span>
+        <select><option>Hora</option></select>
+        <select><option>Zona</option></select>
+        <select><option>Prioridad</option></select>
+        <span class="genv-ordenar__dots">⋯</span>
+      </div>
+
+      <!-- Tabla de envíos -->
+      <div class="genv-tabla-wrap">
+        <table class="genv-tabla">
+          <thead>
+            <tr>
+              <th>Guía</th>
+              <th>Cliente</th>
+              <th>Dirección</th>
+              <th>Hora estimada</th>
+              <th>Repartidor</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="genv-guia">PAK123456789</span></td>
+              <td>
+                <span class="genv-cliente">Ana Martínez</span><br>
+                <span class="genv-sub">CDMX</span>
+              </td>
+              <td><span class="genv-direccion">Col. Roma Norte, CDMX</span></td>
+              <td><span class="genv-hora">10:00 – 11:00</span></td>
+              <td><span class="genv-repartidor">Luis Garcia</span></td>
+              <td><span class="genv-estado genv-estado--pendiente">&#10148; Pendiente</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+            <tr>
+              <td><span class="genv-guia">MXZ67584321</span></td>
+              <td>
+                <span class="genv-cliente">Carlos Ramírez</span><br>
+                <span class="genv-sub">Querétaro, CDMX · Javier Torres</span>
+              </td>
+              <td><span class="genv-direccion">Av. Tecnológico 210, Querétaro</span></td>
+              <td><span class="genv-hora">12:00 – 1:00</span></td>
+              <td><span class="genv-repartidor">Javier Torres</span></td>
+              <td><span class="genv-estado genv-estado--enruta">&#10004; En ruta</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+            <tr>
+              <td><span class="genv-guia">MX987654321</span></td>
+              <td>
+                <span class="genv-cliente">Laura Gómez</span>
+              </td>
+              <td><span class="genv-direccion">Av. Revolución 456, Col. Del Valle</span></td>
+              <td><span class="genv-hora">1:00 – 3:00</span></td>
+              <td><span class="genv-repartidor">Ricardo Muñoz</span></td>
+              <td><span class="genv-estado genv-estado--retrasado">&#9888; Retrasado</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+            <tr>
+              <td><span class="genv-guia">MXZ47630219</span></td>
+              <td>
+                <span class="genv-cliente">Pedro Sanchez</span><br>
+                <span class="genv-sub">Coyoacán, CDMX · Jorge Medina</span>
+              </td>
+              <td><span class="genv-direccion">Av. Universidad 789, Col. Coyoacán</span></td>
+              <td><span class="genv-hora">2:00 – 3:30</span></td>
+              <td><span class="genv-repartidor">Jorge Medina</span></td>
+              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+            <tr>
+              <td><span class="genv-guia">MXZ47620210</span></td>
+              <td>
+                <span class="genv-cliente">Sofia Lozano</span><br>
+                <span class="genv-sub">Javier Torres</span>
+              </td>
+              <td><span class="genv-direccion">Campestre Oriente 230, Toluca</span></td>
+              <td><span class="genv-hora">3:00 – 4:30</span></td>
+              <td><span class="genv-repartidor">Javier Torres</span></td>
+              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+            <tr>
+              <td><span class="genv-guia">MXZ47620210</span></td>
+              <td>
+                <span class="genv-cliente">Sofia Lozano</span><br>
+                <span class="genv-sub">Javier Torres</span>
+              </td>
+              <td><span class="genv-direccion">Campestre Oriente 230, Toluca</span></td>
+              <td><span class="genv-hora">3:00 – 4:30</span></td>
+              <td><span class="genv-repartidor">Javier Torres</span></td>
+              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><button class="genv-ver-btn">ver detalle</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div class="genv-paginacion">
+        <div class="genv-paginacion__info">
+          Mostrando 5 de 268 envíos
+          <span class="genv-paginacion__paginas" style="display:inline-flex; margin-left:8px;">
+            <button class="genv-pag-btn genv-pag-btn--activo">1</button>
+            <button class="genv-pag-btn">2</button>
+            <button class="genv-pag-btn">3</button>
+            <button class="genv-pag-btn">4</button>
+            <button class="genv-pag-btn">5</button>
+            <button class="genv-pag-btn genv-pag-btn--dots">⋯</button>
+          </span>
+        </div>
+        <div class="genv-paginacion__paginas">
+          <button class="genv-pag-btn">&lt;</button>
+          <button class="genv-pag-btn genv-pag-btn--activo">1</button>
+          <button class="genv-pag-btn">2</button>
+          <button class="genv-pag-btn">3</button>
+          <button class="genv-pag-btn">&gt;</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
+</body>
+</html>

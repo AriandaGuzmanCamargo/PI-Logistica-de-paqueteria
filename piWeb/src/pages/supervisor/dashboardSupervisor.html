@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Supervisor - Sistema de Logística</title>
+  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
+  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
+</head>
+<body>
+  <div class="tablero-operador tablero-operador--sin-sidebar">
+
+    <!-- Contenedor del menú hamburguesa (se carga desde menuSupervisor.html) -->
+    <div id="menuContainer" class="menu-overlay"></div>
+    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+
+    <main class="panel-principal panel-principal--full">
+      <header class="barra-superior barra-superior--con-logo">
+        <div class="barra-superior__left">
+          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-logo">
+            <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+          </div>
+          <h1 class="barra-superior__titulo">Supervisor</h1>
+        </div>
+        <div class="barra-superior__perfil">
+          <span class="badge-servicio">
+            <span class="header-sv__punto-verde"></span> En servicio
+          </span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
+          <span class="barra-superior__chevron">&#9662;</span>
+        </div>
+      </header>
+
+      <!-- Bienvenida -->
+      <section class="bienvenida-sv">
+        <img src="/piWeb/images/usuario.png" alt="" class="bienvenida-sv__avatar" />
+        <div class="bienvenida-sv__info">
+          <h2>Bienvenido, <strong>Juan Pérez</strong></h2>
+          <span class="bienvenida-sv__estado"><span class="header-sv__punto-verde"></span> En servicio</span>
+        </div>
+      </section>
+
+      <!-- Tarjetas resumen -->
+      <section class="resumen-sv">
+        <article class="tarjeta-sv tarjeta-sv--azul">
+          <span class="tarjeta-sv__icono">&#128230;</span>
+          <div>
+            <p class="tarjeta-sv__numero">148</p>
+            <p class="tarjeta-sv__label">Entregas hoy</p>
+          </div>
+        </article>
+        <article class="tarjeta-sv tarjeta-sv--amarillo">
+          <span class="tarjeta-sv__icono">&#9888;</span>
+          <div>
+            <p class="tarjeta-sv__numero">32</p>
+            <p class="tarjeta-sv__label">Pendientes</p>
+          </div>
+        </article>
+        <article class="tarjeta-sv tarjeta-sv--rojo">
+          <span class="tarjeta-sv__icono">&#9650;</span>
+          <div>
+            <p class="tarjeta-sv__numero">8</p>
+            <p class="tarjeta-sv__label">Retrasadas</p>
+          </div>
+        </article>
+        <article class="tarjeta-sv tarjeta-sv--gris">
+          <span class="tarjeta-sv__icono">&#128187;</span>
+          <div>
+            <p class="tarjeta-sv__numero">5</p>
+            <p class="tarjeta-sv__label">Incidencias</p>
+          </div>
+        </article>
+        <article class="tarjeta-sv tarjeta-sv--morado">
+          <span class="tarjeta-sv__icono">&#128101;</span>
+          <div>
+            <p class="tarjeta-sv__numero">-</p>
+            <p class="tarjeta-sv__label">Entregados</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Contenido grid: lista envíos + panel derecho -->
+      <section class="contenido-sv">
+
+        <!-- Panel izquierdo: envíos activos -->
+        <div class="envios-sv">
+          <div class="envios-sv__header">
+            <h2>Envíos Activos</h2>
+            <div class="envios-sv__buscar-wrap">
+              <input type="text" placeholder="Buscar dirección o número de guía" class="envios-sv__busqueda" />
+              <button class="envios-sv__btn-todos">Todos <span>&#8964;</span></button>
+            </div>
+          </div>
+
+          <!-- Filtros -->
+          <div class="envios-sv__filtros">
+            <button class="filtro-sv filtro-sv--activo">Todos <span>&#8964;</span></button>
+            <button class="filtro-sv"><span class="filtro-sv__dot filtro-sv__dot--amarillo"></span> Pendiente</button>
+            <button class="filtro-sv"><span class="filtro-sv__dot filtro-sv__dot--verde"></span> En ruta</button>
+            <button class="filtro-sv"><span class="filtro-sv__dot filtro-sv__dot--rojo"></span> Retrasado <span>&#8964;</span></button>
+            <button class="filtro-sv"><span class="filtro-sv__dot filtro-sv__dot--teal"></span> Entregado <span>&#8964;</span></button>
+            <button class="filtro-sv filtro-sv--more">&#8943;</button>
+          </div>
+
+          <!-- Lista de envíos -->
+          <div class="envios-sv__lista">
+
+            <div class="envio-card">
+              <div class="envio-card__top">
+                <div class="envio-card__info">
+                  <span class="envio-card__id">PAK123456789</span>
+                  <span class="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                </div>
+                <span class="envio-card__horario">10:00 – 11:00</span>
+              </div>
+              <div class="envio-card__body">
+                <p class="envio-card__nombre"><strong>Ana Martínez</strong> · Col. Roma Norte, CDMX</p>
+                <p class="envio-card__repartidor">Luis Garcia · Luis Garcia</p>
+              </div>
+              <div class="envio-card__footer">
+                <span class="envio-card__estado envio-card__estado--pendiente">&#9679; Pendiente</span>
+                <div class="envio-card__acciones">
+                  <button class="envio-card__btn">Ver detalle</button>
+                  <button class="envio-card__btn">Reasignar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="envio-card">
+              <div class="envio-card__top">
+                <div class="envio-card__info">
+                  <span class="envio-card__id">MX267584321</span>
+                  <span class="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                </div>
+                <span class="envio-card__horario">12:00 – 1:00</span>
+              </div>
+              <div class="envio-card__body">
+                <p class="envio-card__nombre"><strong>Carlos Ramírez</strong> · Av. Tecnológico 210,</p>
+                <p class="envio-card__repartidor">Javier Torres · Javier Torres</p>
+              </div>
+              <div class="envio-card__footer">
+                <span class="envio-card__estado envio-card__estado--enruta">&#10004; En ruta</span>
+                <div class="envio-card__acciones">
+                  <button class="envio-card__btn">Ver detalle</button>
+                  <button class="envio-card__btn">Reasignar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="envio-card">
+              <div class="envio-card__top">
+                <div class="envio-card__info">
+                  <span class="envio-card__id">PAK987654321</span>
+                  <span class="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                </div>
+                <span class="envio-card__horario">1:00 – 3:00</span>
+              </div>
+              <div class="envio-card__body">
+                <p class="envio-card__nombre"><strong>Laura Gómez</strong> · Av. Revolución 456, Col. Del Valle, CDMX</p>
+                <p class="envio-card__repartidor">CDMX · Ricardo Muñoz</p>
+              </div>
+              <div class="envio-card__footer">
+                <span class="envio-card__estado envio-card__estado--retrasado">&#9650; Retrasado</span>
+                <div class="envio-card__acciones">
+                  <button class="envio-card__btn">Ver detalle</button>
+                  <button class="envio-card__btn">Reasignar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="envio-card">
+              <div class="envio-card__top">
+                <div class="envio-card__info">
+                  <span class="envio-card__id">MX247360219</span>
+                  <span class="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                </div>
+                <span class="envio-card__horario">2:00 – 3:00</span>
+              </div>
+              <div class="envio-card__body">
+                <p class="envio-card__nombre"><strong>Pedro Sánchez</strong> · Av. Universidad 789, Col. Coyoacán, CDMX</p>
+                <p class="envio-card__repartidor">CDMX · Jorge Medina</p>
+              </div>
+              <div class="envio-card__footer">
+                <span class="envio-card__estado envio-card__estado--entregado">&#10004; Entregado</span>
+                <div class="envio-card__acciones">
+                  <button class="envio-card__btn">Ver detalle</button>
+                  <button class="envio-card__btn">Reasignar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="envio-card">
+              <div class="envio-card__top">
+                <div class="envio-card__info">
+                  <span class="envio-card__id">MX247260219</span>
+                  <span class="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                </div>
+                <span class="envio-card__horario">3:00 – 4:30</span>
+              </div>
+              <div class="envio-card__body">
+                <p class="envio-card__nombre"><strong>Sofía Lozano</strong> · Centro Oriente 230</p>
+                <p class="envio-card__repartidor">CDMX · José Herrera</p>
+              </div>
+              <div class="envio-card__footer">
+                <span class="envio-card__estado envio-card__estado--entregado">&#10004; Entregado</span>
+                <div class="envio-card__acciones">
+                  <button class="envio-card__btn">Ver detalle</button>
+                  <button class="envio-card__btn">Reasignar</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Panel derecho: estadísticas -->
+        <aside class="stats-sv">
+          <div class="stats-sv__header">
+            <button class="stats-sv__filtro-btn">Filtro <span>&#8964;</span></button>
+            <button class="stats-sv__export-btn">&#128196; Exportar PDF <span>&#8964;</span></button>
+          </div>
+
+          <div class="stats-sv__card">
+            <p class="stats-sv__label">Entregas completadas hoy</p>
+            <p class="stats-sv__valor">116</p>
+          </div>
+          <div class="stats-sv__card">
+            <p class="stats-sv__label">Tiempo promedio</p>
+            <p class="stats-sv__valor">42 min</p>
+          </div>
+          <div class="stats-sv__card">
+            <p class="stats-sv__label">Cumplimiento</p>
+            <p class="stats-sv__valor">93%</p>
+          </div>
+
+          <div class="stats-sv__card stats-sv__card--resumen">
+            <p class="stats-sv__label">Entregas completadas hoy</p>
+            <p class="stats-sv__valor">116</p>
+            <p class="stats-sv__cumpl">Cumplimiento &#10004;</p>
+            <button class="stats-sv__reporte-btn">Ver reporte completo</button>
+          </div>
+        </aside>
+      </section>
+
+    </main>
+
+  </div>
+  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
+</body>
+</html>

@@ -1,42 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Incidencias - Operador Logístico</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/incidencias.css">
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+import React from 'react';
+import MenuOperador from './menuOperador.jsx';
 
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+export default function Incidencias() {
+  return (
+    <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <div id="menuContainer" className="menu-overlay"><MenuOperador /></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
+
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Incidencias</h1>
+          <h1 className="barra-superior__titulo">Incidencias</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">▾</span>
+        <div className="barra-superior__perfil">
+          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">▾</span>
         </div>
       </header>
 
-      <section class="modulo-incidencias">
-        <div class="incidencias-encabezado">
-          <span class="incidencias-encabezado__icono">▣</span>
+      <section className="modulo-incidencias">
+        <div className="incidencias-encabezado">
+          <span className="incidencias-encabezado__icono">▣</span>
           <h2>Incidencias</h2>
         </div>
 
-        <div class="tabla-incidencias">
+        <div className="tabla-incidencias">
           <table>
             <thead>
               <tr>
@@ -50,9 +45,9 @@
             <tbody>
               <tr>
                 <td><strong>PAK00281356</strong></td>
-                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td><span className="estado-incidencia">En Incidencia</span></td>
                 <td>
-                  <div class="repartidor-celda">
+                  <div className="repartidor-celda">
                     <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
                     <span>Javier Torres</span>
                   </div>
@@ -62,9 +57,9 @@
               </tr>
               <tr>
                 <td><strong>PAK00271234</strong></td>
-                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td><span className="estado-incidencia">En Incidencia</span></td>
                 <td>
-                  <div class="repartidor-celda">
+                  <div className="repartidor-celda">
                     <img src="/piWeb/images/usuario.png" alt="Juan Morales" />
                     <span>Juan Morales</span>
                   </div>
@@ -74,9 +69,9 @@
               </tr>
               <tr>
                 <td><strong>PAK00236290</strong></td>
-                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td><span className="estado-incidencia">En Incidencia</span></td>
                 <td>
-                  <div class="repartidor-celda">
+                  <div className="repartidor-celda">
                     <img src="/piWeb/images/usuario.png" alt="Miguel López" />
                     <span>Miguel López</span>
                   </div>
@@ -86,9 +81,9 @@
               </tr>
               <tr>
                 <td><strong>PAK00196745</strong></td>
-                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td><span className="estado-incidencia">En Incidencia</span></td>
                 <td>
-                  <div class="repartidor-celda">
+                  <div className="repartidor-celda">
                     <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
                     <span>Javier Torres</span>
                   </div>
@@ -98,9 +93,9 @@
               </tr>
               <tr>
                 <td><strong>PAK00193210</strong></td>
-                <td><span class="estado-incidencia">En Incidencia</span></td>
+                <td><span className="estado-incidencia">En Incidencia</span></td>
                 <td>
-                  <div class="repartidor-celda">
+                  <div className="repartidor-celda">
                     <img src="/piWeb/images/usuario.png" alt="Javier Torres" />
                     <span>Javier Torres</span>
                   </div>
@@ -114,6 +109,5 @@
       </section>
     </main>
   </div>
-  <script src="/piWeb/src/pages/operadorLogistico/menuOperador.js"></script>
-</body>
-</html>
+  );
+}

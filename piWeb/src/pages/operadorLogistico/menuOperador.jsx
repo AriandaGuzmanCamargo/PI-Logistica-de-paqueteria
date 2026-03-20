@@ -1,0 +1,84 @@
+import React, { useEffect } from 'react';
+
+export default function MenuOperador() {
+  useEffect(() => {
+    const btnMenu = document.getElementById('btnMenu');
+    const container = document.getElementById('menuContainer');
+    const backdrop = document.getElementById('menuBackdrop');
+    const btnCerrar = container?.querySelector('.menu-hamburguesa__cerrar');
+
+    function abrirMenu() {
+      container?.classList.add('menu-overlay--abierto');
+      backdrop?.classList.add('menu-overlay__backdrop--visible');
+    }
+    function cerrarMenu() {
+      container?.classList.remove('menu-overlay--abierto');
+      backdrop?.classList.remove('menu-overlay__backdrop--visible');
+    }
+    function toggleMenu() {
+      container?.classList.contains('menu-overlay--abierto') ? cerrarMenu() : abrirMenu();
+    }
+
+    btnMenu?.addEventListener('click', toggleMenu);
+    btnCerrar?.addEventListener('click', cerrarMenu);
+    backdrop?.addEventListener('click', cerrarMenu);
+
+    const current = window.location.pathname;
+    container?.querySelectorAll('.menu-hamburguesa__item').forEach(item => {
+      if (item.getAttribute('href') === current) {
+        item.classList.add('menu-hamburguesa__item--activo');
+      }
+    });
+
+    return () => {
+      btnMenu?.removeEventListener('click', toggleMenu);
+      btnCerrar?.removeEventListener('click', cerrarMenu);
+      backdrop?.removeEventListener('click', cerrarMenu);
+    };
+  }, []);
+
+  return (
+    <nav className="menu-hamburguesa">
+  <div className="menu-hamburguesa__cabecera">
+    <div className="menu-hamburguesa__logo">
+      <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+    </div>
+    <h2 className="menu-hamburguesa__marca">METZVIA</h2>
+    <button className="menu-hamburguesa__cerrar" aria-label="Cerrar menu">&times;</button>
+  </div>
+  <div className="menu-hamburguesa__links">
+    <a href="/operador/dashboard" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#9783;</span>
+      Dashboard
+    </a>
+    <a href="/operador/envios" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#9993;</span>
+      Envios
+    </a>
+    <a href="/operador/registrar-paquete" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#9744;</span>
+      Registrar Paquete
+    </a>
+    <a href="/operador/dashboard" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#8981;</span>
+      Escaneo
+    </a>
+    <a href="/operador/incidencias" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#9888;</span>
+      Incidencias
+      <span className="badge">4</span>
+    </a>
+    <a href="/operador/mi-cuenta" className="menu-hamburguesa__item">
+      <span className="menu-hamburguesa__icono-txt">&#9787;</span>
+      Mi Cuenta
+    </a>
+  </div>
+  <div className="menu-hamburguesa__pie">
+    <a href="/login" className="menu-hamburguesa__item menu-hamburguesa__item--salir">
+      <span className="menu-hamburguesa__icono-txt">&#10154;</span>
+      Salir
+    </a>
+  </div>
+</nav>
+  );
+}

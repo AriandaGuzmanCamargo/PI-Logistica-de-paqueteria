@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detalle del Envío - Supervisor</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
-  <style>
+import React from 'react';
+
+export default function DetalleEnvioSupervisor() {
+  return (
+    <>
+      <style>{`
     /* ── Detalle del Envío ── */
     .det-header {
       display: flex;
@@ -392,179 +389,177 @@
       .det-barra-inf { flex-direction: column; align-items: stretch; }
       .det-barra-btn { justify-content: center; }
     }
-  </style>
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+  `}</style>
+      <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <!-- Contenedor del menú hamburguesa -->
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+    {/* Contenedor del menú hamburguesa */}
+    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Supervisor</h1>
+          <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <span class="badge-servicio">
-            <span class="header-sv__punto-verde"></span> En servicio
+        <div className="barra-superior__perfil">
+          <span className="badge-servicio">
+            <span className="header-sv__punto-verde"></span> En servicio
           </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">&#9662;</span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
-      <!-- Encabezado -->
-      <div class="det-header">
-        <h2 class="det-header__titulo">Detalle del Envío</h2>
-        <span class="det-header__guia">PAK123456789</span>
+      {/* Encabezado */}
+      <div className="det-header">
+        <h2 className="det-header__titulo">Detalle del Envío</h2>
+        <span className="det-header__guia">PAK123456789</span>
       </div>
 
-      <!-- Layout 2 columnas -->
-      <div class="det-layout">
+      {/* Layout 2 columnas */}
+      <div className="det-layout">
 
-        <!-- Col izquierda fila 1: Información del Paquete -->
-        <div class="det-card">
-          <h3 class="det-card__titulo">Información del Paquete</h3>
-          <div class="det-paq__guia-row">
-            <span class="det-paq__guia-icono">&#128230;</span>
-            <span class="det-paq__guia">PAK123456789</span>
+        {/* Col izquierda fila 1: Información del Paquete */}
+        <div className="det-card">
+          <h3 className="det-card__titulo">Información del Paquete</h3>
+          <div className="det-paq__guia-row">
+            <span className="det-paq__guia-icono">&#128230;</span>
+            <span className="det-paq__guia">PAK123456789</span>
           </div>
-          <div class="det-paq__campo">
-            <span class="det-paq__label">Cliente</span>
-            <span class="det-paq__valor">Ana Martínez</span>
+          <div className="det-paq__campo">
+            <span className="det-paq__label">Cliente</span>
+            <span className="det-paq__valor">Ana Martínez</span>
           </div>
-          <div class="det-paq__campo">
-            <span class="det-paq__label">Teléfono</span>
-            <span class="det-paq__valor">(55) 1234 5678</span>
+          <div className="det-paq__campo">
+            <span className="det-paq__label">Teléfono</span>
+            <span className="det-paq__valor">(55) 1234 5678</span>
           </div>
-          <div class="det-paq__campo">
-            <span class="det-paq__label">Dirección</span>
-            <span class="det-paq__valor">Col. Roma Norte, CDMX</span>
+          <div className="det-paq__campo">
+            <span className="det-paq__label">Dirección</span>
+            <span className="det-paq__valor">Col. Roma Norte, CDMX</span>
           </div>
-          <div class="det-paq__campo">
-            <span class="det-paq__label">Peso</span>
-            <span class="det-paq__valor">2.6 kg</span>
+          <div className="det-paq__campo">
+            <span className="det-paq__label">Peso</span>
+            <span className="det-paq__valor">2.6 kg</span>
           </div>
-          <div class="det-paq__campo">
-            <span class="det-paq__label">Dimensiones</span>
-            <span class="det-paq__valor">30 cm x 25 cm x 20 cm</span>
+          <div className="det-paq__campo">
+            <span className="det-paq__label">Dimensiones</span>
+            <span className="det-paq__valor">30 cm x 25 cm x 20 cm</span>
           </div>
         </div>
 
-        <!-- Col derecha fila 1: Estado del Envío (timeline) -->
-        <div class="det-card">
-          <h3 class="det-card__titulo">Estado del Envío</h3>
-          <div class="det-timeline">
-            <div class="det-timeline__step">
-              <div class="det-timeline__circle det-timeline__circle--done">&#10004;</div>
-              <span class="det-timeline__label">Registrado</span>
-              <span class="det-timeline__fecha">24 abr 8:00 AM</span>
+        {/* Col derecha fila 1: Estado del Envío (timeline) */}
+        <div className="det-card">
+          <h3 className="det-card__titulo">Estado del Envío</h3>
+          <div className="det-timeline">
+            <div className="det-timeline__step">
+              <div className="det-timeline__circle det-timeline__circle--done">&#10004;</div>
+              <span className="det-timeline__label">Registrado</span>
+              <span className="det-timeline__fecha">24 abr 8:00 AM</span>
             </div>
-            <div class="det-timeline__step">
-              <div class="det-timeline__circle det-timeline__circle--active">&#10004;</div>
-              <span class="det-timeline__label det-timeline__label--active">En almacén</span>
-              <span class="det-timeline__fecha">24 abr 8:45 AM</span>
+            <div className="det-timeline__step">
+              <div className="det-timeline__circle det-timeline__circle--active">&#10004;</div>
+              <span className="det-timeline__label det-timeline__label--active">En almacén</span>
+              <span className="det-timeline__fecha">24 abr 8:45 AM</span>
             </div>
-            <div class="det-timeline__step">
-              <div class="det-timeline__circle det-timeline__circle--done">&#10004;</div>
-              <span class="det-timeline__label det-timeline__label--active">En ruta</span>
-              <span class="det-timeline__fecha">24 abr 9:20 AM</span>
+            <div className="det-timeline__step">
+              <div className="det-timeline__circle det-timeline__circle--done">&#10004;</div>
+              <span className="det-timeline__label det-timeline__label--active">En ruta</span>
+              <span className="det-timeline__fecha">24 abr 9:20 AM</span>
             </div>
-            <div class="det-timeline__step">
-              <div class="det-timeline__circle det-timeline__circle--done">&#10004;</div>
-              <span class="det-timeline__label">Entregado</span>
-              <span class="det-timeline__fecha">24 abr 10:30 AM</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Col izquierda fila 2: Estado del Envío (lista) -->
-        <div class="det-card">
-          <h3 class="det-card__titulo">Estado del Envío</h3>
-          <div class="det-estado-lista">
-            <div class="det-estado-item">
-              <span class="det-estado-item__check det-estado-item__check--done">&#10004;</span>
-              <span class="det-estado-item__label">Registrado</span>
-            </div>
-            <div class="det-estado-item det-estado-item--line">
-              <span class="det-estado-item__check det-estado-item__check--done">&#10004;</span>
-              <span class="det-estado-item__label">En almacén</span>
-            </div>
-            <div class="det-estado-item det-estado-item--line">
-              <span class="det-estado-item__check det-estado-item__check--done">&#10004;</span>
-              <span class="det-estado-item__label det-estado-item__label--active">En ruta</span>
-            </div>
-            <div class="det-estado-item det-estado-item--line">
-              <span class="det-estado-item__check det-estado-item__check--done">&#10004;</span>
-              <span class="det-estado-item__label">Entregado</span>
+            <div className="det-timeline__step">
+              <div className="det-timeline__circle det-timeline__circle--done">&#10004;</div>
+              <span className="det-timeline__label">Entregado</span>
+              <span className="det-timeline__fecha">24 abr 10:30 AM</span>
             </div>
           </div>
         </div>
 
-        <!-- Col derecha fila 2: Repartidor Asignado -->
-        <div class="det-card">
-          <h3 class="det-card__titulo">Repartidor Asignado</h3>
-          <div class="det-rep">
-            <img src="/piWeb/images/usuario.png" alt="Luis García" class="det-rep__foto" />
-            <div class="det-rep__info">
-              <p class="det-rep__nombre">Luis García</p>
-              <p class="det-rep__zona">Centro</p>
-              <span class="det-rep__badge">Centro</span>
+        {/* Col izquierda fila 2: Estado del Envío (lista) */}
+        <div className="det-card">
+          <h3 className="det-card__titulo">Estado del Envío</h3>
+          <div className="det-estado-lista">
+            <div className="det-estado-item">
+              <span className="det-estado-item__check det-estado-item__check--done">&#10004;</span>
+              <span className="det-estado-item__label">Registrado</span>
             </div>
-            <div class="det-rep__acciones">
-              <button class="det-rep-btn det-rep-btn--reasignar">
-                <span class="det-rep-btn__icono">&#128230;</span> Reasignar repartidor
+            <div className="det-estado-item det-estado-item--line">
+              <span className="det-estado-item__check det-estado-item__check--done">&#10004;</span>
+              <span className="det-estado-item__label">En almacén</span>
+            </div>
+            <div className="det-estado-item det-estado-item--line">
+              <span className="det-estado-item__check det-estado-item__check--done">&#10004;</span>
+              <span className="det-estado-item__label det-estado-item__label--active">En ruta</span>
+            </div>
+            <div className="det-estado-item det-estado-item--line">
+              <span className="det-estado-item__check det-estado-item__check--done">&#10004;</span>
+              <span className="det-estado-item__label">Entregado</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Col derecha fila 2: Repartidor Asignado */}
+        <div className="det-card">
+          <h3 className="det-card__titulo">Repartidor Asignado</h3>
+          <div className="det-rep">
+            <img src="/piWeb/images/usuario.png" alt="Luis García" className="det-rep__foto" />
+            <div className="det-rep__info">
+              <p className="det-rep__nombre">Luis García</p>
+              <p className="det-rep__zona">Centro</p>
+              <span className="det-rep__badge">Centro</span>
+            </div>
+            <div className="det-rep__acciones">
+              <button className="det-rep-btn det-rep-btn--reasignar">
+                <span className="det-rep-btn__icono">&#128230;</span> Reasignar repartidor
               </button>
-              <button class="det-rep-btn det-rep-btn--retraso">
-                <span class="det-rep-btn__icono">&#9888;</span> Marcar retraso
+              <button className="det-rep-btn det-rep-btn--retraso">
+                <span className="det-rep-btn__icono">&#9888;</span> Marcar retraso
               </button>
-              <button class="det-rep-btn det-rep-btn--incidencia">
-                <span class="det-rep-btn__icono">&#9888;</span> Reportar incidencia
+              <button className="det-rep-btn det-rep-btn--incidencia">
+                <span className="det-rep-btn__icono">&#9888;</span> Reportar incidencia
               </button>
             </div>
           </div>
-          <div class="det-vehiculo">
-            <img src="/piWeb/images/logoSinFondo.png" alt="Nissan NV200" class="det-vehiculo__img" />
-            <span class="det-vehiculo__nombre">Nissan NV200</span>
+          <div className="det-vehiculo">
+            <img src="/piWeb/images/logoSinFondo.png" alt="Nissan NV200" className="det-vehiculo__img" />
+            <span className="det-vehiculo__nombre">Nissan NV200</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Acciones Supervisor -->
-      <div class="det-card det-acciones-sv">
-        <h3 class="det-card__titulo">Acciones Supervisor</h3>
-        <div class="det-acciones-sv__btns">
-          <button class="det-sv-btn det-sv-btn--reasignar">
-            <span class="det-sv-btn__icono">&#128230;</span> Reasignar repartidor
-            <span class="det-sv-btn__flecha">&rsaquo;</span>
+      {/* Acciones Supervisor */}
+      <div className="det-card det-acciones-sv">
+        <h3 className="det-card__titulo">Acciones Supervisor</h3>
+        <div className="det-acciones-sv__btns">
+          <button className="det-sv-btn det-sv-btn--reasignar">
+            <span className="det-sv-btn__icono">&#128230;</span> Reasignar repartidor
+            <span className="det-sv-btn__flecha">&rsaquo;</span>
           </button>
-          <button class="det-sv-btn det-sv-btn--retraso">
-            <span class="det-sv-btn__icono">&#9200;</span> Marcar retraso
+          <button className="det-sv-btn det-sv-btn--retraso">
+            <span className="det-sv-btn__icono">&#9200;</span> Marcar retraso
           </button>
         </div>
       </div>
 
-      <!-- Barra inferior -->
-      <div class="det-barra-inf">
-        <a href="/piWeb/src/pages/supervisor/enviosSupervisor.html" class="det-barra-btn det-barra-btn--volver">
+      {/* Barra inferior */}
+      <div className="det-barra-inf">
+        <a href="/piWeb/src/pages/supervisor/enviosSupervisor.html" className="det-barra-btn det-barra-btn--volver">
           &lsaquo; Volver
         </a>
-        <button class="det-barra-btn det-barra-btn--detalles">
-          <span class="det-barra-btn__icono">&#9776;</span> Detalles
+        <button className="det-barra-btn det-barra-btn--detalles">
+          <span className="det-barra-btn__icono">&#9776;</span> Detalles
         </button>
       </div>
 
     </main>
   </div>
-  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
-</body>
-</html>
+    </>
+  );
+}

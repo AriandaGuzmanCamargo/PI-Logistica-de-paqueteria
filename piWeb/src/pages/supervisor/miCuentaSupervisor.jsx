@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Cuenta - Supervisor</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
-  <style>
+import React from 'react';
+
+export default function MiCuentaSupervisor() {
+  return (
+    <>
+      <style>{`
     /* ── Contenido Mi Cuenta ── */
     .perfil-contenedor {
       display: flex;
@@ -183,84 +180,82 @@
       .perfil-input-row { flex-direction: column; align-items: flex-start; }
       .perfil-input-row label { min-width: auto; }
     }
-  </style>
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+  `}</style>
+      <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <!-- Contenedor del menú hamburguesa (se carga desde menuSupervisor.html) -->
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+    {/* Contenedor del menú hamburguesa (se carga desde menuSupervisor.html) */}
+    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Supervisor</h1>
+          <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <span class="badge-servicio">
-            <span class="header-sv__punto-verde"></span> En servicio
+        <div className="barra-superior__perfil">
+          <span className="badge-servicio">
+            <span className="header-sv__punto-verde"></span> En servicio
           </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">&#9662;</span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
-      <!-- Contenido Mi Cuenta -->
-      <section class="perfil-contenedor">
-        <div class="perfil-card">
-          <a href="/piWeb/src/pages/supervisor/dashboardSupervisor.html" class="perfil-card__cerrar">&times;</a>
+      {/* Contenido Mi Cuenta */}
+      <section className="perfil-contenedor">
+        <div className="perfil-card">
+          <a href="/piWeb/src/pages/supervisor/dashboardSupervisor.html" className="perfil-card__cerrar">&times;</a>
 
-          <div class="perfil-avatar-wrap">
-            <img src="/piWeb/images/usuario.png" alt="Roberto Salazar" class="perfil-avatar" />
+          <div className="perfil-avatar-wrap">
+            <img src="/piWeb/images/usuario.png" alt="Roberto Salazar" className="perfil-avatar" />
           </div>
-          <h2 class="perfil-nombre">Roberto Salazar</h2>
-          <p class="perfil-rol"><span class="perfil-rol__dot"></span> Supervisor</p>
+          <h2 className="perfil-nombre">Roberto Salazar</h2>
+          <p className="perfil-rol"><span className="perfil-rol__dot"></span> Supervisor</p>
 
-          <div class="perfil-datos">
-            <div class="perfil-datos__left">
-              <p class="perfil-dato"><strong>Trabajo:</strong> Supervisor</p>
-              <p class="perfil-dato"><strong>Zona asignada:</strong> <span class="perfil-dato__pin">&#128205;</span> Centro</p>
-              <p class="perfil-dato"><strong>Correo:</strong> roberto.salazar@metzvia.com</p>
-              <p class="perfil-dato"><strong>Teléfono:</strong> +32 55 1234 5678</p>
+          <div className="perfil-datos">
+            <div className="perfil-datos__left">
+              <p className="perfil-dato"><strong>Trabajo:</strong> Supervisor</p>
+              <p className="perfil-dato"><strong>Zona asignada:</strong> <span className="perfil-dato__pin">&#128205;</span> Centro</p>
+              <p className="perfil-dato"><strong>Correo:</strong> roberto.salazar@metzvia.com</p>
+              <p className="perfil-dato"><strong>Teléfono:</strong> +32 55 1234 5678</p>
             </div>
-            <div class="perfil-datos__right">
-              <button class="perfil-btn">
-                <span class="perfil-btn__icon">&#9998;</span> Editar perfil
+            <div className="perfil-datos__right">
+              <button className="perfil-btn">
+                <span className="perfil-btn__icon">&#9998;</span> Editar perfil
               </button>
-              <button class="perfil-btn">
-                <span class="perfil-btn__icon">&#128274;</span> Cambiar contraseña
+              <button className="perfil-btn">
+                <span className="perfil-btn__icon">&#128274;</span> Cambiar contraseña
               </button>
             </div>
           </div>
 
-          <div class="perfil-form">
-            <div class="perfil-input-row">
+          <div className="perfil-form">
+            <div className="perfil-input-row">
               <label>Contraseña Actual</label>
               <input type="password" />
             </div>
-            <div class="perfil-input-row">
+            <div className="perfil-input-row">
               <label>Nueva Contraseña</label>
               <input type="password" />
             </div>
-            <div class="perfil-input-row">
+            <div className="perfil-input-row">
               <label>Confirmar Contraseña</label>
               <input type="password" />
             </div>
           </div>
 
-          <button class="perfil-guardar">Guardar Cambios</button>
+          <button className="perfil-guardar">Guardar Cambios</button>
         </div>
       </section>
 
     </main>
   </div>
-  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
-</body>
-</html>
+    </>
+  );
+}

@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Incidencias - Supervisor</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
-  <style>
+import React from 'react';
+
+export default function IncidenciasSupervisor() {
+  return (
+    <>
+      <style>{`
     /* ── Gestión de Incidencias ── */
     .ginc-header {
       display: flex;
@@ -254,60 +251,58 @@
       .ginc-buscar { min-width: auto; }
       .ginc-paginacion { flex-direction: column; align-items: flex-start; }
     }
-  </style>
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+  `}</style>
+      <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <!-- Contenedor del menú hamburguesa -->
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+    {/* Contenedor del menú hamburguesa */}
+    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Supervisor</h1>
+          <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <span class="badge-servicio">
-            <span class="header-sv__punto-verde"></span> En servicio
+        <div className="barra-superior__perfil">
+          <span className="badge-servicio">
+            <span className="header-sv__punto-verde"></span> En servicio
           </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">&#9662;</span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
-      <!-- Contenido Gestión de Incidencias -->
-      <div class="ginc-header">
-        <h2 class="ginc-titulo">Gestión de Incidencias</h2>
-        <div class="ginc-header__acciones">
-          <button class="ginc-header-btn">&#9776; Filtro &#9662;</button>
-          <button class="ginc-header-btn">&#9776; &#9873; &#9662;</button>
+      {/* Contenido Gestión de Incidencias */}
+      <div className="ginc-header">
+        <h2 className="ginc-titulo">Gestión de Incidencias</h2>
+        <div className="ginc-header__acciones">
+          <button className="ginc-header-btn">&#9776; Filtro &#9662;</button>
+          <button className="ginc-header-btn">&#9776; &#9873; &#9662;</button>
         </div>
       </div>
 
-      <!-- Barra búsqueda + filtros -->
-      <div class="ginc-barra">
-        <div class="ginc-buscar">
-          <span class="ginc-buscar__icono">&#128269;</span>
+      {/* Barra búsqueda + filtros */}
+      <div className="ginc-barra">
+        <div className="ginc-buscar">
+          <span className="ginc-buscar__icono">&#128269;</span>
           <input type="text" placeholder="Buscar incidencia..." />
         </div>
-        <button class="ginc-chip ginc-chip--pendiente">&#128203; Pendiente <span class="ginc-chip__count">5</span></button>
-        <button class="ginc-chip ginc-chip--progreso">&#10004; En progreso <span class="ginc-chip__count">3</span></button>
-        <button class="ginc-chip ginc-chip--resuelto">&#10004; Resuelto <span class="ginc-chip__count">14</span></button>
-        <button class="ginc-filtro-btn">&#9776; Filtro &#9662;</button>
+        <button className="ginc-chip ginc-chip--pendiente">&#128203; Pendiente <span className="ginc-chip__count">5</span></button>
+        <button className="ginc-chip ginc-chip--progreso">&#10004; En progreso <span className="ginc-chip__count">3</span></button>
+        <button className="ginc-chip ginc-chip--resuelto">&#10004; Resuelto <span className="ginc-chip__count">14</span></button>
+        <button className="ginc-filtro-btn">&#9776; Filtro &#9662;</button>
       </div>
 
-      <!-- Tabla de incidencias -->
-      <div class="ginc-tabla-wrap">
-        <h3 class="ginc-seccion-titulo">Información del Envio</h3>
-        <table class="ginc-tabla">
+      {/* Tabla de incidencias */}
+      <div className="ginc-tabla-wrap">
+        <h3 className="ginc-seccion-titulo">Información del Envio</h3>
+        <table className="ginc-tabla">
           <thead>
             <tr>
               <th>Guía</th>
@@ -319,121 +314,121 @@
           </thead>
           <tbody>
             <tr>
-              <td><span class="ginc-guia">PAK123456789</span></td>
+              <td><span className="ginc-guia">PAK123456789</span></td>
               <td>
-                <div class="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Luis García" class="ginc-rep__foto" />
+                <div className="ginc-rep">
+                  <img src="/piWeb/images/usuario.png" alt="Luis García" className="ginc-rep__foto" />
                   <div>
-                    <p class="ginc-rep__nombre">Luis García</p>
-                    <p class="ginc-rep__zona">Centro</p>
-                    <p class="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__nombre">Luis García</p>
+                    <p className="ginc-rep__zona">Centro</p>
+                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="ginc-problema">Cliente ausente</p>
-                <p class="ginc-problema-hora">10:30 AM</p>
+                <p className="ginc-problema">Cliente ausente</p>
+                <p className="ginc-problema-hora">10:30 AM</p>
               </td>
-              <td><span class="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button class="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
+              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
             </tr>
             <tr>
-              <td><span class="ginc-guia">MXZ4567320</span></td>
+              <td><span className="ginc-guia">MXZ4567320</span></td>
               <td>
-                <div class="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Jorge Sánchez" class="ginc-rep__foto" />
+                <div className="ginc-rep">
+                  <img src="/piWeb/images/usuario.png" alt="Jorge Sánchez" className="ginc-rep__foto" />
                   <div>
-                    <p class="ginc-rep__nombre">Jorge Sánchez</p>
-                    <p class="ginc-rep__zona">Coyoacán</p>
-                    <p class="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__nombre">Jorge Sánchez</p>
+                    <p className="ginc-rep__zona">Coyoacán</p>
+                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="ginc-problema">Dirección incorrecta</p>
-                <p class="ginc-problema-hora">3:15 PM</p>
+                <p className="ginc-problema">Dirección incorrecta</p>
+                <p className="ginc-problema-hora">3:15 PM</p>
               </td>
-              <td><span class="ginc-estado ginc-estado--progreso">&#10148; En progreso</span></td>
-              <td><button class="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--progreso">&#10148; En progreso</span></td>
+              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
             </tr>
             <tr>
-              <td><span class="ginc-guia">MXZ67584321</span></td>
+              <td><span className="ginc-guia">MXZ67584321</span></td>
               <td>
-                <div class="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Carlos Ramirez" class="ginc-rep__foto" />
+                <div className="ginc-rep">
+                  <img src="/piWeb/images/usuario.png" alt="Carlos Ramirez" className="ginc-rep__foto" />
                   <div>
-                    <p class="ginc-rep__nombre">Carlos Ramirez</p>
-                    <p class="ginc-rep__zona">Norte</p>
-                    <p class="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__nombre">Carlos Ramirez</p>
+                    <p className="ginc-rep__zona">Norte</p>
+                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="ginc-problema">Retraso logístico</p>
-                <p class="ginc-problema-hora">12:45 PM</p>
+                <p className="ginc-problema">Retraso logístico</p>
+                <p className="ginc-problema-hora">12:45 PM</p>
               </td>
-              <td><span class="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button class="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
+              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
             </tr>
             <tr>
-              <td><span class="ginc-guia">MX274760219</span></td>
+              <td><span className="ginc-guia">MX274760219</span></td>
               <td>
-                <div class="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Pilar Suarez" class="ginc-rep__foto" />
+                <div className="ginc-rep">
+                  <img src="/piWeb/images/usuario.png" alt="Pilar Suarez" className="ginc-rep__foto" />
                   <div>
-                    <p class="ginc-rep__nombre">Pilar Suarez</p>
-                    <p class="ginc-rep__zona">Toluca</p>
-                    <p class="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__nombre">Pilar Suarez</p>
+                    <p className="ginc-rep__zona">Toluca</p>
+                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="ginc-problema">Paquete dañado</p>
-                <p class="ginc-problema-hora">4:45 PM</p>
+                <p className="ginc-problema">Paquete dañado</p>
+                <p className="ginc-problema-hora">4:45 PM</p>
               </td>
-              <td><span class="ginc-estado ginc-estado--resuelto">&#10004; Resuelto</span></td>
-              <td><button class="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--resuelto">&#10004; Resuelto</span></td>
+              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
             </tr>
             <tr>
-              <td><span class="ginc-guia">MX967654321</span></td>
+              <td><span className="ginc-guia">MX967654321</span></td>
               <td>
-                <div class="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Laura Gómez" class="ginc-rep__foto" />
+                <div className="ginc-rep">
+                  <img src="/piWeb/images/usuario.png" alt="Laura Gómez" className="ginc-rep__foto" />
                   <div>
-                    <p class="ginc-rep__nombre">Laura Gómez</p>
-                    <p class="ginc-rep__zona">Del Valle</p>
+                    <p className="ginc-rep__nombre">Laura Gómez</p>
+                    <p className="ginc-rep__zona">Del Valle</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="ginc-problema">Retraso logístico</p>
-                <p class="ginc-problema-hora">1:10 PM</p>
+                <p className="ginc-problema">Retraso logístico</p>
+                <p className="ginc-problema-hora">1:10 PM</p>
               </td>
-              <td><span class="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button class="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
+              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Paginación -->
-      <div class="ginc-paginacion">
-        <span class="ginc-paginacion__info">Mostrando 5 de 122 incidencias</span>
-        <div class="ginc-paginacion__paginas">
-          <button class="ginc-pag-btn">&lt;</button>
-          <button class="ginc-pag-btn ginc-pag-btn--activo">1</button>
-          <button class="ginc-pag-btn">2</button>
-          <button class="ginc-pag-btn">3</button>
-          <button class="ginc-pag-btn">4</button>
-          <button class="ginc-pag-btn">5</button>
-          <button class="ginc-pag-btn">&gt;</button>
-          <button class="ginc-pag-btn">&gt;</button>
-          <button class="ginc-pag-btn">&gt;</button>
+      {/* Paginación */}
+      <div className="ginc-paginacion">
+        <span className="ginc-paginacion__info">Mostrando 5 de 122 incidencias</span>
+        <div className="ginc-paginacion__paginas">
+          <button className="ginc-pag-btn">&lt;</button>
+          <button className="ginc-pag-btn ginc-pag-btn--activo">1</button>
+          <button className="ginc-pag-btn">2</button>
+          <button className="ginc-pag-btn">3</button>
+          <button className="ginc-pag-btn">4</button>
+          <button className="ginc-pag-btn">5</button>
+          <button className="ginc-pag-btn">&gt;</button>
+          <button className="ginc-pag-btn">&gt;</button>
+          <button className="ginc-pag-btn">&gt;</button>
         </div>
       </div>
 
     </main>
   </div>
-  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
-</body>
-</html>
+    </>
+  );
+}

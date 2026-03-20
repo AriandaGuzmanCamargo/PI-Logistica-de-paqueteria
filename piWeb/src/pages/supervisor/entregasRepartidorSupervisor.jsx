@@ -1,12 +1,99 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entregas del Repartidor - Supervisor</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
-  <style>
+import React, { useEffect } from 'react';
+
+export default function EntregasRepartidorSupervisor() {
+
+  useEffect(() => {
+    (function () {
+          var backdrop = document.getElementById('modalReasignarBackdrop');
+          var cerrarBtn = document.getElementById('modalCerrarBtn');
+          var cancelarBtn = document.getElementById('modalCancelarBtn');
+          var confirmarBtn = document.getElementById('modalConfirmarBtn');
+          var repItems = document.querySelectorAll('.modal-rep');
+          var buscarInput = document.getElementById('modalBuscarInput');
+          var modalGuia = document.getElementById('modalGuia');
+          var modalCliente = document.getElementById('modalCliente');
+          var modalDir = document.getElementById('modalDir');
+          var selectedRep = null;
+    
+          // Abrir modal desde botones "Reasignar" en la tabla
+          document.querySelectorAll('.ent-accion-btn--reasignar').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var row = btn.closest('tr');
+              if (row) {
+                var guia = row.querySelector('.td-guia');
+                var cliente = row.querySelector('.td-cliente');
+                var dir = row.querySelector('.td-dir');
+                if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
+                if (cliente) modalCliente.textContent = cliente.textContent;
+                if (dir) modalDir.textContent = dir.textContent;
+              }
+              abrirModal();
+            });
+          });
+    
+          // Botón "Reasignar paquete" de la barra inferior
+          document.querySelector('.ent-bar-btn--reasignar').addEventListener('click', function () {
+            modalGuia.textContent = '—';
+            modalCliente.textContent = 'Seleccione desde la tabla';
+            modalDir.textContent = '';
+            abrirModal();
+          });
+    
+          function abrirModal() {
+            selectedRep = null;
+            repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+            confirmarBtn.disabled = true;
+            document.getElementById('modalMotivo').value = '';
+            buscarInput.value = '';
+            filtrarRepartidores('');
+            backdrop.classList.add('modal-reasignar-backdrop--visible');
+          }
+    
+          function cerrarModal() {
+            backdrop.classList.remove('modal-reasignar-backdrop--visible');
+          }
+    
+          cerrarBtn.addEventListener('click', cerrarModal);
+          cancelarBtn.addEventListener('click', cerrarModal);
+          backdrop.addEventListener('click', function (e) {
+            if (e.target === backdrop) cerrarModal();
+          });
+    
+          // Seleccionar repartidor
+          repItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+              repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+              item.classList.add('modal-rep--selected');
+              selectedRep = item.getAttribute('data-rep');
+              confirmarBtn.disabled = false;
+            });
+          });
+    
+          // Buscar repartidor
+          buscarInput.addEventListener('input', function () {
+            filtrarRepartidores(buscarInput.value.toLowerCase());
+          });
+    
+          function filtrarRepartidores(query) {
+            repItems.forEach(function (item) {
+              var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
+              var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
+              item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
+            });
+          }
+    
+          // Confirmar
+          confirmarBtn.addEventListener('click', function () {
+            if (!selectedRep) return;
+            var repName = document.querySelector('.modal-rep--selected .modal-rep__nombre').textContent;
+            alert('Paquete reasignado exitosamente a ' + repName);
+            cerrarModal();
+          });
+        })();
+  }, []);
+  return (
+    <>
+      <style>{`
     /* ── Entregas del Repartidor ── */
     .ent-header {
       display: flex;
@@ -609,85 +696,83 @@
       .ent-resumen { flex-direction: column; }
       .ent-stat { min-width: auto; }
     }
-  </style>
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+  `}</style>
+      <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <!-- Contenedor del menú hamburguesa -->
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+    {/* Contenedor del menú hamburguesa */}
+    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Supervisor</h1>
+          <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <span class="badge-servicio">
-            <span class="header-sv__punto-verde"></span> En servicio
+        <div className="barra-superior__perfil">
+          <span className="badge-servicio">
+            <span className="header-sv__punto-verde"></span> En servicio
           </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">&#9662;</span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
-      <!-- Encabezado -->
-      <div class="ent-header">
-        <h2 class="ent-header__titulo">Entregas del Repartidor</h2>
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" class="ent-header__volver">
+      {/* Encabezado */}
+      <div className="ent-header">
+        <h2 className="ent-header__titulo">Entregas del Repartidor</h2>
+        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-header__volver">
           &lsaquo; Volver
         </a>
       </div>
 
-      <!-- Info del repartidor + estadísticas -->
-      <div class="ent-driver">
-        <img src="/piWeb/images/usuario.png" alt="Luis García" class="ent-driver__foto" />
-        <div class="ent-driver__info">
-          <p class="ent-driver__nombre">Luis García</p>
-          <p class="ent-driver__zona-text">Centro</p>
-          <div class="ent-driver__badges">
-            <span class="ent-badge ent-badge--zona">Centro</span>
-            <span class="ent-badge ent-badge--vehiculo">Nissan NV200</span>
+      {/* Info del repartidor + estadísticas */}
+      <div className="ent-driver">
+        <img src="/piWeb/images/usuario.png" alt="Luis García" className="ent-driver__foto" />
+        <div className="ent-driver__info">
+          <p className="ent-driver__nombre">Luis García</p>
+          <p className="ent-driver__zona-text">Centro</p>
+          <div className="ent-driver__badges">
+            <span className="ent-badge ent-badge--zona">Centro</span>
+            <span className="ent-badge ent-badge--vehiculo">Nissan NV200</span>
           </div>
         </div>
-        <div class="ent-resumen">
-          <div class="ent-stat">
-            <p class="ent-stat__numero ent-stat__numero--azul">13</p>
-            <p class="ent-stat__label">Entregas<br>asignadas</p>
+        <div className="ent-resumen">
+          <div className="ent-stat">
+            <p className="ent-stat__numero ent-stat__numero--azul">13</p>
+            <p className="ent-stat__label">Entregas<br />asignadas</p>
           </div>
-          <div class="ent-stat">
-            <p class="ent-stat__numero ent-stat__numero--verde">8</p>
-            <p class="ent-stat__label">Entregas<br>completadas</p>
+          <div className="ent-stat">
+            <p className="ent-stat__numero ent-stat__numero--verde">8</p>
+            <p className="ent-stat__label">Entregas<br />completadas</p>
           </div>
-          <div class="ent-stat">
-            <p class="ent-stat__numero ent-stat__numero--naranja">4</p>
-            <p class="ent-stat__label">Pendientes</p>
+          <div className="ent-stat">
+            <p className="ent-stat__numero ent-stat__numero--naranja">4</p>
+            <p className="ent-stat__label">Pendientes</p>
           </div>
-          <div class="ent-stat">
-            <p class="ent-stat__numero ent-stat__numero--rojo">1</p>
-            <p class="ent-stat__label">Retrasadas</p>
+          <div className="ent-stat">
+            <p className="ent-stat__numero ent-stat__numero--rojo">1</p>
+            <p className="ent-stat__label">Retrasadas</p>
           </div>
         </div>
       </div>
 
-      <!-- Estado -->
-      <p class="ent-estado-row">
-        <strong>Estado</strong>&nbsp;&nbsp;<span class="ent-estado-valor">En ruta</span>
+      {/* Estado */}
+      <p className="ent-estado-row">
+        <strong>Estado</strong>&nbsp;&nbsp;<span className="ent-estado-valor">En ruta</span>
       </p>
 
-      <!-- Tabla de entregas -->
-      <div class="ent-seccion">
-        <h3 class="ent-seccion__titulo">Entregas Asignadas a Luis García</h3>
+      {/* Tabla de entregas */}
+      <div className="ent-seccion">
+        <h3 className="ent-seccion__titulo">Entregas Asignadas a Luis García</h3>
 
-        <div class="ent-tabla-wrap">
-          <table class="ent-tabla">
+        <div className="ent-tabla-wrap">
+          <table className="ent-tabla">
             <thead>
               <tr>
                 <th>Guía</th>
@@ -700,298 +785,208 @@
             </thead>
             <tbody>
               <tr>
-                <td class="td-guia">PAK123456789</td>
-                <td class="td-cliente">Ana Martínez</td>
-                <td class="td-dir">Roma Norte</td>
-                <td class="td-hora">10:00 – 11:00</td>
+                <td className="td-guia">PAK123456789</td>
+                <td className="td-cliente">Ana Martínez</td>
+                <td className="td-dir">Roma Norte</td>
+                <td className="td-hora">10:00 – 11:00</td>
                 <td>
-                  <span class="ent-estado-badge ent-estado-badge--pendiente">
-                    <span class="ent-estado-badge__icono">&#9664;</span> Pendiente
+                  <span className="ent-estado-badge ent-estado-badge--pendiente">
+                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
                   </span>
                 </td>
                 <td>
-                  <button class="ent-accion-btn">
-                    <span class="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                  <button className="ent-accion-btn">
+                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
                   </button>
                 </td>
               </tr>
               <tr>
-                <td class="td-guia">MX267584321</td>
-                <td class="td-cliente">Carlos Ramírez</td>
-                <td class="td-dir">Av. Tecnológico 210</td>
-                <td class="td-hora">12:00 – 1:00</td>
+                <td className="td-guia">MX267584321</td>
+                <td className="td-cliente">Carlos Ramírez</td>
+                <td className="td-dir">Av. Tecnológico 210</td>
+                <td className="td-hora">12:00 – 1:00</td>
                 <td>
-                  <span class="ent-estado-badge ent-estado-badge--enruta">
-                    <span class="ent-estado-badge__icono">&#10004;</span> En ruta
+                  <span className="ent-estado-badge ent-estado-badge--enruta">
+                    <span className="ent-estado-badge__icono">&#10004;</span> En ruta
                   </span>
                 </td>
                 <td>
-                  <button class="ent-accion-btn">
-                    <span class="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                  <button className="ent-accion-btn">
+                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
                   </button>
                 </td>
               </tr>
               <tr>
-                <td class="td-guia">MX987654321</td>
-                <td class="td-cliente">Laura Gómez</td>
-                <td class="td-dir">Av. Revolución 456, Col. Del Valle</td>
-                <td class="td-hora">1:00 – 3:00 PM</td>
+                <td className="td-guia">MX987654321</td>
+                <td className="td-cliente">Laura Gómez</td>
+                <td className="td-dir">Av. Revolución 456, Col. Del Valle</td>
+                <td className="td-hora">1:00 – 3:00 PM</td>
                 <td>
-                  <span class="ent-estado-badge ent-estado-badge--retrasado">
-                    <span class="ent-estado-badge__icono">&#9650;</span> Retrasado
+                  <span className="ent-estado-badge ent-estado-badge--retrasado">
+                    <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
                   </span>
                 </td>
                 <td>
-                  <button class="ent-accion-btn ent-accion-btn--reasignar">
-                    <span class="ent-accion-btn__icono">&#128196;</span> Reasignar
+                  <button className="ent-accion-btn ent-accion-btn--reasignar">
+                    <span className="ent-accion-btn__icono">&#128196;</span> Reasignar
                   </button>
                 </td>
               </tr>
               <tr>
-                <td class="td-guia">
+                <td className="td-guia">
                   MX247630219
-                  <br><span class="td-cliente-sub">PAK123466789</span>
+                  <br /><span className="td-cliente-sub">PAK123466789</span>
                 </td>
-                <td class="td-cliente">Jorge Sánchez</td>
-                <td class="td-dir">Av. Universidad 789, Col. Coyoacán</td>
-                <td class="td-hora">2:00 – 3:30 PM</td>
+                <td className="td-cliente">Jorge Sánchez</td>
+                <td className="td-dir">Av. Universidad 789, Col. Coyoacán</td>
+                <td className="td-hora">2:00 – 3:30 PM</td>
                 <td>
-                  <span class="ent-estado-badge ent-estado-badge--pendiente">
-                    <span class="ent-estado-badge__icono">&#9664;</span> Pendiente
+                  <span className="ent-estado-badge ent-estado-badge--pendiente">
+                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
                   </span>
                 </td>
                 <td>
-                  <button class="ent-accion-btn">
-                    <span class="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                  <button className="ent-accion-btn">
+                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
                   </button>
                 </td>
               </tr>
               <tr>
-                <td class="td-guia">MX2476502010</td>
-                <td class="td-cliente">Pilar Suárez</td>
-                <td class="td-dir">Campestre Oriente 230, Toluca</td>
-                <td class="td-hora">3:00 – 4:30 PM</td>
+                <td className="td-guia">MX2476502010</td>
+                <td className="td-cliente">Pilar Suárez</td>
+                <td className="td-dir">Campestre Oriente 230, Toluca</td>
+                <td className="td-hora">3:00 – 4:30 PM</td>
                 <td>
-                  <span class="ent-estado-badge ent-estado-badge--pendiente">
-                    <span class="ent-estado-badge__icono">&#9664;</span> Pendiente
+                  <span className="ent-estado-badge ent-estado-badge--pendiente">
+                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
                   </span>
                 </td>
                 <td>
-                  <button class="ent-accion-btn">
-                    <span class="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                  <button className="ent-accion-btn">
+                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <!-- Paginación interna -->
-          <div class="ent-paginacion">
-            <span class="ent-paginacion__info">Mostrando 5 de 13 entregas</span>
-            <div class="ent-paginacion__paginas">
-              <button class="ent-pag-btn ent-pag-btn--activo">1</button>
-              <button class="ent-pag-btn">2</button>
-              <button class="ent-pag-btn">3</button>
-              <button class="ent-pag-btn">4</button>
-              <button class="ent-pag-btn">5</button>
-              <button class="ent-pag-btn">&middot;&middot;</button>
+          {/* Paginación interna */}
+          <div className="ent-paginacion">
+            <span className="ent-paginacion__info">Mostrando 5 de 13 entregas</span>
+            <div className="ent-paginacion__paginas">
+              <button className="ent-pag-btn ent-pag-btn--activo">1</button>
+              <button className="ent-pag-btn">2</button>
+              <button className="ent-pag-btn">3</button>
+              <button className="ent-pag-btn">4</button>
+              <button className="ent-pag-btn">5</button>
+              <button className="ent-pag-btn">&middot;&middot;</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Barra de acciones inferior -->
-      <div class="ent-acciones-bar">
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" class="ent-bar-btn ent-bar-btn--volver">
+      {/* Barra de acciones inferior */}
+      <div className="ent-acciones-bar">
+        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-bar-btn ent-bar-btn--volver">
           &lsaquo; Volver
         </a>
-        <button class="ent-bar-btn ent-bar-btn--reasignar">
-          <span class="ent-bar-btn__icono">&#128230;</span> Reasignar paquete
+        <button className="ent-bar-btn ent-bar-btn--reasignar">
+          <span className="ent-bar-btn__icono">&#128230;</span> Reasignar paquete
         </button>
-        <button class="ent-bar-btn ent-bar-btn--contactar">
-          <span class="ent-bar-btn__icono">&#128222;</span> Contactar repartidor
+        <button className="ent-bar-btn ent-bar-btn--contactar">
+          <span className="ent-bar-btn__icono">&#128222;</span> Contactar repartidor
         </button>
-        <button class="ent-bar-btn ent-bar-btn--incidencia">
-          <span class="ent-bar-btn__icono">&#9888;</span> Marcar incidencia
+        <button className="ent-bar-btn ent-bar-btn--incidencia">
+          <span className="ent-bar-btn__icono">&#9888;</span> Marcar incidencia
         </button>
       </div>
 
     </main>
   </div>
 
-  <!-- ══ Modal Reasignar Paquete ══ -->
-  <div id="modalReasignarBackdrop" class="modal-reasignar-backdrop">
-    <div class="modal-reasignar">
-      <div class="modal-reasignar__header">
-        <h3 class="modal-reasignar__titulo">Reasignar Paquete</h3>
-        <button id="modalCerrarBtn" class="modal-reasignar__cerrar" aria-label="Cerrar">&times;</button>
+  {/* ══ Modal Reasignar Paquete ══ */}
+  <div id="modalReasignarBackdrop" className="modal-reasignar-backdrop">
+    <div className="modal-reasignar">
+      <div className="modal-reasignar__header">
+        <h3 className="modal-reasignar__titulo">Reasignar Paquete</h3>
+        <button id="modalCerrarBtn" className="modal-reasignar__cerrar" aria-label="Cerrar">&times;</button>
       </div>
 
-      <!-- Info del paquete -->
-      <div class="modal-paq">
-        <p class="modal-paq__label">Paquete a reasignar</p>
-        <div class="modal-paq__row">
-          <span id="modalGuia" class="modal-paq__guia">MX987654321</span>
-          <span id="modalCliente" class="modal-paq__cliente">Laura Gómez</span>
-          <span id="modalDir" class="modal-paq__dir">Av. Revolución 456, Col. Del Valle</span>
-          <span class="modal-paq__estado">
-            <span id="modalEstado" class="ent-estado-badge ent-estado-badge--retrasado">
-              <span class="ent-estado-badge__icono">&#9650;</span> Retrasado
+      {/* Info del paquete */}
+      <div className="modal-paq">
+        <p className="modal-paq__label">Paquete a reasignar</p>
+        <div className="modal-paq__row">
+          <span id="modalGuia" className="modal-paq__guia">MX987654321</span>
+          <span id="modalCliente" className="modal-paq__cliente">Laura Gómez</span>
+          <span id="modalDir" className="modal-paq__dir">Av. Revolución 456, Col. Del Valle</span>
+          <span className="modal-paq__estado">
+            <span id="modalEstado" className="ent-estado-badge ent-estado-badge--retrasado">
+              <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
             </span>
           </span>
         </div>
       </div>
 
-      <!-- Seleccionar nuevo repartidor -->
-      <div class="modal-seleccion">
-        <p class="modal-seleccion__titulo">Seleccionar nuevo repartidor</p>
-        <div class="modal-buscar">
-          <span class="modal-buscar__icono">&#128269;</span>
+      {/* Seleccionar nuevo repartidor */}
+      <div className="modal-seleccion">
+        <p className="modal-seleccion__titulo">Seleccionar nuevo repartidor</p>
+        <div className="modal-buscar">
+          <span className="modal-buscar__icono">&#128269;</span>
           <input type="text" id="modalBuscarInput" placeholder="Buscar repartidor..." />
         </div>
-        <div class="modal-repartidores" id="modalRepLista">
-          <div class="modal-rep" data-rep="javier">
-            <img src="/piWeb/images/usuario.png" alt="Javier Torres" class="modal-rep__foto" />
-            <div class="modal-rep__info">
-              <p class="modal-rep__nombre">Javier Torres</p>
-              <p class="modal-rep__zona">Roma Norte · 3 entregas asignadas</p>
+        <div className="modal-repartidores" id="modalRepLista">
+          <div className="modal-rep" data-rep="javier">
+            <img src="/piWeb/images/usuario.png" alt="Javier Torres" className="modal-rep__foto" />
+            <div className="modal-rep__info">
+              <p className="modal-rep__nombre">Javier Torres</p>
+              <p className="modal-rep__zona">Roma Norte · 3 entregas asignadas</p>
             </div>
-            <span class="modal-rep__estado modal-rep__estado--disponible">Disponible</span>
-            <span class="modal-rep__radio"></span>
+            <span className="modal-rep__estado modal-rep__estado--disponible">Disponible</span>
+            <span className="modal-rep__radio"></span>
           </div>
-          <div class="modal-rep" data-rep="ricardo">
-            <img src="/piWeb/images/usuario.png" alt="Ricardo Muñoz" class="modal-rep__foto" />
-            <div class="modal-rep__info">
-              <p class="modal-rep__nombre">Ricardo Muñoz</p>
-              <p class="modal-rep__zona">Del Valle · 5 entregas asignadas</p>
+          <div className="modal-rep" data-rep="ricardo">
+            <img src="/piWeb/images/usuario.png" alt="Ricardo Muñoz" className="modal-rep__foto" />
+            <div className="modal-rep__info">
+              <p className="modal-rep__nombre">Ricardo Muñoz</p>
+              <p className="modal-rep__zona">Del Valle · 5 entregas asignadas</p>
             </div>
-            <span class="modal-rep__estado modal-rep__estado--enruta">En ruta</span>
-            <span class="modal-rep__radio"></span>
+            <span className="modal-rep__estado modal-rep__estado--enruta">En ruta</span>
+            <span className="modal-rep__radio"></span>
           </div>
-          <div class="modal-rep" data-rep="pedro">
-            <img src="/piWeb/images/usuario.png" alt="Pedro Sánchez" class="modal-rep__foto" />
-            <div class="modal-rep__info">
-              <p class="modal-rep__nombre">Pedro Sánchez</p>
-              <p class="modal-rep__zona">Coyoacán · 4 entregas asignadas</p>
+          <div className="modal-rep" data-rep="pedro">
+            <img src="/piWeb/images/usuario.png" alt="Pedro Sánchez" className="modal-rep__foto" />
+            <div className="modal-rep__info">
+              <p className="modal-rep__nombre">Pedro Sánchez</p>
+              <p className="modal-rep__zona">Coyoacán · 4 entregas asignadas</p>
             </div>
-            <span class="modal-rep__estado modal-rep__estado--enruta">En ruta</span>
-            <span class="modal-rep__radio"></span>
+            <span className="modal-rep__estado modal-rep__estado--enruta">En ruta</span>
+            <span className="modal-rep__radio"></span>
           </div>
-          <div class="modal-rep" data-rep="sofia">
-            <img src="/piWeb/images/usuario.png" alt="Sofía Lozano" class="modal-rep__foto" />
-            <div class="modal-rep__info">
-              <p class="modal-rep__nombre">Sofía Lozano</p>
-              <p class="modal-rep__zona">Toluca · 0 entregas asignadas</p>
+          <div className="modal-rep" data-rep="sofia">
+            <img src="/piWeb/images/usuario.png" alt="Sofía Lozano" className="modal-rep__foto" />
+            <div className="modal-rep__info">
+              <p className="modal-rep__nombre">Sofía Lozano</p>
+              <p className="modal-rep__zona">Toluca · 0 entregas asignadas</p>
             </div>
-            <span class="modal-rep__estado modal-rep__estado--disponible">Disponible</span>
-            <span class="modal-rep__radio"></span>
+            <span className="modal-rep__estado modal-rep__estado--disponible">Disponible</span>
+            <span className="modal-rep__radio"></span>
           </div>
         </div>
       </div>
 
-      <!-- Motivo -->
-      <div class="modal-motivo">
-        <p class="modal-motivo__label">Motivo de la reasignación (opcional)</p>
-        <textarea class="modal-motivo__textarea" id="modalMotivo" placeholder="Ej: Repartidor actual tiene retraso en zona..."></textarea>
+      {/* Motivo */}
+      <div className="modal-motivo">
+        <p className="modal-motivo__label">Motivo de la reasignación (opcional)</p>
+        <textarea className="modal-motivo__textarea" id="modalMotivo" placeholder="Ej: Repartidor actual tiene retraso en zona..."></textarea>
       </div>
 
-      <!-- Botones -->
-      <div class="modal-acciones">
-        <button id="modalCancelarBtn" class="modal-btn modal-btn--cancelar">Cancelar</button>
-        <button id="modalConfirmarBtn" class="modal-btn modal-btn--confirmar" disabled>Confirmar reasignación</button>
+      {/* Botones */}
+      <div className="modal-acciones">
+        <button id="modalCancelarBtn" className="modal-btn modal-btn--cancelar">Cancelar</button>
+        <button id="modalConfirmarBtn" className="modal-btn modal-btn--confirmar" disabled>Confirmar reasignación</button>
       </div>
     </div>
   </div>
-
-  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
-  <script>
-    (function () {
-      var backdrop = document.getElementById('modalReasignarBackdrop');
-      var cerrarBtn = document.getElementById('modalCerrarBtn');
-      var cancelarBtn = document.getElementById('modalCancelarBtn');
-      var confirmarBtn = document.getElementById('modalConfirmarBtn');
-      var repItems = document.querySelectorAll('.modal-rep');
-      var buscarInput = document.getElementById('modalBuscarInput');
-      var modalGuia = document.getElementById('modalGuia');
-      var modalCliente = document.getElementById('modalCliente');
-      var modalDir = document.getElementById('modalDir');
-      var selectedRep = null;
-
-      // Abrir modal desde botones "Reasignar" en la tabla
-      document.querySelectorAll('.ent-accion-btn--reasignar').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var row = btn.closest('tr');
-          if (row) {
-            var guia = row.querySelector('.td-guia');
-            var cliente = row.querySelector('.td-cliente');
-            var dir = row.querySelector('.td-dir');
-            if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
-            if (cliente) modalCliente.textContent = cliente.textContent;
-            if (dir) modalDir.textContent = dir.textContent;
-          }
-          abrirModal();
-        });
-      });
-
-      // Botón "Reasignar paquete" de la barra inferior
-      document.querySelector('.ent-bar-btn--reasignar').addEventListener('click', function () {
-        modalGuia.textContent = '—';
-        modalCliente.textContent = 'Seleccione desde la tabla';
-        modalDir.textContent = '';
-        abrirModal();
-      });
-
-      function abrirModal() {
-        selectedRep = null;
-        repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-        confirmarBtn.disabled = true;
-        document.getElementById('modalMotivo').value = '';
-        buscarInput.value = '';
-        filtrarRepartidores('');
-        backdrop.classList.add('modal-reasignar-backdrop--visible');
-      }
-
-      function cerrarModal() {
-        backdrop.classList.remove('modal-reasignar-backdrop--visible');
-      }
-
-      cerrarBtn.addEventListener('click', cerrarModal);
-      cancelarBtn.addEventListener('click', cerrarModal);
-      backdrop.addEventListener('click', function (e) {
-        if (e.target === backdrop) cerrarModal();
-      });
-
-      // Seleccionar repartidor
-      repItems.forEach(function (item) {
-        item.addEventListener('click', function () {
-          repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-          item.classList.add('modal-rep--selected');
-          selectedRep = item.getAttribute('data-rep');
-          confirmarBtn.disabled = false;
-        });
-      });
-
-      // Buscar repartidor
-      buscarInput.addEventListener('input', function () {
-        filtrarRepartidores(buscarInput.value.toLowerCase());
-      });
-
-      function filtrarRepartidores(query) {
-        repItems.forEach(function (item) {
-          var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
-          var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
-          item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
-        });
-      }
-
-      // Confirmar
-      confirmarBtn.addEventListener('click', function () {
-        if (!selectedRep) return;
-        var repName = document.querySelector('.modal-rep--selected .modal-rep__nombre').textContent;
-        alert('Paquete reasignado exitosamente a ' + repName);
-        cerrarModal();
-      });
-    })();
-  </script>
-</body>
-</html>
+    </>
+  );
+}

@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Envíos - Supervisor</title>
-  <link rel="stylesheet" href="/piWeb/styles/operadorComun.css">
-  <link rel="stylesheet" href="/piWeb/styles/supervisor.css">
-  <style>
+import React from 'react';
+
+export default function EnviosSupervisor() {
+  return (
+    <>
+      <style>{`
     /* ── Gestión de Envíos ── */
     .genv-titulo {
       font-size: 26px;
@@ -279,63 +276,61 @@
       .genv-filtro-btn { margin-left: 0; }
       .genv-paginacion { flex-direction: column; align-items: flex-start; }
     }
-  </style>
-</head>
-<body>
-  <div class="tablero-operador tablero-operador--sin-sidebar">
+  `}</style>
+      <div className="tablero-operador tablero-operador--sin-sidebar">
 
-    <!-- Contenedor del menú hamburguesa -->
-    <div id="menuContainer" class="menu-overlay"></div>
-    <div id="menuBackdrop" class="menu-overlay__backdrop"></div>
+    {/* Contenedor del menú hamburguesa */}
+    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main class="panel-principal panel-principal--full">
-      <header class="barra-superior barra-superior--con-logo">
-        <div class="barra-superior__left">
-          <button id="btnMenu" class="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <main className="panel-principal panel-principal--full">
+      <header className="barra-superior barra-superior--con-logo">
+        <div className="barra-superior__left">
+          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div class="header-logo">
+          <div className="header-logo">
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
-          <h1 class="barra-superior__titulo">Supervisor</h1>
+          <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div class="barra-superior__perfil">
-          <span class="badge-servicio">
-            <span class="header-sv__punto-verde"></span> En servicio
+        <div className="barra-superior__perfil">
+          <span className="badge-servicio">
+            <span className="header-sv__punto-verde"></span> En servicio
           </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" class="barra-superior__avatar" />
-          <span class="barra-superior__chevron">&#9662;</span>
+          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
+          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
-      <!-- Contenido Gestión de Envíos -->
-      <h2 class="genv-titulo">Gestión de Envíos</h2>
+      {/* Contenido Gestión de Envíos */}
+      <h2 className="genv-titulo">Gestión de Envíos</h2>
 
-      <!-- Barra búsqueda + filtros -->
-      <div class="genv-barra">
-        <div class="genv-buscar">
-          <span class="genv-buscar__icono">&#128269;</span>
+      {/* Barra búsqueda + filtros */}
+      <div className="genv-barra">
+        <div className="genv-buscar">
+          <span className="genv-buscar__icono">&#128269;</span>
           <input type="text" placeholder="Buscar dirección o número de guía" />
         </div>
-        <button class="genv-chip genv-chip--todos">Todos <span class="genv-chip__flecha">&#9662;</span></button>
-        <button class="genv-chip genv-chip--pendiente">&#9201; Pendiente</button>
-        <button class="genv-chip genv-chip--retrasado">&#9888; Retrasado</button>
-        <button class="genv-chip genv-chip--entregado">&#10004; Entregado</button>
-        <button class="genv-filtro-btn">&#9776; Filtro</button>
+        <button className="genv-chip genv-chip--todos">Todos <span className="genv-chip__flecha">&#9662;</span></button>
+        <button className="genv-chip genv-chip--pendiente">&#9201; Pendiente</button>
+        <button className="genv-chip genv-chip--retrasado">&#9888; Retrasado</button>
+        <button className="genv-chip genv-chip--entregado">&#10004; Entregado</button>
+        <button className="genv-filtro-btn">&#9776; Filtro</button>
       </div>
 
-      <!-- Ordenar por -->
-      <div class="genv-ordenar">
+      {/* Ordenar por */}
+      <div className="genv-ordenar">
         <span>Ordenar por:</span>
         <select><option>Hora</option></select>
         <select><option>Zona</option></select>
         <select><option>Prioridad</option></select>
-        <span class="genv-ordenar__dots">⋯</span>
+        <span className="genv-ordenar__dots">⋯</span>
       </div>
 
-      <!-- Tabla de envíos -->
-      <div class="genv-tabla-wrap">
-        <table class="genv-tabla">
+      {/* Tabla de envíos */}
+      <div className="genv-tabla-wrap">
+        <table className="genv-tabla">
           <thead>
             <tr>
               <th>Guía</th>
@@ -349,104 +344,104 @@
           </thead>
           <tbody>
             <tr>
-              <td><span class="genv-guia">PAK123456789</span></td>
+              <td><span className="genv-guia">PAK123456789</span></td>
               <td>
-                <span class="genv-cliente">Ana Martínez</span><br>
-                <span class="genv-sub">CDMX</span>
+                <span className="genv-cliente">Ana Martínez</span><br />
+                <span className="genv-sub">CDMX</span>
               </td>
-              <td><span class="genv-direccion">Col. Roma Norte, CDMX</span></td>
-              <td><span class="genv-hora">10:00 – 11:00</span></td>
-              <td><span class="genv-repartidor">Luis Garcia</span></td>
-              <td><span class="genv-estado genv-estado--pendiente">&#10148; Pendiente</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Col. Roma Norte, CDMX</span></td>
+              <td><span className="genv-hora">10:00 – 11:00</span></td>
+              <td><span className="genv-repartidor">Luis Garcia</span></td>
+              <td><span className="genv-estado genv-estado--pendiente">&#10148; Pendiente</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
-              <td><span class="genv-guia">MXZ67584321</span></td>
+              <td><span className="genv-guia">MXZ67584321</span></td>
               <td>
-                <span class="genv-cliente">Carlos Ramírez</span><br>
-                <span class="genv-sub">Querétaro, CDMX · Javier Torres</span>
+                <span className="genv-cliente">Carlos Ramírez</span><br />
+                <span className="genv-sub">Querétaro, CDMX · Javier Torres</span>
               </td>
-              <td><span class="genv-direccion">Av. Tecnológico 210, Querétaro</span></td>
-              <td><span class="genv-hora">12:00 – 1:00</span></td>
-              <td><span class="genv-repartidor">Javier Torres</span></td>
-              <td><span class="genv-estado genv-estado--enruta">&#10004; En ruta</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Av. Tecnológico 210, Querétaro</span></td>
+              <td><span className="genv-hora">12:00 – 1:00</span></td>
+              <td><span className="genv-repartidor">Javier Torres</span></td>
+              <td><span className="genv-estado genv-estado--enruta">&#10004; En ruta</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
-              <td><span class="genv-guia">MX987654321</span></td>
+              <td><span className="genv-guia">MX987654321</span></td>
               <td>
-                <span class="genv-cliente">Laura Gómez</span>
+                <span className="genv-cliente">Laura Gómez</span>
               </td>
-              <td><span class="genv-direccion">Av. Revolución 456, Col. Del Valle</span></td>
-              <td><span class="genv-hora">1:00 – 3:00</span></td>
-              <td><span class="genv-repartidor">Ricardo Muñoz</span></td>
-              <td><span class="genv-estado genv-estado--retrasado">&#9888; Retrasado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Av. Revolución 456, Col. Del Valle</span></td>
+              <td><span className="genv-hora">1:00 – 3:00</span></td>
+              <td><span className="genv-repartidor">Ricardo Muñoz</span></td>
+              <td><span className="genv-estado genv-estado--retrasado">&#9888; Retrasado</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
-              <td><span class="genv-guia">MXZ47630219</span></td>
+              <td><span className="genv-guia">MXZ47630219</span></td>
               <td>
-                <span class="genv-cliente">Pedro Sanchez</span><br>
-                <span class="genv-sub">Coyoacán, CDMX · Jorge Medina</span>
+                <span className="genv-cliente">Pedro Sanchez</span><br />
+                <span className="genv-sub">Coyoacán, CDMX · Jorge Medina</span>
               </td>
-              <td><span class="genv-direccion">Av. Universidad 789, Col. Coyoacán</span></td>
-              <td><span class="genv-hora">2:00 – 3:30</span></td>
-              <td><span class="genv-repartidor">Jorge Medina</span></td>
-              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Av. Universidad 789, Col. Coyoacán</span></td>
+              <td><span className="genv-hora">2:00 – 3:30</span></td>
+              <td><span className="genv-repartidor">Jorge Medina</span></td>
+              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
-              <td><span class="genv-guia">MXZ47620210</span></td>
+              <td><span className="genv-guia">MXZ47620210</span></td>
               <td>
-                <span class="genv-cliente">Sofia Lozano</span><br>
-                <span class="genv-sub">Javier Torres</span>
+                <span className="genv-cliente">Sofia Lozano</span><br />
+                <span className="genv-sub">Javier Torres</span>
               </td>
-              <td><span class="genv-direccion">Campestre Oriente 230, Toluca</span></td>
-              <td><span class="genv-hora">3:00 – 4:30</span></td>
-              <td><span class="genv-repartidor">Javier Torres</span></td>
-              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
+              <td><span className="genv-hora">3:00 – 4:30</span></td>
+              <td><span className="genv-repartidor">Javier Torres</span></td>
+              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
-              <td><span class="genv-guia">MXZ47620210</span></td>
+              <td><span className="genv-guia">MXZ47620210</span></td>
               <td>
-                <span class="genv-cliente">Sofia Lozano</span><br>
-                <span class="genv-sub">Javier Torres</span>
+                <span className="genv-cliente">Sofia Lozano</span><br />
+                <span className="genv-sub">Javier Torres</span>
               </td>
-              <td><span class="genv-direccion">Campestre Oriente 230, Toluca</span></td>
-              <td><span class="genv-hora">3:00 – 4:30</span></td>
-              <td><span class="genv-repartidor">Javier Torres</span></td>
-              <td><span class="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" class="genv-ver-btn">ver detalle</a></td>
+              <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
+              <td><span className="genv-hora">3:00 – 4:30</span></td>
+              <td><span className="genv-repartidor">Javier Torres</span></td>
+              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Paginación -->
-      <div class="genv-paginacion">
-        <div class="genv-paginacion__info">
+      {/* Paginación */}
+      <div className="genv-paginacion">
+        <div className="genv-paginacion__info">
           Mostrando 5 de 268 envíos
-          <span class="genv-paginacion__paginas" style="display:inline-flex; margin-left:8px;">
-            <button class="genv-pag-btn genv-pag-btn--activo">1</button>
-            <button class="genv-pag-btn">2</button>
-            <button class="genv-pag-btn">3</button>
-            <button class="genv-pag-btn">4</button>
-            <button class="genv-pag-btn">5</button>
-            <button class="genv-pag-btn genv-pag-btn--dots">⋯</button>
+          <span className="genv-paginacion__paginas" style={{display: 'inline-flex', marginLeft: '8px'}}>
+            <button className="genv-pag-btn genv-pag-btn--activo">1</button>
+            <button className="genv-pag-btn">2</button>
+            <button className="genv-pag-btn">3</button>
+            <button className="genv-pag-btn">4</button>
+            <button className="genv-pag-btn">5</button>
+            <button className="genv-pag-btn genv-pag-btn--dots">⋯</button>
           </span>
         </div>
-        <div class="genv-paginacion__paginas">
-          <button class="genv-pag-btn">&lt;</button>
-          <button class="genv-pag-btn genv-pag-btn--activo">1</button>
-          <button class="genv-pag-btn">2</button>
-          <button class="genv-pag-btn">3</button>
-          <button class="genv-pag-btn">&gt;</button>
+        <div className="genv-paginacion__paginas">
+          <button className="genv-pag-btn">&lt;</button>
+          <button className="genv-pag-btn genv-pag-btn--activo">1</button>
+          <button className="genv-pag-btn">2</button>
+          <button className="genv-pag-btn">3</button>
+          <button className="genv-pag-btn">&gt;</button>
         </div>
       </div>
 
     </main>
   </div>
-  <script src="/piWeb/src/pages/supervisor/menuSupervisor.js"></script>
-</body>
-</html>
+    </>
+  );
+}

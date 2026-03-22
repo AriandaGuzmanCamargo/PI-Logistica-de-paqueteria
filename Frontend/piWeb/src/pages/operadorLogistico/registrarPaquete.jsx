@@ -70,7 +70,7 @@ export default function RegistrarPaquete() {
           <h2>Registrar Paquete</h2>
         </div>
 
-        <article className="tarjeta-formulario">
+        <article className="tarjeta-formulario-registro">
           <h3>Nuevo Envío</h3>
 
           <div className="pasos-formulario" role="tablist" aria-label="Pasos de registro">

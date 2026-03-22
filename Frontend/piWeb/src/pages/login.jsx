@@ -1,8 +1,57 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async () => {
+    setError('');
+
+    if (!correo || !contrasena) {
+      setError('Completa correo y contrasena.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ correo, contrasena }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        setError(data.message || 'No se pudo iniciar sesion.');
+        return;
+      }
+
+      const rol = String(data.usuario?.rol || '').toLowerCase();
+
+      if (rol === 'admin' || rol === 'supervisor') {
+        navigate('/supervisor/dashboard');
+        return;
+      }
+
+      if (rol === 'operador' || rol === 'usuario' || rol === 'cliente' || rol === 'conductor') {
+        navigate('/operador/dashboard');
+        return;
+      }
+
+      setError('Rol sin pantalla asignada en web.');
+    } catch (_error) {
+      setError('No se pudo conectar con el servidor.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const ojoBotones = document.querySelectorAll('.grupo-campo__ojo');
@@ -50,21 +99,36 @@ export default function Login() {
               <span className="grupo-campo__icono">
                 <img src="/piWeb/images/gmail.png" alt="Correo" />
               </span>
-              <input type="email" placeholder="Correo electrónico" />
+              <input
+                type="email"
+                placeholder="Correo electronico"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+              />
             </div>
 
             <div className="grupo-campo grupo-campo--contrasena">
               <span className="grupo-campo__icono">
                 <img src="/piWeb/images/candado.png" alt="Contraseña" />
               </span>
-              <input type="password" placeholder="Contraseña" className="input-contrasena" />
+              <input
+                type="password"
+                placeholder="Contrasena"
+                className="input-contrasena"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
+              />
               <button className="grupo-campo__ojo" type="button" aria-label="Mostrar/ocultar contraseña">
                 <img src="/piWeb/images/ojo-abierto.png" alt="Ver contraseña" className="ojo-abierto" />
                 <img src="/piWeb/images/ojo.png" alt="Ocultar contraseña" className="ojo-cerrado" style={{display: 'none'}} />
               </button>
             </div>
 
-            <button className="boton boton--primario" onClick={() => navigate('/operador/dashboard')}>Iniciar Sesión</button>
+            {error ? <p style={{ color: '#b71c1c', marginBottom: '12px' }}>{error}</p> : null}
+
+            <button className="boton boton--primario" onClick={handleLogin} disabled={isLoading}>
+              {isLoading ? 'Validando...' : 'Iniciar Sesion'}
+            </button>
             <a className="enlace-olvido" href="/recuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
 
             <p className="tarjeta-formulario__nota">¿No tienes cuenta? <a href="/registro.html">Regístrate</a></p>

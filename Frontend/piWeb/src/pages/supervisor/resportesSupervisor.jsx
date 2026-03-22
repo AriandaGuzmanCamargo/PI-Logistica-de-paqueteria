@@ -1,11 +1,12 @@
 import React from 'react';
+import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function ResportesSupervisor() {
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
 
     {/* Menú hamburguesa */}
-    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
     <main className="panel-principal panel-principal--full">

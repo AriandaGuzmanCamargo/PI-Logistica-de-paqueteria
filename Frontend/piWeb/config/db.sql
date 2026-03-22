@@ -22,17 +22,6 @@ CREATE TYPE tipo_incidencia_enum AS ENUM ('retraso','dano','perdida');
 CREATE TYPE estado_incidencia_enum AS ENUM ('abierta','en_proceso','cerrada');
 
 CREATE TYPE estado_operacion_enum AS ENUM ('activo','inactivo');
-INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, estado)
-VALUES 
-('Admin', 'Principal', 'admin@metzvia.com', '123456', '4420000001', 'admin', 'activo'),
-
-('Luis', 'Operador', 'operador@metzvia.com', '123456', '4420000002', 'operador', 'activo'),
-
-('Carlos', 'Conductor', 'conductor@metzvia.com', '123456', '4420000003', 'conductor', 'activo'),
-
-('Ana', 'Cliente', 'cliente1@metzvia.com', '123456', '4420000004', 'cliente', 'activo'),
-
-('Maria', 'Cliente', 'cliente2@metzvia.com', '123456', '4420000005', 'cliente', 'activo');
 -- Usuarios
 CREATE TABLE usuarios (
     id_usuario SERIAL PRIMARY KEY,
@@ -45,6 +34,15 @@ CREATE TABLE usuarios (
     estado estado_usuario NOT NULL DEFAULT 'activo',
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, estado)
+VALUES
+('Admin', 'Principal', 'admin@metzvia.com', '123456', '4420000001', 'admin', 'activo'),
+('Luis', 'Operador', 'operador@metzvia.com', '123456', '4420000002', 'operador', 'activo'),
+('Carlos', 'Conductor', 'conductor@metzvia.com', '123456', '4420000003', 'conductor', 'activo'),
+('Ana', 'Cliente', 'cliente1@metzvia.com', '123456', '4420000004', 'cliente', 'activo'),
+('Maria', 'Cliente', 'cliente2@metzvia.com', '123456', '4420000005', 'cliente', 'activo')
+ON CONFLICT (correo) DO NOTHING;
 
 -- Clientes
 CREATE TABLE clientes (

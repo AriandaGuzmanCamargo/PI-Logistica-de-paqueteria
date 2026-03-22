@@ -36,7 +36,7 @@
   color: #445585;
 }
 
-.tarjeta-formulario {
+.tarjeta-formulario-registro {
   margin: 14px;
   border: 1px solid #d9e0f8;
   border-radius: 8px;
@@ -44,7 +44,7 @@
   padding: 14px;
 }
 
-.tarjeta-formulario h3 {
+.tarjeta-formulario-registro h3 {
   margin: 0 0 14px;
   font-size: 34px;
   color: #34497a;

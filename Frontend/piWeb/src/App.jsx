@@ -42,9 +42,11 @@ export default function App() {
       {/* Redirigir raíz al login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/piWeb/login" element={<Login />} />
 
       {/* Operador Logístico */}
       <Route path="/operador/dashboard" element={<DashboardOperador />} />
+      <Route path="/piWeb/operador/dashboard" element={<DashboardOperador />} />
       <Route path="/operador/datos-paquete" element={<DatosPaquete />} />
       <Route path="/operador/detalle-envio" element={<DetalleEnvio />} />
       <Route path="/operador/envios" element={<EnviosOperador />} />
@@ -54,6 +56,7 @@ export default function App() {
 
       {/* Supervisor */}
       <Route path="/supervisor/dashboard" element={<DashboardSupervisor />} />
+      <Route path="/piWeb/supervisor/dashboard" element={<DashboardSupervisor />} />
       <Route path="/supervisor/detalle-envio" element={<DetalleEnvioSupervisor />} />
       <Route path="/supervisor/entregas-repartidor" element={<EntregasRepartidorSupervisor />} />
       <Route path="/supervisor/envios" element={<EnviosSupervisor />} />
@@ -62,6 +65,9 @@ export default function App() {
       <Route path="/supervisor/mi-cuenta" element={<MiCuentaSupervisor />} />
       <Route path="/supervisor/reportes" element={<ResportesSupervisor />} />
       <Route path="/supervisor/ruta-repartidor" element={<RutaRepartidorSupervisor />} />
+
+      {/* Evita pantalla en blanco si la ruta no coincide */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

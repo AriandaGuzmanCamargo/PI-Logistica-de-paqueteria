@@ -1,4 +1,5 @@
 import React from 'react';
+import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function EnviosSupervisor() {
   return (
@@ -280,7 +281,7 @@ export default function EnviosSupervisor() {
       <div className="tablero-operador tablero-operador--sin-sidebar">
 
     {/* Contenedor del menú hamburguesa */}
-    <div id="menuContainer" className="menu-overlay"></div>
+    <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
     <main className="panel-principal panel-principal--full">

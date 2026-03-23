@@ -1,17 +1,54 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, SafeAreaView, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from '../styles/LoginStyles';
+import { loginRequest } from '../services/authService';
 
 export default function LoginScreen({ navigation }) {
   const [tipoAcceso, setTipoAcceso] = useState('usuario');
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (tipoAcceso === 'repartidor') {
-      navigation.navigate('DashboardR');
+  const handleLogin = async () => {
+    const correoLimpio = correo.trim().toLowerCase();
+
+    if (!correoLimpio || !contrasena.trim()) {
+      setErrorMessage('Ingresa correo y contrasena.');
       return;
     }
 
-    navigation.navigate('Dashboard');
+    setErrorMessage('');
+    setIsLoading(true);
+
+    try {
+      const data = await loginRequest({
+        correo: correoLimpio,
+        contrasena,
+        tipoAcceso,
+      });
+
+      const rol = data?.usuario?.rol;
+
+      if (tipoAcceso === 'usuario' && rol !== 'cliente') {
+        throw new Error('Esta cuenta no corresponde al acceso de usuario.');
+      }
+
+      if (tipoAcceso === 'chofer' && rol !== 'conductor') {
+        throw new Error('Esta cuenta no corresponde al acceso de chofer.');
+      }
+
+      if (tipoAcceso === 'chofer') {
+        navigation.navigate('DashboardR');
+        return;
+      }
+
+      navigation.navigate('Dashboard');
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudo iniciar sesion.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -39,20 +76,45 @@ export default function LoginScreen({ navigation }) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.roleBtn, tipoAcceso === 'repartidor' && styles.roleBtnActive]}
-                onPress={() => setTipoAcceso('repartidor')}
+                style={[styles.roleBtn, tipoAcceso === 'chofer' && styles.roleBtnActive]}
+                onPress={() => setTipoAcceso('chofer')}
               >
-                <Text style={[styles.roleBtnText, tipoAcceso === 'repartidor' && styles.roleBtnTextActive]}>
-                  Repartidor
+                <Text style={[styles.roleBtnText, tipoAcceso === 'chofer' && styles.roleBtnTextActive]}>
+                  Chofer
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <TextInput style={styles.input} placeholder="Correo electronico" placeholderTextColor="#9AA4BF" />
-            <TextInput style={styles.input} placeholder="Contrasena" placeholderTextColor="#9AA4BF" secureTextEntry />
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electronico"
+              placeholderTextColor="#9AA4BF"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={correo}
+              onChangeText={setCorreo}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contrasena"
+              placeholderTextColor="#9AA4BF"
+              secureTextEntry
+              value={contrasena}
+              onChangeText={setContrasena}
+            />
 
-            <TouchableOpacity style={styles.primaryBtn} onPress={handleLogin}>
-              <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
+            {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+
+            <TouchableOpacity
+              style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>

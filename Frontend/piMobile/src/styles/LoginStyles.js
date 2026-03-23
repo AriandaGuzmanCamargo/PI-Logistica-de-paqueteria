@@ -93,11 +93,20 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 12,
   },
+  errorText: {
+    color: '#C43D3D',
+    marginTop: -4,
+    marginBottom: 10,
+    fontWeight: '600',
+  },
   primaryBtn: {
     backgroundColor: colors.gold,
     borderRadius: 10,
     padding: 13,
     marginTop: 4,
+  },
+  primaryBtnDisabled: {
+    opacity: 0.7,
   },
   primaryBtnText: {
     color: colors.white,

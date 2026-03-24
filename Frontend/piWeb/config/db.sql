@@ -41,21 +41,12 @@ VALUES
 ('Luis', 'Operador', 'operador@metzvia.com', '123456', '4420000002', 'operador', 'activo'),
 ('Carlos', 'Conductor', 'conductor@metzvia.com', '123456', '4420000003', 'conductor', 'activo'),
 ('Ana', 'Cliente', 'cliente1@metzvia.com', '123456', '4420000004', 'cliente', 'activo'),
-('Maria', 'Cliente', 'cliente2@metzvia.com', '123456', '4420000005', 'cliente', 'activo')
+('Maria', 'Cliente', 'cliente2@metzvia.com', '123456', '4420000005', 'cliente', 'activo'),
+('Jorge', 'Mendoza', 'conductor2@metzvia.com', '123456', '4420000006', 'conductor', 'activo'),
+('Rafael', 'Lopez', 'conductor3@metzvia.com', '123456', '4420000007', 'conductor', 'activo'),
+('Diego', 'Ramirez', 'conductor4@metzvia.com', '123456', '4420000008', 'conductor', 'activo')
 ON CONFLICT (correo) DO NOTHING;
 
--- Clientes
-INSERT INTO clientes (nombre, rfc, telefono, correo, direccion_principal, ciudad, estado, codigo_postal)
-VALUES
-('Juan Pérez López', 'PELJ800101AB1', '4421234567', 'juan.perez@gmail.com', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', '76000'),
-
-('María González Ruiz', 'GORM850202CD2', '4422345678', 'maria.gonzalez@gmail.com', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', '76100'),
-
-('Carlos Hernández Soto', 'HESC900303EF3', '4423456789', 'carlos.hernandez@gmail.com', 'Av. Zaragoza 789', 'San Juan del Río', 'Querétaro', '76800'),
-
-('Ana Martínez Cruz', 'MACA920404GH4', '4424567890', 'ana.martinez@gmail.com', 'Calle Reforma 321', 'Celaya', 'Guanajuato', '38000'),
-
-('Luis Ramírez Torres', 'RATL950505IJ5', '4425678901', 'luis.ramirez@gmail.com', 'Blvd. Bernardo Quintana 654', 'Querétaro', 'Querétaro', '76120');
 -- Clientes
 CREATE TABLE clientes (
     id_cliente SERIAL PRIMARY KEY,
@@ -69,17 +60,18 @@ CREATE TABLE clientes (
     codigo_postal VARCHAR(10) NOT NULL,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-INSERT INTO paquetes (codigo_rastreo, descripcion, tipo_contenido, peso, volumen, largo, ancho, alto, valor_declarado, tipo_servicio, estado_actual)
+INSERT INTO clientes (nombre, rfc, telefono, correo, direccion_principal, ciudad, estado, codigo_postal)
 VALUES
-('MTZ001', 'Celular Samsung Galaxy', 'Electronica', 0.50, 0.01, 15, 8, 5, 12000, 'express', 'en_transito'),
+('Juan Pérez López', 'PELJ800101AB1', '4421234567', 'juan.perez@gmail.com', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', '76000'),
 
-('MTZ002', 'Documentos legales', 'Documentos', 0.20, 0.005, 30, 25, 2, 500, 'normal', 'registrado'),
+('María González Ruiz', 'GORM850202CD2', '4422345678', 'maria.gonzalez@gmail.com', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', '76100'),
 
-('MTZ003', 'Zapatos deportivos', 'Ropa', 1.20, 0.02, 30, 20, 10, 2500, 'economico', 'en_transito'),
+('Carlos Hernández Soto', 'HESC900303EF3', '4423456789', 'carlos.hernandez@gmail.com', 'Av. Zaragoza 789', 'San Juan del Río', 'Querétaro', '76800'),
 
-('MTZ004', 'Laptop HP', 'Electronica', 2.50, 0.03, 40, 30, 10, 18000, 'express', 'entregado'),
+('Ana Martínez Cruz', 'MACA920404GH4', '4424567890', 'ana.martinez@gmail.com', 'Calle Reforma 321', 'Celaya', 'Guanajuato', '38000'),
 
-('MTZ005', 'Libros universitarios', 'Libros', 3.00, 0.04, 35, 25, 15, 1500, 'normal', 'en_transito');
+('Luis Ramírez Torres', 'RATL950505IJ5', '4425678901', 'luis.ramirez@gmail.com', 'Blvd. Bernardo Quintana 654', 'Querétaro', 'Querétaro', '76120');
+
 -- Paquetes
 CREATE TABLE paquetes (
     id_paquete SERIAL PRIMARY KEY,
@@ -96,17 +88,17 @@ CREATE TABLE paquetes (
     estado_actual estado_paquete_enum NOT NULL,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-INSERT INTO envios (id_cliente_remitente, id_cliente_destinatario, direccion_origen, direccion_destino, ciudad_origen, ciudad_destino, fecha_estimada_entrega, fecha_entrega_real, costo_total, estado_envio)
+INSERT INTO paquetes (codigo_rastreo, descripcion, tipo_contenido, peso, volumen, largo, ancho, alto, valor_declarado, tipo_servicio, estado_actual)
 VALUES
-(1, 2, 'Av. Constituyentes 123', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', NOW() + INTERVAL '1 day', NULL, 150.00, 'en_ruta'),
+('MTZ001', 'Celular Samsung Galaxy', 'Electronica', 0.50, 0.01, 15, 8, 5, 12000, 'express', 'en_transito'),
 
-(2, 3, 'Calle Hidalgo 456', 'Av. Zaragoza 789', 'Querétaro', 'San Juan del Río', NOW() + INTERVAL '2 day', NULL, 200.00, 'pendiente'),
+('MTZ002', 'Documentos legales', 'Documentos', 0.20, 0.005, 30, 25, 2, 500, 'normal', 'registrado'),
 
-(3, 4, 'Av. Zaragoza 789', 'Calle Reforma 321', 'San Juan del Río', 'Celaya', NOW() + INTERVAL '3 day', NULL, 250.00, 'en_ruta'),
+('MTZ003', 'Zapatos deportivos', 'Ropa', 1.20, 0.02, 30, 20, 10, 2500, 'economico', 'en_transito'),
 
-(4, 5, 'Calle Reforma 321', 'Blvd. Bernardo Quintana 654', 'Celaya', 'Querétaro', NOW() + INTERVAL '1 day', NOW(), 300.00, 'entregado'),
+('MTZ004', 'Laptop HP', 'Electronica', 2.50, 0.03, 40, 30, 10, 18000, 'express', 'entregado'),
 
-(5, 1, 'Blvd. Bernardo Quintana 654', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', NOW() + INTERVAL '2 day', NULL, 180.00, 'en_ruta');
+('MTZ005', 'Libros universitarios', 'Libros', 3.00, 0.04, 35, 25, 15, 1500, 'normal', 'en_transito');
 -- Envios
 CREATE TABLE envios (
     id_envio SERIAL PRIMARY KEY,
@@ -128,13 +120,18 @@ CREATE TABLE envios (
     FOREIGN KEY (id_cliente_destinatario)
     REFERENCES clientes(id_cliente)
 );
-INSERT INTO envio_paquete (id_envio, id_paquete)
+INSERT INTO envios (id_cliente_remitente, id_cliente_destinatario, direccion_origen, direccion_destino, ciudad_origen, ciudad_destino, fecha_estimada_entrega, fecha_entrega_real, costo_total, estado_envio)
 VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
+(1, 2, 'Av. Constituyentes 123', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', NOW() + INTERVAL '1 day', NULL, 150.00, 'en_ruta'),
+
+(2, 3, 'Calle Hidalgo 456', 'Av. Zaragoza 789', 'Querétaro', 'San Juan del Río', NOW() + INTERVAL '2 day', NULL, 200.00, 'pendiente'),
+
+(3, 4, 'Av. Zaragoza 789', 'Calle Reforma 321', 'San Juan del Río', 'Celaya', NOW() + INTERVAL '3 day', NULL, 250.00, 'en_ruta'),
+
+(4, 5, 'Calle Reforma 321', 'Blvd. Bernardo Quintana 654', 'Celaya', 'Querétaro', NOW() + INTERVAL '1 day', NOW(), 300.00, 'entregado'),
+
+(5, 1, 'Blvd. Bernardo Quintana 654', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', NOW() + INTERVAL '2 day', NULL, 180.00, 'en_ruta');
+
 -- Relación envio-paquete
 CREATE TABLE envio_paquete (
     id_envio INT NOT NULL,
@@ -149,7 +146,13 @@ CREATE TABLE envio_paquete (
     REFERENCES paquetes(id_paquete)
     ON DELETE CASCADE
 );
-
+INSERT INTO envio_paquete (id_envio, id_paquete)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 -- Rutas
 CREATE TABLE rutas (
     id_ruta SERIAL PRIMARY KEY,
@@ -161,6 +164,14 @@ CREATE TABLE rutas (
     tipo_ruta tipo_ruta_enum NOT NULL,
     estado estado_ruta_enum NOT NULL
 );
+
+INSERT INTO rutas (nombre_ruta, origen, destino, distancia_km, tiempo_estimado, tipo_ruta, estado)
+VALUES
+('Ruta-Centro Norte', 'Querétaro Centro', 'Juriquilla', 18.50, '00:45', 'urbana', 'activa'),
+('Ruta-Industrial QRO', 'Parque Industrial Benito Juárez', 'El Marqués', 22.30, '00:55', 'urbana', 'activa'),
+('Ruta-QRO-SJR', 'Querétaro', 'San Juan del Río', 52.00, '01:10', 'foranea', 'activa'),
+('Ruta-QRO-Celaya', 'Querétaro', 'Celaya', 65.00, '01:25', 'foranea', 'activa'),
+('Ruta-Aeropuerto', 'Querétaro Centro', 'AIQ', 35.00, '00:50', 'urbana', 'inactiva');
 
 -- Vehiculos
 CREATE TABLE vehiculos (
@@ -176,6 +187,14 @@ CREATE TABLE vehiculos (
     kilometraje DECIMAL(10,2)
 );
 
+INSERT INTO vehiculos (placa, marca, modelo, tipo, capacidad_peso, capacidad_volumen, estado, anio, kilometraje)
+VALUES
+('ULL4428', 'Honda', 'Cargo 150', 'moto', 120.00, 0.40, 'disponible', 2022, 18500.00),
+('ULL4429', 'Nissan', 'Urvan', 'van', 800.00, 3.80, 'en_ruta', 2009, 60320.00),
+('ULL4430', 'Ford', 'Transit', 'van', 1100.00, 5.20, 'disponible', 2023, 27840.00),
+('ULL4431', 'Isuzu', 'ELF 400', 'camion', 3500.00, 18.00, 'mantenimiento', 2020, 98500.00),
+('ULL4432', 'Italika', 'FT150', 'moto', 110.00, 0.35, 'disponible', 2024, 4200.00);
+
 -- Conductores
 CREATE TABLE conductores (
     id_conductor SERIAL PRIMARY KEY,
@@ -188,6 +207,16 @@ CREATE TABLE conductores (
     FOREIGN KEY (id_usuario)
     REFERENCES usuarios(id_usuario)
 );
+
+INSERT INTO conductores (id_usuario, licencia, tipo_licencia, fecha_contratacion, estado)
+VALUES
+((SELECT id_usuario FROM usuarios WHERE correo = 'conductor@metzvia.com'),'LIC-QRO-2021-001','B', '2021-06-15','activo'),
+
+((SELECT id_usuario FROM usuarios WHERE correo = 'conductor2@metzvia.com'),'LIC-QRO-2022-014','B','2022-02-10','activo'),
+
+((SELECT id_usuario FROM usuarios WHERE correo = 'conductor3@metzvia.com'),'LIC-QRO-2020-087','C','2020-09-01','activo'),
+
+((SELECT id_usuario FROM usuarios WHERE correo = 'conductor4@metzvia.com'),'LIC-QRO-2023-031','B','2023-05-18','activo');
 
 -- Asignaciones
 CREATE TABLE asignaciones_ruta (
@@ -204,6 +233,14 @@ CREATE TABLE asignaciones_ruta (
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
 
+INSERT INTO asignaciones_ruta (id_ruta, id_vehiculo, id_conductor, fecha_salida, fecha_llegada, estado_asignacion)
+VALUES
+(1, 2, 1, '2026-03-24 08:00:00', NULL, 'en_proceso'),
+(2, 3, 1, '2026-03-24 10:30:00', NULL, 'programada'),
+(3, 2, 1, '2026-03-23 07:00:00', '2026-03-23 11:20:00', 'finalizada'),
+(4, 3, 1, '2026-03-24 13:00:00', NULL, 'programada'),
+(5, 5, 1, '2026-03-22 09:15:00', '2026-03-22 10:05:00', 'finalizada');
+
 -- Envio en ruta
 CREATE TABLE envio_ruta (
     id_envio INT NOT NULL,
@@ -216,6 +253,14 @@ CREATE TABLE envio_ruta (
     FOREIGN KEY (id_asignacion)
     REFERENCES asignaciones_ruta(id_asignacion)
 );
+
+INSERT INTO envio_ruta (id_envio, id_asignacion)
+VALUES
+(1, 1),
+(2, 2),
+(3, 1),
+(4, 3),
+(5, 4);
 
 -- Tracking
 CREATE TABLE tracking (
@@ -231,6 +276,14 @@ CREATE TABLE tracking (
     FOREIGN KEY (id_envio) REFERENCES envios(id_envio)
 );
 
+INSERT INTO tracking (id_paquete, id_envio, ubicacion_actual, estado_paquete, observaciones, fecha_hora)
+VALUES
+(1, 1, 'Centro de distribución Querétaro', 'en_transito', 'Salida a ruta urbana', NOW() - INTERVAL '2 hour'),
+(2, 2, 'Sucursal Querétaro Norte', 'registrado', 'Pendiente de recolección', NOW() - INTERVAL '1 hour'),
+(3, 3, 'Carretera 57 km 158', 'en_transito', 'Retraso por tráfico', NOW() - INTERVAL '3 hour'),
+(4, 4, 'Celaya Centro', 'entregado', 'Entrega completada sin incidencias', NOW() - INTERVAL '30 minute'),
+(5, 5, 'Centro logístico Querétaro', 'en_transito', 'Asignación de salida en proceso', NOW() - INTERVAL '45 minute');
+
 -- Historial
 CREATE TABLE historial_envio (
     id_historial SERIAL PRIMARY KEY,
@@ -243,6 +296,21 @@ CREATE TABLE historial_envio (
     FOREIGN KEY (id_envio)
     REFERENCES envios(id_envio)
 );
+
+INSERT INTO historial_envio (id_envio, estado, ubicacion, observaciones, fecha)
+VALUES
+(1, 'pendiente', 'Sucursal Querétaro Centro', 'Orden registrada en sistema', NOW() - INTERVAL '6 hour'),
+(1, 'en_ruta', 'Centro de distribución Querétaro', 'Unidad asignada y salida confirmada', NOW() - INTERVAL '2 hour'),
+
+(2, 'pendiente', 'Sucursal Querétaro Norte', 'Pendiente de recolección', NOW() - INTERVAL '5 hour'),
+
+(3, 'pendiente', 'San Juan del Río', 'Paquete recibido en ventanilla', NOW() - INTERVAL '9 hour'),
+(3, 'en_ruta', 'Carretera 57', 'En tránsito a Celaya', NOW() - INTERVAL '4 hour'),
+
+(4, 'pendiente', 'Celaya Centro', 'Generación de guía', NOW() - INTERVAL '10 hour'),
+(4, 'en_ruta', 'Ruta Celaya-Querétaro', 'Traslado sin incidencias', NOW() - INTERVAL '7 hour'),
+(4, 'entregado', 'Querétaro', 'Entrega completada al destinatario', NOW() - INTERVAL '1 hour'),
+(5, 'pendiente', 'Centro logístico Querétaro', 'Esperando validación de salida', NOW() - INTERVAL '3 hour');
 
 -- Entregas
 CREATE TABLE entregas (
@@ -262,6 +330,12 @@ CREATE TABLE entregas (
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
 
+INSERT INTO entregas (id_envio, id_paquete, id_conductor, fecha_hora_entrega, nombre_quien_recibe, firma_digital, evidencia_foto, estado_entrega, motivo_falla)
+VALUES
+(4, 4, 1, NOW() - INTERVAL '1 hour', 'María González Ruiz', 'firma_entrega_004.png', 'foto_entrega_004.jpg', 'exitosa', NULL),
+(2, 2, 2, NOW() - INTERVAL '35 minute', 'Domicilio sin recepción', NULL, 'foto_falla_002.jpg', 'fallida', 'No hubo persona para recibir el paquete'),
+(1, 1, 3, NOW() - INTERVAL '15 minute', 'Recepción corporativa', 'firma_entrega_001.png', 'foto_entrega_001.jpg', 'exitosa', NULL);
+
 -- Pagos
 CREATE TABLE pagos (
     id_pago SERIAL PRIMARY KEY,
@@ -275,6 +349,13 @@ CREATE TABLE pagos (
     FOREIGN KEY (id_envio)
     REFERENCES envios(id_envio)
 );
+
+INSERT INTO pagos (id_envio, metodo_pago, monto, fecha_pago, estado_pago, referencia)
+VALUES
+(1, 'tarjeta', 150.00, NOW() - INTERVAL '2 day', 'pagado', 'TXN-ENV001-20260322'),
+(2, 'efectivo', 250.00, NOW() - INTERVAL '3 hour', 'pagado', 'EFE-ENV003-20260324'),
+(3, 'tarjeta', 300.00, NOW() - INTERVAL '5 hour', 'pagado', 'TXN-ENV004-20260324'),
+(4, 'tarjeta', 180.00, NOW() - INTERVAL '30 minute', 'rechazado', 'TXN-ENV005-20260324');
 
 -- Incidencias
 CREATE TABLE incidencias (
@@ -292,6 +373,13 @@ CREATE TABLE incidencias (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
+INSERT INTO incidencias (id_envio, id_paquete, id_usuario, tipo_incidencia, descripcion, fecha_reporte, estado)
+VALUES
+(3, 3, 2, 'retraso', 'Tráfico rumbo a la salida de Celaya.', NOW() - INTERVAL '5 hour', 'en_proceso'),
+(5, 5, 2, 'dano', 'Caja con golpe lateral detectado en el centro logístico.', NOW() - INTERVAL '2 hour', 'abierta'),
+(2, 2, 1, 'perdida', 'Sobre no localizado.', NOW() - INTERVAL '1 day', 'cerrada'),
+(1, 1, 3, 'retraso', 'Reprogramación de ruta por cierre vial.', NOW() - INTERVAL '90 minute', 'abierta');
+
 -- Mantenimientos
 CREATE TABLE mantenimientos (
     id_mantenimiento SERIAL PRIMARY KEY,
@@ -306,6 +394,12 @@ CREATE TABLE mantenimientos (
     REFERENCES vehiculos(id_vehiculo)
 );
 
+INSERT INTO mantenimientos (id_vehiculo, tipo_mantenimiento, descripcion, fecha, costo, proximo_servicio_km)
+VALUES
+(2, 'Preventivo', 'Cambio de aceite y revisión de frenos.', CURRENT_DATE - INTERVAL '30 day', 2450.00, 65000.00),
+(4, 'Correctivo', 'Sustitución de balatas y ajuste de suspensión.', CURRENT_DATE - INTERVAL '10 day', 7800.00, 105000.00),
+(5, 'Preventivo', 'Afinación general y cambio de bujía.', CURRENT_DATE - INTERVAL '15 day', 950.00, 9000.00);
+
 -- Notificaciones
 CREATE TABLE notificaciones (
     id_notificacion SERIAL PRIMARY KEY,
@@ -319,6 +413,14 @@ CREATE TABLE notificaciones (
     REFERENCES usuarios(id_usuario)
 );
 
+INSERT INTO notificaciones (id_usuario, titulo, mensaje, leida, fecha)
+VALUES
+(1, 'Resumen diario', 'Se generó el resumen operativo del día.', TRUE, NOW() - INTERVAL '1 day'),
+(2, 'Nueva incidencia', 'Se registró una incidencia en el envío #5.', FALSE, NOW() - INTERVAL '5 hour'),
+(3, 'Ruta asignada', 'Tienes una nueva asignación para la Ruta Centro Norte.', FALSE, NOW() - INTERVAL '3 hour'),
+(4, 'Envío actualizado', 'Tu envío MTZ004 fue entregado exitosamente.', TRUE, NOW() - INTERVAL '2 hour'),
+(5, 'Pago rechazado', 'Tu pago del envío #5 fue rechazado.', FALSE, NOW() - INTERVAL '30 minute');
+
 -- Centros logísticos
 CREATE TABLE centros_logisticos (
     id_centro SERIAL PRIMARY KEY,
@@ -329,3 +431,10 @@ CREATE TABLE centros_logisticos (
     capacidad_paquetes INT NOT NULL,
     estado_operacion estado_operacion_enum NOT NULL
 );
+
+INSERT INTO centros_logisticos (nombre, direccion, ciudad, estado, capacidad_paquetes, estado_operacion)
+VALUES
+('Centro de distribución Querétaro', 'Av. Pie de la Cuesta 1200', 'Querétaro', 'Querétaro', 12000, 'activo'),
+('Sucursal Querétaro Norte', 'Av. del Sol 245', 'Querétaro', 'Querétaro', 8000, 'activo'),
+('Celaya Centro', 'Blvd. Adolfo López Mateos 890', 'Celaya', 'Guanajuato', 9000, 'activo'),
+('Centro logístico Querétaro', 'Calle 5 de Mayo 45', 'Querétaro', 'Querétaro', 1500, 'inactivo');

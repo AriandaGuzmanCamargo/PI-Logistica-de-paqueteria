@@ -17,7 +17,7 @@ export default function DetalleEnvio() {
 					<div className="header-logo">
 						<img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
 					</div>
-					<h1 className="barra-superior__titulo">Detalle envío</h1>
+					<h1 className="barra-superior__titulo">Operador logístico</h1>
 				</div>
 				<div className="barra-superior__perfil">
 					<img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />

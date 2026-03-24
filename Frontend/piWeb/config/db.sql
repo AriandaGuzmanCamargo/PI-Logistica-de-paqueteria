@@ -45,6 +45,18 @@ VALUES
 ON CONFLICT (correo) DO NOTHING;
 
 -- Clientes
+INSERT INTO clientes (nombre, rfc, telefono, correo, direccion_principal, ciudad, estado, codigo_postal)
+VALUES
+('Juan Pérez López', 'PELJ800101AB1', '4421234567', 'juan.perez@gmail.com', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', '76000'),
+
+('María González Ruiz', 'GORM850202CD2', '4422345678', 'maria.gonzalez@gmail.com', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', '76100'),
+
+('Carlos Hernández Soto', 'HESC900303EF3', '4423456789', 'carlos.hernandez@gmail.com', 'Av. Zaragoza 789', 'San Juan del Río', 'Querétaro', '76800'),
+
+('Ana Martínez Cruz', 'MACA920404GH4', '4424567890', 'ana.martinez@gmail.com', 'Calle Reforma 321', 'Celaya', 'Guanajuato', '38000'),
+
+('Luis Ramírez Torres', 'RATL950505IJ5', '4425678901', 'luis.ramirez@gmail.com', 'Blvd. Bernardo Quintana 654', 'Querétaro', 'Querétaro', '76120');
+-- Clientes
 CREATE TABLE clientes (
     id_cliente SERIAL PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
@@ -57,7 +69,17 @@ CREATE TABLE clientes (
     codigo_postal VARCHAR(10) NOT NULL,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+INSERT INTO paquetes (codigo_rastreo, descripcion, tipo_contenido, peso, volumen, largo, ancho, alto, valor_declarado, tipo_servicio, estado_actual)
+VALUES
+('MTZ001', 'Celular Samsung Galaxy', 'Electronica', 0.50, 0.01, 15, 8, 5, 12000, 'express', 'en_transito'),
 
+('MTZ002', 'Documentos legales', 'Documentos', 0.20, 0.005, 30, 25, 2, 500, 'normal', 'registrado'),
+
+('MTZ003', 'Zapatos deportivos', 'Ropa', 1.20, 0.02, 30, 20, 10, 2500, 'economico', 'en_transito'),
+
+('MTZ004', 'Laptop HP', 'Electronica', 2.50, 0.03, 40, 30, 10, 18000, 'express', 'entregado'),
+
+('MTZ005', 'Libros universitarios', 'Libros', 3.00, 0.04, 35, 25, 15, 1500, 'normal', 'en_transito');
 -- Paquetes
 CREATE TABLE paquetes (
     id_paquete SERIAL PRIMARY KEY,
@@ -74,7 +96,17 @@ CREATE TABLE paquetes (
     estado_actual estado_paquete_enum NOT NULL,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+INSERT INTO envios (id_cliente_remitente, id_cliente_destinatario, direccion_origen, direccion_destino, ciudad_origen, ciudad_destino, fecha_estimada_entrega, fecha_entrega_real, costo_total, estado_envio)
+VALUES
+(1, 2, 'Av. Constituyentes 123', 'Calle Hidalgo 456', 'Querétaro', 'Querétaro', NOW() + INTERVAL '1 day', NULL, 150.00, 'en_ruta'),
 
+(2, 3, 'Calle Hidalgo 456', 'Av. Zaragoza 789', 'Querétaro', 'San Juan del Río', NOW() + INTERVAL '2 day', NULL, 200.00, 'pendiente'),
+
+(3, 4, 'Av. Zaragoza 789', 'Calle Reforma 321', 'San Juan del Río', 'Celaya', NOW() + INTERVAL '3 day', NULL, 250.00, 'en_ruta'),
+
+(4, 5, 'Calle Reforma 321', 'Blvd. Bernardo Quintana 654', 'Celaya', 'Querétaro', NOW() + INTERVAL '1 day', NOW(), 300.00, 'entregado'),
+
+(5, 1, 'Blvd. Bernardo Quintana 654', 'Av. Constituyentes 123', 'Querétaro', 'Querétaro', NOW() + INTERVAL '2 day', NULL, 180.00, 'en_ruta');
 -- Envios
 CREATE TABLE envios (
     id_envio SERIAL PRIMARY KEY,
@@ -96,7 +128,13 @@ CREATE TABLE envios (
     FOREIGN KEY (id_cliente_destinatario)
     REFERENCES clientes(id_cliente)
 );
-
+INSERT INTO envio_paquete (id_envio, id_paquete)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 -- Relación envio-paquete
 CREATE TABLE envio_paquete (
     id_envio INT NOT NULL,

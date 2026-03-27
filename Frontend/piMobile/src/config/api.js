@@ -20,14 +20,14 @@ const getDefaultApiUrl = () => {
   const host = getHostFromExpo();
 
   if (host) {
-    return `http://${host}:3001`;
+    return `http://${host}:3000`;
   }
 
   if (Platform.OS === 'android') {
-    return 'http://10.0.2.2:3001';
+    return 'http://10.0.2.2:3000';
   }
 
-  return 'http://localhost:3001';
+  return 'http://localhost:3000';
 };
 
 export const API_BASE_URL = fromEnv || getDefaultApiUrl();

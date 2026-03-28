@@ -180,6 +180,41 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 			lineHeight: s(15),
 			marginBottom: s(8),
 		},
+		refreshBtn: {
+			borderRadius: s(7),
+			backgroundColor: isDarkMode ? '#314A78' : '#5D7FB7',
+			alignItems: 'center',
+			justifyContent: 'center',
+			paddingVertical: s(8),
+			marginBottom: s(8),
+		},
+		refreshBtnText: {
+			color: colors.white,
+			fontSize: s(12),
+			fontWeight: '600',
+		},
+		liveBtn: {
+			borderRadius: s(7),
+			backgroundColor: isDarkMode ? '#2F5A45' : '#4E9A72',
+			alignItems: 'center',
+			justifyContent: 'center',
+			paddingVertical: s(8),
+			marginBottom: s(6),
+		},
+		liveBtnActive: {
+			backgroundColor: isDarkMode ? '#7A2F2F' : '#C44E4E',
+		},
+		liveBtnText: {
+			color: colors.white,
+			fontSize: s(12),
+			fontWeight: '700',
+		},
+		liveStatus: {
+			color: isDarkMode ? '#86EFAC' : '#17613B',
+			fontSize: s(11),
+			fontWeight: '600',
+			marginBottom: s(8),
+		},
 		startBtn: {
 			borderRadius: s(7),
 			backgroundColor: '#E4B23C',

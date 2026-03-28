@@ -15,7 +15,7 @@ import getDetalleEntregaRStyles from '../styles/DetalleEntregaRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
-import { geocodeAddress, getDrivingRoute, normalizeAddressQuery, toKm, toMinutes } from '../services/rutaMapService';
+import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, resolveCurrentPosition, toKm, toMinutes } from '../services/rutaMapService';
 
 let MapViewComponent = null;
 let MarkerComponent = null;
@@ -62,73 +62,65 @@ export default function DetalleEntregaR({ navigation, route }) {
 		durationSeconds: null,
 	});
 
-	useEffect(() => {
-		let isCancelled = false;
+	const resolveMapPreview = async () => {
+		setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
 
-		async function resolveMapPreview() {
-			setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
+		try {
+			const Location = await getExpoLocationModule();
+			let destination = null;
+			const currentPosition = await resolveCurrentPosition(DEFAULT_ORIGIN);
+			const origin = currentPosition.origin;
+			let warning = currentPosition.warning || '';
+
+			const normalizedAddress = normalizeAddressQuery(delivery.address);
 
 			try {
-				const { default: Location } = await import('expo-location');
-				let destination = null;
-				let warning = '';
+				const localResults = await Location.geocodeAsync(normalizedAddress);
+				const localFirst = Array.isArray(localResults) ? localResults[0] : null;
 
-				const normalizedAddress = normalizeAddressQuery(delivery.address);
+				if (localFirst?.latitude && localFirst?.longitude) {
+					destination = {
+						latitude: localFirst.latitude,
+						longitude: localFirst.longitude,
+					};
+				}
+			} catch {
+				destination = null;
+			}
 
+			if (!destination) {
 				try {
-					const localResults = await Location.geocodeAsync(normalizedAddress);
-					const localFirst = Array.isArray(localResults) ? localResults[0] : null;
-
-					if (localFirst?.latitude && localFirst?.longitude) {
-						destination = {
-							latitude: localFirst.latitude,
-							longitude: localFirst.longitude,
-						};
-					}
+					destination = await geocodeAddress(delivery.address);
 				} catch {
-					destination = null;
-				}
-
-				if (!destination) {
-					try {
-						destination = await geocodeAddress(delivery.address);
-					} catch {
-						destination = { ...DEFAULT_DESTINATION };
-						warning = 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
-					}
-				}
-
-				const routeData = await getDrivingRoute(DEFAULT_ORIGIN, destination);
-
-				if (!isCancelled) {
-					setMapState({
-						loading: false,
-						error: '',
-						warning,
-						origin: DEFAULT_ORIGIN,
-						destination,
-						routeCoordinates: routeData.coordinates,
-						distanceMeters: routeData.distanceMeters,
-						durationSeconds: routeData.durationSeconds,
-					});
-				}
-			} catch (error) {
-				if (!isCancelled) {
-					setMapState((prev) => ({
-						...prev,
-						loading: false,
-						error: '',
-						warning: error.message || 'No fue posible calcular la ruta exacta.',
-					}));
+					destination = { ...DEFAULT_DESTINATION };
+					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
 				}
 			}
+
+			const routeData = await getDrivingRoute(origin, destination);
+
+			setMapState({
+				loading: false,
+				error: '',
+				warning,
+				origin,
+				destination,
+				routeCoordinates: routeData.coordinates,
+				distanceMeters: routeData.distanceMeters,
+				durationSeconds: routeData.durationSeconds,
+			});
+		} catch (error) {
+			setMapState((prev) => ({
+				...prev,
+				loading: false,
+				error: '',
+				warning: error.message || 'No fue posible calcular la ruta exacta.',
+			}));
 		}
+	};
 
+	useEffect(() => {
 		resolveMapPreview();
-
-		return () => {
-			isCancelled = true;
-		};
 	}, [delivery.address]);
 
 	const previewRegion = useMemo(() => {
@@ -247,6 +239,10 @@ export default function DetalleEntregaR({ navigation, route }) {
 						</View>
 
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
+
+						<TouchableOpacity style={styles.refreshBtn} onPress={resolveMapPreview}>
+							<Text style={styles.actionText}>Actualizar ubicacion real</Text>
+						</TouchableOpacity>
 
 						<View style={styles.actionRow}>
 							<TouchableOpacity style={[styles.actionButton, styles.successBtn]}>

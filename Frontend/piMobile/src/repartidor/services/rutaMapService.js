@@ -2,6 +2,17 @@ const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
 const MAPS_CO_BASE_URL = 'https://geocode.maps.co/search';
 const OSRM_BASE_URL = 'https://router.project-osrm.org/route/v1/driving';
 
+export async function getExpoLocationModule() {
+  const locationModule = await import('expo-location');
+  const Location = locationModule?.default || locationModule;
+
+  if (!Location) {
+    throw new Error('No se pudo inicializar expo-location.');
+  }
+
+  return Location;
+}
+
 function normalizeCoordinate(value) {
   return Number.parseFloat(Number(value).toFixed(6));
 }
@@ -140,6 +151,65 @@ export async function getDrivingRoute(origin, destination) {
     durationSeconds: route.duration,
     coordinates,
   };
+}
+
+export async function resolveCurrentPosition(defaultOrigin) {
+  const Location = await getExpoLocationModule();
+
+  const requestPermission = Location.requestForegroundPermissionsAsync;
+
+  if (typeof requestPermission !== 'function') {
+    return {
+      origin: { ...defaultOrigin },
+      source: 'default',
+      warning: 'No se pudo acceder a permisos de ubicacion en este dispositivo.',
+    };
+  }
+
+  const permission = await requestPermission();
+
+  if (permission.status !== 'granted') {
+    return {
+      origin: { ...defaultOrigin },
+      source: 'default',
+      warning: 'Permiso de ubicacion denegado. Activalo para usar posicion real.',
+    };
+  }
+
+  try {
+    const position = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Highest,
+      maximumAge: 4000,
+    });
+
+    return {
+      origin: {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      },
+      source: 'gps',
+      warning: '',
+    };
+  } catch {
+    const lastKnown = await Location.getLastKnownPositionAsync();
+
+    if (lastKnown?.coords?.latitude && lastKnown?.coords?.longitude) {
+      return {
+        origin: {
+          latitude: lastKnown.coords.latitude,
+          longitude: lastKnown.coords.longitude,
+        },
+        source: 'lastKnown',
+        warning: 'Usando ultima ubicacion conocida del dispositivo.',
+      };
+    }
+
+    return {
+      origin: { ...defaultOrigin },
+      source: 'default',
+      warning: 'No fue posible leer GPS. Verifica que la ubicacion del telefono este encendida.',
+    };
+  }
 }
 
 export function toKm(distanceMeters) {

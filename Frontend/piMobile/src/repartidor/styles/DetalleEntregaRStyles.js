@@ -213,6 +213,14 @@ export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
       lineHeight: s(15),
       marginTop: s(2),
     },
+    refreshBtn: {
+      marginTop: s(8),
+      borderRadius: s(7),
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: s(8),
+      backgroundColor: isDarkMode ? '#314A78' : '#5D7FB7',
+    },
     actionRow: {
       flexDirection: 'row',
       gap: s(7),

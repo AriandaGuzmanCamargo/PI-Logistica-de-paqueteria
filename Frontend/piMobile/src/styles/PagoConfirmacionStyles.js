@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     color: '#6A5A2C',
     fontWeight: '700',
     marginTop: 4,
+    textAlign: 'center',
   },
   btn: {
     backgroundColor: colors.gold,

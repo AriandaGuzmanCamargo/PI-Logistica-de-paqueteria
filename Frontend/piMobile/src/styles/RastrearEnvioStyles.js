@@ -103,6 +103,46 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+  timelineLocation: {
+    color: '#9AA4BF',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  timelineDate: {
+    color: '#9AA4BF',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  timelineObservacion: {
+    color: '#8891AE',
+    fontSize: 11,
+    marginTop: 2,
+    fontStyle: 'italic',
+  },
+  errorWrap: {
+    backgroundColor: '#FFE5E5',
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  loadingWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 12,
+    color: colors.text,
+    fontSize: 14,
+  },
   link: {
     marginTop: 2,
     color: colors.muted,

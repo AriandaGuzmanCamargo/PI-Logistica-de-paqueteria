@@ -40,13 +40,13 @@ export default function MainLayout({
               />
 
               <View style={styles.rightGroup}>
-                <View style={styles.iconCircle}>
+                <TouchableOpacity style={styles.iconCircle} onPress={() => navigation.navigate('Notificaciones')}>
                   <Image
                     source={require('../../images/bell_9972125.png')}
                     style={styles.bellIcon}
                     resizeMode="contain"
                   />
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.avatar}>
                   <Text style={styles.avatarText}>EP</Text>
                 </TouchableOpacity>

@@ -34,8 +34,8 @@ export default function NuevoEnvioScreen({ navigation }) {
         <Text style={styles.btnPrimaryText}>Completar formulario de envio</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('CotizarEnvio')}>
-        <Text style={styles.btnText}>Usar flujo rapido</Text>
+      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('PagoOpciones')}>
+        <Text style={styles.btnText}>Ir a pagos</Text>
       </TouchableOpacity>
     </MainLayout>
   );

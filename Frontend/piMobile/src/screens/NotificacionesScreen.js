@@ -1,26 +1,92 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MainLayout from '../components/MainLayout';
+import { getCurrentUser } from '../services/sessionService';
+import { getNotificacionesByUsuario } from '../services/notificacionesService';
 import styles from '../styles/NotificacionesStyles';
 
+function formatRelativeDate(isoString) {
+  if (!isoString) return 'Sin fecha';
+
+  const date = new Date(isoString);
+  const diffMs = Date.now() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+
+  if (diffMin < 1) return 'Ahora';
+  if (diffMin < 60) return `Hace ${diffMin} min`;
+
+  const diffHours = Math.floor(diffMin / 60);
+  if (diffHours < 24) return `Hace ${diffHours} h`;
+
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays === 1) return 'Ayer';
+  return `Hace ${diffDays} dias`;
+}
+
 export default function NotificacionesScreen({ navigation }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [notificaciones, setNotificaciones] = useState([]);
+
+  const loadNotificaciones = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      const user = getCurrentUser();
+
+      if (!user?.id_usuario) {
+        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+      }
+
+      const data = await getNotificacionesByUsuario(user.id_usuario);
+      setNotificaciones(data);
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudieron cargar las notificaciones.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadNotificaciones();
+    }, [loadNotificaciones])
+  );
+
   return (
     <MainLayout title="Notificaciones" navigation={navigation} backTo="MenuUsuario" activeTab="ConfiguracionUsuario">
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Envio PAK123456789</Text>
-          <Text style={styles.time}>Hace 5 min</Text>
+      {isLoading ? (
+        <View style={styles.stateWrap}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.stateText}>Cargando notificaciones...</Text>
         </View>
-        <Text style={styles.message}>Tu paquete esta en reparto y llegara hoy entre 2:00 PM y 5:00 PM.</Text>
-      </View>
+      ) : null}
 
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Pago confirmado</Text>
-          <Text style={styles.time}>Ayer</Text>
+      {!isLoading && errorMessage ? (
+        <View style={styles.stateWrap}>
+          <Text style={[styles.stateText, styles.stateError]}>{errorMessage}</Text>
         </View>
-        <Text style={styles.message}>Se registro correctamente el pago del envio PAK889900112.</Text>
-      </View>
+      ) : null}
+
+      {!isLoading && !errorMessage && notificaciones.length === 0 ? (
+        <View style={styles.stateWrap}>
+          <Text style={styles.stateText}>No tienes notificaciones por ahora.</Text>
+        </View>
+      ) : null}
+
+      {!isLoading && !errorMessage
+        ? notificaciones.map((item) => (
+            <View style={styles.card} key={item.id_notificacion}>
+              <View style={styles.row}>
+                <Text style={styles.title}>{item.titulo || 'Notificacion'}</Text>
+                <Text style={styles.time}>{formatRelativeDate(item.fecha)}</Text>
+              </View>
+              <Text style={styles.message}>{item.mensaje || 'Sin contenido'}</Text>
+            </View>
+          ))
+        : null}
     </MainLayout>
   );
 }

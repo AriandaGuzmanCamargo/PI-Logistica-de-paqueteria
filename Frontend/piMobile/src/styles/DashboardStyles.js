@@ -38,6 +38,27 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '700',
   },
+  feedbackWrap: {
+    marginTop: 8,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    color: colors.text,
+    marginTop: 6,
+    fontSize: 13,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 13,
+    fontWeight: '500',
+  },
   grid: {
     marginTop: 10,
     flexDirection: 'row',

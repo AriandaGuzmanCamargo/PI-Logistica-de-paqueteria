@@ -8,15 +8,22 @@ export default function DetalleEnvioSupervisor() {
     /* ── Detalle del Envío ── */
     .det-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       margin: 20px 0 22px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
     }
     .det-header__titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .det-header__guia {
       display: inline-block;
@@ -397,8 +404,8 @@ export default function DetalleEnvioSupervisor() {
     <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main className="panel-principal panel-principal--full">
-      <header className="barra-superior barra-superior--con-logo">
+    <main className="panel-principal panel-principal--full panel-principal--supervisor">
+      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
         <div className="barra-superior__left">
           <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -407,13 +414,6 @@ export default function DetalleEnvioSupervisor() {
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
-        </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
@@ -430,7 +430,6 @@ export default function DetalleEnvioSupervisor() {
         <div className="det-card">
           <h3 className="det-card__titulo">Información del Paquete</h3>
           <div className="det-paq__guia-row">
-            <span className="det-paq__guia-icono">&#128230;</span>
             <span className="det-paq__guia">PAK123456789</span>
           </div>
           <div className="det-paq__campo">
@@ -517,13 +516,13 @@ export default function DetalleEnvioSupervisor() {
             </div>
             <div className="det-rep__acciones">
               <button className="det-rep-btn det-rep-btn--reasignar">
-                <span className="det-rep-btn__icono">&#128230;</span> Reasignar repartidor
+                Reasignar repartidor
               </button>
               <button className="det-rep-btn det-rep-btn--retraso">
-                <span className="det-rep-btn__icono">&#9888;</span> Marcar retraso
+                Marcar retraso
               </button>
               <button className="det-rep-btn det-rep-btn--incidencia">
-                <span className="det-rep-btn__icono">&#9888;</span> Reportar incidencia
+                Reportar incidencia
               </button>
             </div>
           </div>
@@ -540,11 +539,11 @@ export default function DetalleEnvioSupervisor() {
         <h3 className="det-card__titulo">Acciones Supervisor</h3>
         <div className="det-acciones-sv__btns">
           <button className="det-sv-btn det-sv-btn--reasignar">
-            <span className="det-sv-btn__icono">&#128230;</span> Reasignar repartidor
+            Reasignar repartidor
             <span className="det-sv-btn__flecha">&rsaquo;</span>
           </button>
           <button className="det-sv-btn det-sv-btn--retraso">
-            <span className="det-sv-btn__icono">&#9200;</span> Marcar retraso
+            Marcar retraso
           </button>
         </div>
       </div>

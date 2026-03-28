@@ -94,10 +94,6 @@ export default function DashboardOperador() {
           </div>
           <h1 className="barra-superior__titulo">Operador logístico</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">▾</span>
-        </div>
       </header>
 
       <section className="bienvenida">
@@ -109,28 +105,28 @@ export default function DashboardOperador() {
 
       <section className={`resumen-operador ${loading ? 'resumen-operador--loading' : ''}`}>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/pendiente.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Pendientes por Procesar</h3>
             <p>{loading ? '...' : resumen.pendientes}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/proceso.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>En Proceso</h3>
             <p>{loading ? '...' : resumen.enRuta}</p>
           </div>
         </article>
         <article className="tarjeta-resumen tarjeta-resumen--alerta">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/pendiente.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Pendientes de Entrega</h3>
             <p>{loading ? '...' : resumen.retrasados}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/total.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Total de Envíos Hoy</h3>
             <p>{loading ? '...' : resumen.total}</p>

@@ -40,13 +40,9 @@ export default function MainLayout({
                     style={styles.bellIcon}
                     resizeMode="contain"
                   />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate('ConfiguracionUsuario')}>
-                  <Image
-                    source={require('../../images/usuario.png')}
-                    style={styles.avatarIcon}
-                    resizeMode="contain"
-                  />
+                </View>
+                <TouchableOpacity style={styles.avatar}>
+                  <Text style={styles.avatarText}>EP</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -1,105 +1,100 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function RutaRepartidorSupervisor() {
 
   useEffect(() => {
-    // ── Mapa Leaflet ──
-        (function () {
-          var map = L.map('rutaMapa', {
-            zoomControl: false
-          }).setView([19.4326, -99.1332], 14);
-    
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors',
-            maxZoom: 19
-          }).addTo(map);
-    
-          // Icono almacén
-          var iconAlmacen = L.divIcon({
-            className: '',
-            html: '<div style="background:#3b6aaa;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#9642; Almacén</div>',
-            iconSize: [80, 30],
-            iconAnchor: [40, 15]
-          });
-    
-          // Icono punto de entrega
-          function iconEntrega(numero, color) {
-            return L.divIcon({
-              className: '',
-              html: '<div style="background:' + color + ';color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.25);">' + numero + '</div>',
-              iconSize: [30, 30],
-              iconAnchor: [15, 15]
-            });
-          }
-    
-          // Icono repartidor
-          var iconRepartidor = L.divIcon({
-            className: '',
-            html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">&#128666;</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-    
-          // Puntos de la ruta (simulados sobre CDMX)
-          var almacen = [19.4280, -99.1480];
-          var puntos = [
-            { coord: [19.4230, -99.1400], nombre: 'Ana García', color: '#3b6aaa' },
-            { coord: [19.4260, -99.1350], nombre: 'Carlos Ramírez', color: '#3b6aaa' },
-            { coord: [19.4310, -99.1300], nombre: 'Laura Gómez', color: '#3b6aaa' },
-            { coord: [19.4380, -99.1250], nombre: 'Jorge Sánchez', color: '#f5a623' },
-            { coord: [19.4420, -99.1200], nombre: 'Pilar Suárez', color: '#3b6aaa' }
-          ];
-    
-          // Marcador almacén
-          L.marker(almacen, { icon: iconAlmacen }).addTo(map)
-            .bindPopup('<strong>Almacén Central</strong><br>Punto de salida');
-    
-          // Marcadores de entrega
-          puntos.forEach(function (p, i) {
-            L.marker(p.coord, { icon: iconEntrega(i + 1, p.color) }).addTo(map)
-              .bindPopup('<strong>' + p.nombre + '</strong>');
-          });
-    
-          // Repartidor actual
-          L.marker([19.4260, -99.1370], { icon: iconRepartidor }).addTo(map)
-            .bindPopup('<strong>Luis García</strong><br>Repartidor en ruta');
-    
-          // Ruta como línea
-          var rutaCoords = [almacen].concat(puntos.map(function (p) { return p.coord; }));
-          L.polyline(rutaCoords, {
-            color: '#3b6aaa',
-            weight: 4,
-            opacity: 0.8,
-            dashArray: '8, 6'
-          }).addTo(map);
-    
-          // Ajustar vista
-          var bounds = L.latLngBounds(rutaCoords);
-          map.fitBounds(bounds, { padding: [40, 40] });
-    
-          // Actualización automática simulada (cada 30 seg)
-          var updateInterval = setInterval(function () {
-            // En producción: fetch a API para obtener posición actual del repartidor
-            console.log('Actualizando posición del repartidor...');
-          }, 30000);
-    
-          // Limpiar interval al salir
-          window.addEventListener('beforeunload', function () {
-            clearInterval(updateInterval);
-          });
-        })();
-    
-        // ── Tabs ──
-        (function () {
-          var tabs = document.querySelectorAll('.ruta-tab');
-          tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
-              tabs.forEach(function (t) { t.classList.remove('ruta-tab--activo'); });
-              tab.classList.add('ruta-tab--activo');
-            });
-          });
-        })();
+    const mapEl = document.getElementById('rutaMapa');
+    if (!mapEl) return undefined;
+
+    const map = L.map(mapEl, {
+      zoomControl: false
+    }).setView([19.4326, -99.1332], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    const iconAlmacen = L.divIcon({
+      className: '',
+      html: '<div style="background:#3b6aaa;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#9642; Almacén</div>',
+      iconSize: [80, 30],
+      iconAnchor: [40, 15]
+    });
+
+    function iconEntrega(numero, color) {
+      return L.divIcon({
+        className: '',
+        html: '<div style="background:' + color + ';color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.25);">' + numero + '</div>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+    }
+
+    const iconRepartidor = L.divIcon({
+      className: '',
+      html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">R</div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const almacen = [19.4280, -99.1480];
+    const puntos = [
+      { coord: [19.4230, -99.1400], nombre: 'Ana García', color: '#3b6aaa' },
+      { coord: [19.4260, -99.1350], nombre: 'Carlos Ramírez', color: '#3b6aaa' },
+      { coord: [19.4310, -99.1300], nombre: 'Laura Gómez', color: '#3b6aaa' },
+      { coord: [19.4380, -99.1250], nombre: 'Jorge Sánchez', color: '#f5a623' },
+      { coord: [19.4420, -99.1200], nombre: 'Pilar Suárez', color: '#3b6aaa' }
+    ];
+
+    L.marker(almacen, { icon: iconAlmacen }).addTo(map)
+      .bindPopup('<strong>Almacén Central</strong><br>Punto de salida');
+
+    puntos.forEach(function (p, i) {
+      L.marker(p.coord, { icon: iconEntrega(i + 1, p.color) }).addTo(map)
+        .bindPopup('<strong>' + p.nombre + '</strong>');
+    });
+
+    L.marker([19.4260, -99.1370], { icon: iconRepartidor }).addTo(map)
+      .bindPopup('<strong>Luis García</strong><br>Repartidor en ruta');
+
+    const rutaCoords = [almacen].concat(puntos.map(function (p) { return p.coord; }));
+    L.polyline(rutaCoords, {
+      color: '#3b6aaa',
+      weight: 4,
+      opacity: 0.8,
+      dashArray: '8, 6'
+    }).addTo(map);
+
+    const bounds = L.latLngBounds(rutaCoords);
+    map.fitBounds(bounds, { padding: [40, 40] });
+
+    const updateInterval = setInterval(function () {
+      console.log('Actualizando posición del repartidor...');
+    }, 30000);
+
+    const tabs = document.querySelectorAll('.ruta-tab');
+    const handlers = [];
+    tabs.forEach(function (tab) {
+      const onClick = function () {
+        tabs.forEach(function (t) { t.classList.remove('ruta-tab--activo'); });
+        tab.classList.add('ruta-tab--activo');
+      };
+      handlers.push({ tab: tab, onClick: onClick });
+      tab.addEventListener('click', onClick);
+    });
+
+    return () => {
+      clearInterval(updateInterval);
+      handlers.forEach(function (h) {
+        h.tab.removeEventListener('click', h.onClick);
+      });
+      map.remove();
+    };
   }, []);
   return (
     <>
@@ -107,15 +102,23 @@ export default function RutaRepartidorSupervisor() {
     /* ── Ruta del Repartidor ── */
     .ruta-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       margin: 20px 0 18px;
+      gap: 12px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
     }
     .ruta-header__titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .ruta-header__volver {
       display: inline-flex;
@@ -202,7 +205,7 @@ export default function RutaRepartidorSupervisor() {
     }
     .ruta-badge--zona { background: #3b6aaa; }
     .ruta-badge--vehiculo { background: #4a6fa5; }
-    .ruta-badge--vehiculo::before { content: "🚐 "; }
+    .ruta-badge--vehiculo::before { content: ""; }
 
     .ruta-driver__estado {
       display: flex;
@@ -566,8 +569,8 @@ export default function RutaRepartidorSupervisor() {
     <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main className="panel-principal panel-principal--full">
-      <header className="barra-superior barra-superior--con-logo">
+    <main className="panel-principal panel-principal--full panel-principal--supervisor">
+      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
         <div className="barra-superior__left">
           <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -577,21 +580,14 @@ export default function RutaRepartidorSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Encabezado de la ruta */}
       <div className="ruta-header">
         <h2 className="ruta-header__titulo">Ruta del Repartidor</h2>
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ruta-header__volver">
+        <Link to="/supervisor/gestion-repartidores" className="ruta-header__volver">
           &lsaquo; Volver
-        </a>
+        </Link>
       </div>
 
       {/* Layout 2 columnas */}
@@ -626,9 +622,7 @@ export default function RutaRepartidorSupervisor() {
               <div className="ruta-entregas-mapa__header">
                 <h3 className="ruta-entregas-mapa__titulo">Entregas de la Ruta</h3>
                 <div className="ruta-entregas-mapa__meta">
-                  <span className="ruta-tiempo">
-                    <span className="ruta-tiempo__icono">&#9201;</span> Tiempo restante
-                  </span>
+                  <span className="ruta-tiempo">Tiempo restante</span>
                   <button className="ruta-entregas-mapa__more" aria-label="Más opciones">&#8943;</button>
                 </div>
               </div>

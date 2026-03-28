@@ -1,96 +1,138 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function EntregasRepartidorSupervisor() {
 
   useEffect(() => {
-    (function () {
-          var backdrop = document.getElementById('modalReasignarBackdrop');
-          var cerrarBtn = document.getElementById('modalCerrarBtn');
-          var cancelarBtn = document.getElementById('modalCancelarBtn');
-          var confirmarBtn = document.getElementById('modalConfirmarBtn');
-          var repItems = document.querySelectorAll('.modal-rep');
-          var buscarInput = document.getElementById('modalBuscarInput');
-          var modalGuia = document.getElementById('modalGuia');
-          var modalCliente = document.getElementById('modalCliente');
-          var modalDir = document.getElementById('modalDir');
-          var selectedRep = null;
-    
-          // Abrir modal desde botones "Reasignar" en la tabla
-          document.querySelectorAll('.ent-accion-btn--reasignar').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-              var row = btn.closest('tr');
-              if (row) {
-                var guia = row.querySelector('.td-guia');
-                var cliente = row.querySelector('.td-cliente');
-                var dir = row.querySelector('.td-dir');
-                if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
-                if (cliente) modalCliente.textContent = cliente.textContent;
-                if (dir) modalDir.textContent = dir.textContent;
-              }
-              abrirModal();
-            });
-          });
-    
-          // Botón "Reasignar paquete" de la barra inferior
-          document.querySelector('.ent-bar-btn--reasignar').addEventListener('click', function () {
-            modalGuia.textContent = '—';
-            modalCliente.textContent = 'Seleccione desde la tabla';
-            modalDir.textContent = '';
-            abrirModal();
-          });
-    
-          function abrirModal() {
-            selectedRep = null;
-            repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-            confirmarBtn.disabled = true;
-            document.getElementById('modalMotivo').value = '';
-            buscarInput.value = '';
-            filtrarRepartidores('');
-            backdrop.classList.add('modal-reasignar-backdrop--visible');
-          }
-    
-          function cerrarModal() {
-            backdrop.classList.remove('modal-reasignar-backdrop--visible');
-          }
-    
-          cerrarBtn.addEventListener('click', cerrarModal);
-          cancelarBtn.addEventListener('click', cerrarModal);
-          backdrop.addEventListener('click', function (e) {
-            if (e.target === backdrop) cerrarModal();
-          });
-    
-          // Seleccionar repartidor
-          repItems.forEach(function (item) {
-            item.addEventListener('click', function () {
-              repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-              item.classList.add('modal-rep--selected');
-              selectedRep = item.getAttribute('data-rep');
-              confirmarBtn.disabled = false;
-            });
-          });
-    
-          // Buscar repartidor
-          buscarInput.addEventListener('input', function () {
-            filtrarRepartidores(buscarInput.value.toLowerCase());
-          });
-    
-          function filtrarRepartidores(query) {
-            repItems.forEach(function (item) {
-              var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
-              var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
-              item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
-            });
-          }
-    
-          // Confirmar
-          confirmarBtn.addEventListener('click', function () {
-            if (!selectedRep) return;
-            var repName = document.querySelector('.modal-rep--selected .modal-rep__nombre').textContent;
-            alert('Paquete reasignado exitosamente a ' + repName);
-            cerrarModal();
-          });
-        })();
+    var backdrop = document.getElementById('modalReasignarBackdrop');
+    var cerrarBtn = document.getElementById('modalCerrarBtn');
+    var cancelarBtn = document.getElementById('modalCancelarBtn');
+    var confirmarBtn = document.getElementById('modalConfirmarBtn');
+    var repItems = Array.from(document.querySelectorAll('.modal-rep'));
+    var buscarInput = document.getElementById('modalBuscarInput');
+    var modalGuia = document.getElementById('modalGuia');
+    var modalCliente = document.getElementById('modalCliente');
+    var modalDir = document.getElementById('modalDir');
+    var modalMotivo = document.getElementById('modalMotivo');
+    var tableBtns = Array.from(document.querySelectorAll('.ent-accion-btn--reasignar'));
+    var barReasignarBtn = document.querySelector('.ent-bar-btn--reasignar');
+
+    if (!backdrop || !cerrarBtn || !cancelarBtn || !confirmarBtn || !buscarInput || !modalGuia || !modalCliente || !modalDir || !modalMotivo || repItems.length === 0) {
+      return undefined;
+    }
+
+    var selectedRep = null;
+    var tableHandlers = [];
+    var repHandlers = [];
+
+    function filtrarRepartidores(query) {
+      repItems.forEach(function (item) {
+        var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
+        var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
+        item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
+      });
+    }
+
+    function abrirModal() {
+      selectedRep = null;
+      repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+      confirmarBtn.disabled = true;
+      modalMotivo.value = '';
+      buscarInput.value = '';
+      filtrarRepartidores('');
+      backdrop.classList.add('modal-reasignar-backdrop--visible');
+    }
+
+    function cerrarModal() {
+      backdrop.classList.remove('modal-reasignar-backdrop--visible');
+    }
+
+    function onBackdropClick(e) {
+      if (e.target === backdrop) cerrarModal();
+    }
+
+    function onBuscarInput() {
+      filtrarRepartidores(buscarInput.value.toLowerCase());
+    }
+
+    function onConfirmarClick() {
+      if (!selectedRep) return;
+      var repSelected = document.querySelector('.modal-rep--selected .modal-rep__nombre');
+      var repName = repSelected ? repSelected.textContent : 'repartidor';
+      alert('Paquete reasignado exitosamente a ' + repName);
+      cerrarModal();
+    }
+
+    tableBtns.forEach(function (btn) {
+      var onBtnClick = function () {
+        var row = btn.closest('tr');
+        if (row) {
+          var guia = row.querySelector('.td-guia');
+          var cliente = row.querySelector('.td-cliente');
+          var dir = row.querySelector('.td-dir');
+          if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
+          if (cliente) modalCliente.textContent = cliente.textContent;
+          if (dir) modalDir.textContent = dir.textContent;
+        }
+        abrirModal();
+      };
+      btn.addEventListener('click', onBtnClick);
+      tableHandlers.push({ btn: btn, handler: onBtnClick });
+    });
+
+    var onBarReasignarClick = null;
+    if (barReasignarBtn) {
+      onBarReasignarClick = function () {
+        modalGuia.textContent = '—';
+        modalCliente.textContent = 'Seleccione desde la tabla';
+        modalDir.textContent = '';
+        abrirModal();
+      };
+      barReasignarBtn.addEventListener('click', onBarReasignarClick);
+    }
+
+    repItems.forEach(function (item) {
+      var onRepClick = function () {
+        repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+        item.classList.add('modal-rep--selected');
+        selectedRep = item.getAttribute('data-rep');
+        confirmarBtn.disabled = false;
+      };
+      item.addEventListener('click', onRepClick);
+      repHandlers.push({ item: item, handler: onRepClick });
+    });
+
+    cerrarBtn.addEventListener('click', cerrarModal);
+    cancelarBtn.addEventListener('click', cerrarModal);
+    backdrop.addEventListener('click', onBackdropClick);
+    buscarInput.addEventListener('input', onBuscarInput);
+    confirmarBtn.addEventListener('click', onConfirmarClick);
+
+    var openReasignar = new URLSearchParams(window.location.search).get('openReasignar') === '1';
+    if (openReasignar) {
+      modalGuia.textContent = '—';
+      modalCliente.textContent = 'Seleccione desde la tabla';
+      modalDir.textContent = '';
+      abrirModal();
+    }
+
+    return function () {
+      tableHandlers.forEach(function (entry) {
+        entry.btn.removeEventListener('click', entry.handler);
+      });
+      repHandlers.forEach(function (entry) {
+        entry.item.removeEventListener('click', entry.handler);
+      });
+      if (barReasignarBtn && onBarReasignarClick) {
+        barReasignarBtn.removeEventListener('click', onBarReasignarClick);
+      }
+      cerrarBtn.removeEventListener('click', cerrarModal);
+      cancelarBtn.removeEventListener('click', cerrarModal);
+      backdrop.removeEventListener('click', onBackdropClick);
+      buscarInput.removeEventListener('input', onBuscarInput);
+      confirmarBtn.removeEventListener('click', onConfirmarClick);
+    };
   }, []);
   return (
     <>
@@ -98,15 +140,23 @@ export default function EntregasRepartidorSupervisor() {
     /* ── Entregas del Repartidor ── */
     .ent-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       margin: 20px 0 18px;
+      gap: 12px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
     }
     .ent-header__titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .ent-header__volver {
       display: inline-flex;
@@ -704,8 +754,8 @@ export default function EntregasRepartidorSupervisor() {
     <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main className="panel-principal panel-principal--full">
-      <header className="barra-superior barra-superior--con-logo">
+    <main className="panel-principal panel-principal--full panel-principal--supervisor">
+      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
         <div className="barra-superior__left">
           <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -715,21 +765,14 @@ export default function EntregasRepartidorSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Encabezado */}
       <div className="ent-header">
         <h2 className="ent-header__titulo">Entregas del Repartidor</h2>
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-header__volver">
+        <Link to="/supervisor/gestion-repartidores" className="ent-header__volver">
           &lsaquo; Volver
-        </a>
+        </Link>
       </div>
 
       {/* Info del repartidor + estadísticas */}
@@ -792,12 +835,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">10:00 – 11:00</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -808,12 +851,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">12:00 – 1:00</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--enruta">
-                    <span className="ent-estado-badge__icono">&#10004;</span> En ruta
+                    En ruta
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -824,12 +867,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">1:00 – 3:00 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--retrasado">
-                    <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
+                    Retrasado
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn ent-accion-btn--reasignar">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Reasignar
+                    Reasignar
                   </button>
                 </td>
               </tr>
@@ -843,12 +886,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">2:00 – 3:30 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -859,12 +902,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">3:00 – 4:30 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -888,17 +931,17 @@ export default function EntregasRepartidorSupervisor() {
 
       {/* Barra de acciones inferior */}
       <div className="ent-acciones-bar">
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-bar-btn ent-bar-btn--volver">
+        <Link to="/supervisor/gestion-repartidores" className="ent-bar-btn ent-bar-btn--volver">
           &lsaquo; Volver
-        </a>
+        </Link>
         <button className="ent-bar-btn ent-bar-btn--reasignar">
-          <span className="ent-bar-btn__icono">&#128230;</span> Reasignar paquete
+          Reasignar paquete
         </button>
         <button className="ent-bar-btn ent-bar-btn--contactar">
-          <span className="ent-bar-btn__icono">&#128222;</span> Contactar repartidor
+          Contactar repartidor
         </button>
         <button className="ent-bar-btn ent-bar-btn--incidencia">
-          <span className="ent-bar-btn__icono">&#9888;</span> Marcar incidencia
+          Marcar incidencia
         </button>
       </div>
 
@@ -922,7 +965,7 @@ export default function EntregasRepartidorSupervisor() {
           <span id="modalDir" className="modal-paq__dir">Av. Revolución 456, Col. Del Valle</span>
           <span className="modal-paq__estado">
             <span id="modalEstado" className="ent-estado-badge ent-estado-badge--retrasado">
-              <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
+              Retrasado
             </span>
           </span>
         </div>
@@ -932,7 +975,6 @@ export default function EntregasRepartidorSupervisor() {
       <div className="modal-seleccion">
         <p className="modal-seleccion__titulo">Seleccionar nuevo repartidor</p>
         <div className="modal-buscar">
-          <span className="modal-buscar__icono">&#128269;</span>
           <input type="text" id="modalBuscarInput" placeholder="Buscar repartidor..." />
         </div>
         <div className="modal-repartidores" id="modalRepLista">

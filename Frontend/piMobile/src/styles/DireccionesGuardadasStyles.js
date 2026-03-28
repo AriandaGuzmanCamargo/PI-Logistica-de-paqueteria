@@ -2,6 +2,29 @@ import { StyleSheet } from 'react-native';
 import colors from '../theme/colors';
 
 const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 12,
+  },
+  subtitle: {
+    flex: 1,
+    color: colors.muted,
+    fontSize: 13,
+  },
+  primaryButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  primaryButtonText: {
+    color: colors.white,
+    fontWeight: '700',
+    fontSize: 13,
+  },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 12,
@@ -12,19 +35,154 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#EEF1F9',
+  },
+  infoWrap: {
+    flex: 1,
+    paddingRight: 10,
   },
   item: {
     color: colors.text,
     fontSize: 15,
     fontWeight: '600',
   },
-  right: {
+  addressLine: {
+    marginTop: 4,
+    color: colors.text,
+    fontSize: 13,
+  },
+  secondaryLine: {
+    marginTop: 2,
     color: colors.muted,
+    fontSize: 13,
+  },
+  badge: {
+    marginTop: 8,
+    alignSelf: 'flex-start',
+    backgroundColor: '#EAF3FF',
+    color: '#0B63CE',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 20,
+    fontWeight: '700',
+    fontSize: 11,
+  },
+  actionsWrap: {
+    alignItems: 'flex-end',
+    gap: 8,
+  },
+  actionButton: {
+    borderWidth: 1,
+    borderColor: '#D7DEEF',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: colors.white,
+  },
+  actionText: {
+    color: colors.text,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  deleteButton: {
+    borderColor: '#F3D3D3',
+    backgroundColor: '#FFF6F6',
+  },
+  deleteText: {
+    color: '#C53E3E',
+  },
+  stateWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
+  },
+  stateText: {
+    marginTop: 10,
+    color: colors.muted,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  stateError: {
+    color: '#B84B4B',
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(14, 23, 45, 0.45)',
+    justifyContent: 'center',
+    padding: 18,
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.line,
+    maxHeight: '88%',
+  },
+  modalTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.text,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 10,
+  },
+  formWrap: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  input: {
+    height: 44,
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    color: colors.text,
+    backgroundColor: colors.white,
+    marginBottom: 10,
+  },
+  inputMultiline: {
+    minHeight: 84,
+    textAlignVertical: 'top',
+    paddingTop: 10,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 2,
+    marginBottom: 4,
+  },
+  switchLabel: {
+    color: colors.text,
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 14,
+    borderTopWidth: 1,
+    borderTopColor: colors.line,
+  },
+  secondaryButton: {
+    borderWidth: 1,
+    borderColor: '#CCD4EA',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    backgroundColor: colors.white,
+  },
+  secondaryButtonText: {
+    color: colors.text,
+    fontWeight: '700',
     fontSize: 13,
   },
 });

@@ -29,6 +29,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
     lineHeight: 20,
   },
+  stateWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
+  },
+  stateText: {
+    marginTop: 8,
+    color: colors.text,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  stateError: {
+    color: '#D32F2F',
+    fontWeight: '600',
+  },
 });
 
 export default styles;

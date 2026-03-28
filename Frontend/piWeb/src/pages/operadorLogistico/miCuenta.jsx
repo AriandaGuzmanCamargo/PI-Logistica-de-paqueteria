@@ -19,11 +19,9 @@ export default function MiCuenta() {
           </div>
           <h1 className="barra-superior__titulo">Operador logístico</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">▾</span>
-        </div>
       </header>
+
+      <h2 className="titulo-pagina-operador">Mi Cuenta</h2>
 
       <section className="modulo-cuenta">
         <div className="cuenta-fondo-superior"></div>

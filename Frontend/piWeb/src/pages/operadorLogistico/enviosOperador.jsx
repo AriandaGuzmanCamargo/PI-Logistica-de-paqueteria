@@ -98,11 +98,9 @@ export default function EnviosOperador() {
           </div>
           <h1 className="barra-superior__titulo">Operador logístico</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">▾</span>
-        </div>
       </header>
+
+      <h2 className="titulo-pagina-operador">Envíos</h2>
 
       <section className="modulo-envios">
         <div className="alerta-registro alerta-registro--oculta" id="alerta-registro">
@@ -110,7 +108,6 @@ export default function EnviosOperador() {
         </div>
 
         <div className="envios-encabezado">
-          <h2 className="envios-encabezado__titulo">// Envíos</h2>
           <a href="#" className="envios-encabezado__ver">Ver Todo</a>
         </div>
 

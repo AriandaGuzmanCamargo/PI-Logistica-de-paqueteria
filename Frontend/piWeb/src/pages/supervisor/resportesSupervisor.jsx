@@ -9,8 +9,8 @@ export default function ResportesSupervisor() {
     <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main className="panel-principal panel-principal--full">
-      <header className="barra-superior barra-superior--con-logo">
+    <main className="panel-principal panel-principal--full panel-principal--supervisor">
+      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
         <div className="barra-superior__left">
           <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -20,13 +20,6 @@ export default function ResportesSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Título + controles fecha/exportar */}
@@ -34,10 +27,10 @@ export default function ResportesSupervisor() {
         <h2 className="rep-header__titulo">Reportes</h2>
         <div className="rep-header__controles">
           <button className="rep-header__fecha">
-            &#128197; 15 – 21 Abr, 2024 <span>&#8964;</span>
+            15 – 21 Abr, 2024 <span>&#8964;</span>
           </button>
           <button className="rep-header__exportar">
-            &#128196; Exportar PDF
+            Exportar PDF
           </button>
           <button className="rep-header__flecha">&#8593;</button>
         </div>
@@ -46,39 +39,49 @@ export default function ResportesSupervisor() {
       {/* Tarjetas resumen reportes */}
       <section className="rep-resumen">
         <article className="rep-card rep-card--azul">
-          <span className="rep-card__icono">&#128230;</span>
+          <span className="rep-card__icono">
+            <img src="/piWeb/images/supervisor/entregas.png" alt="Entregas totales" className="rep-card__icono-img" />
+          </span>
           <div>
             <p className="rep-card__numero">1,152</p>
             <p className="rep-card__label">Entregas Totales</p>
           </div>
         </article>
         <article className="rep-card rep-card--verde">
-          <span className="rep-card__icono">&#10004;</span>
+          <span className="rep-card__icono">
+            <img src="/piWeb/images/supervisor/entregas.png" alt="Entregas completadas" className="rep-card__icono-img" />
+          </span>
           <div>
             <p className="rep-card__numero">1,050</p>
             <p className="rep-card__label">Entregas Completadas</p>
           </div>
         </article>
         <article className="rep-card rep-card--rojo">
-          <span className="rep-card__icono">&#9650;</span>
+          <span className="rep-card__icono">
+            <img src="/piWeb/images/supervisor/retrasadas.png" alt="Entregas retrasadas" className="rep-card__icono-img" />
+          </span>
           <div>
             <p className="rep-card__numero">84</p>
             <p className="rep-card__label">Entregas Retrasadas</p>
           </div>
         </article>
         <article className="rep-card rep-card--amarillo">
-          <span className="rep-card__icono">&#128172;</span>
+          <span className="rep-card__icono">
+            <img src="/piWeb/images/supervisor/incidencias.png" alt="Incidencias registradas" className="rep-card__icono-img" />
+          </span>
           <div>
             <p className="rep-card__numero">34</p>
             <p className="rep-card__label">Incidencias Registradas</p>
           </div>
         </article>
         <article className="rep-card rep-card--gris">
-          <span className="rep-card__icono">&#9201;</span>
+          <span className="rep-card__icono">
+            <img src="/piWeb/images/supervisor/nivel.png" alt="Nivel de cumplimiento" className="rep-card__icono-img" />
+          </span>
           <div>
             <p className="rep-card__numero">39 min</p>
             <p className="rep-card__label">Nivel de cumplimiento</p>
-            <div className="rep-card__stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+            <div className="rep-card__stars">4/5</div>
           </div>
         </article>
       </section>
@@ -193,7 +196,7 @@ export default function ResportesSupervisor() {
                   <div className="rep-rend__bar"><div className="rep-rend__fill" style={{width: '95%', background: '#4caf50'}}></div></div>
                 </td>
                 <td>4 h 12 min</td>
-                <td><span className="rep-rend__estado rep-rend__estado--ok">&#10004;</span></td>
+                <td><span className="rep-rend__estado rep-rend__estado--ok">OK</span></td>
               </tr>
               <tr>
                 <td>Javier Torres</td>
@@ -202,7 +205,7 @@ export default function ResportesSupervisor() {
                   <div className="rep-rend__bar"><div className="rep-rend__fill" style={{width: '78%', background: '#4caf50'}}></div></div>
                 </td>
                 <td>4 h 45 min</td>
-                <td><span className="rep-rend__estado rep-rend__estado--ok">&#10004;</span></td>
+                <td><span className="rep-rend__estado rep-rend__estado--ok">OK</span></td>
               </tr>
               <tr>
                 <td>Ricardo Muñoz</td>
@@ -211,7 +214,7 @@ export default function ResportesSupervisor() {
                   <div className="rep-rend__bar"><div className="rep-rend__fill" style={{width: '64%', background: '#4caf50'}}></div></div>
                 </td>
                 <td>5 h 20 min</td>
-                <td><span className="rep-rend__estado rep-rend__estado--warn">&#9679;</span></td>
+                <td><span className="rep-rend__estado rep-rend__estado--warn">REV</span></td>
               </tr>
               <tr>
                 <td>Jorge Medina</td>
@@ -220,7 +223,7 @@ export default function ResportesSupervisor() {
                   <div className="rep-rend__bar"><div className="rep-rend__fill" style={{width: '55%', background: '#f2c44e'}}></div></div>
                 </td>
                 <td>4 h 05 min</td>
-                <td><span className="rep-rend__estado rep-rend__estado--warn">&#9679;</span></td>
+                <td><span className="rep-rend__estado rep-rend__estado--warn">REV</span></td>
               </tr>
               <tr>
                 <td>Jose Herrera</td>
@@ -229,7 +232,7 @@ export default function ResportesSupervisor() {
                   <div className="rep-rend__bar"><div className="rep-rend__fill" style={{width: '40%', background: '#f2c44e'}}></div></div>
                 </td>
                 <td>4 h 30 min</td>
-                <td><span className="rep-rend__estado rep-rend__estado--warn">&#9679;</span></td>
+                <td><span className="rep-rend__estado rep-rend__estado--warn">REV</span></td>
               </tr>
             </tbody>
           </table>

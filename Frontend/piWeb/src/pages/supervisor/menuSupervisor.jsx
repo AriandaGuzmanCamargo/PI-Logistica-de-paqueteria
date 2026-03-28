@@ -48,35 +48,35 @@ export default function MenuSupervisor() {
   </div>
   <div className="menu-hamburguesa__links">
     <a href="/supervisor/dashboard" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9783;</span>
+      <img src="/piWeb/images/dasboard.png" alt="" className="menu-hamburguesa__icono-img" />
       Dashboard
     </a>
   
     <a href="/supervisor/gestion-repartidores" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9823;</span>
+      <img src="/piWeb/images/supervisor/repartidores.png" alt="" className="menu-hamburguesa__icono-img" />
       Repartidores
     </a>
  
     <a href="/supervisor/incidencias" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9888;</span>
+      <img src="/piWeb/images/supervisor/incidencias.png" alt="" className="menu-hamburguesa__icono-img" />
       Incidencias
     </a>
     <a href="/supervisor/reportes" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#128202;</span>
+      <img src="/piWeb/images/registrar.png" alt="" className="menu-hamburguesa__icono-img" />
       Reportes
     </a>
     <a href="/supervisor/envios" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#128230;</span>
+      <img src="/piWeb/images/envio.png" alt="" className="menu-hamburguesa__icono-img" />
       Envíos
     </a>
     <a href="/supervisor/mi-cuenta" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9787;</span>
+      <img src="/piWeb/images/perfil.png" alt="" className="menu-hamburguesa__icono-img" />
       Mi Perfil
     </a>
   </div>
   <div className="menu-hamburguesa__pie">
     <a href="/login" className="menu-hamburguesa__item menu-hamburguesa__item--salir">
-      <span className="menu-hamburguesa__icono-txt">&#10154;</span>
+      <img src="/piWeb/images/salida.png" alt="" className="menu-hamburguesa__icono-img" />
       Salir
     </a>
   </div>

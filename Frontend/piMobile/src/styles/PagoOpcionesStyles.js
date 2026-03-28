@@ -43,13 +43,6 @@ const styles = StyleSheet.create({
     color: '#6A5A2C',
     textAlign: 'center',
   },
-  noticeCode: {
-    color: colors.primary,
-    textAlign: 'center',
-    fontWeight: '800',
-    marginTop: 6,
-    marginBottom: 6,
-  },
   btn: {
     backgroundColor: colors.primary,
     borderRadius: 10,

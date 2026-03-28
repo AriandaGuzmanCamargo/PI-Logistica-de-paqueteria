@@ -9,8 +9,8 @@ export default function DashboardSupervisor() {
     <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
     <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    <main className="panel-principal panel-principal--full">
-      <header className="barra-superior barra-superior--con-logo">
+    <main className="panel-principal panel-principal--full panel-principal--supervisor">
+      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
         <div className="barra-superior__left">
           <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -19,13 +19,6 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
-        </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
         </div>
       </header>
 
@@ -41,38 +34,48 @@ export default function DashboardSupervisor() {
       {/* Tarjetas resumen */}
       <section className="resumen-sv">
         <article className="tarjeta-sv tarjeta-sv--azul">
-          <span className="tarjeta-sv__icono">&#128230;</span>
+          <span className="tarjeta-sv__icono">
+            <img src="/piWeb/images/supervisor/entregas.png" alt="Entregas" className="tarjeta-sv__icono-img" />
+          </span>
           <div>
             <p className="tarjeta-sv__numero">148</p>
             <p className="tarjeta-sv__label">Entregas hoy</p>
           </div>
         </article>
         <article className="tarjeta-sv tarjeta-sv--amarillo">
-          <span className="tarjeta-sv__icono">&#9888;</span>
+          <span className="tarjeta-sv__icono">
+            <img src="/piWeb/images/supervisor/pendiente.png" alt="Pendientes" className="tarjeta-sv__icono-img" />
+          </span>
           <div>
             <p className="tarjeta-sv__numero">32</p>
             <p className="tarjeta-sv__label">Pendientes</p>
           </div>
         </article>
         <article className="tarjeta-sv tarjeta-sv--rojo">
-          <span className="tarjeta-sv__icono">&#9650;</span>
+          <span className="tarjeta-sv__icono">
+            <img src="/piWeb/images/supervisor/retrasadas.png" alt="Retrasadas" className="tarjeta-sv__icono-img" />
+          </span>
           <div>
             <p className="tarjeta-sv__numero">8</p>
             <p className="tarjeta-sv__label">Retrasadas</p>
           </div>
         </article>
         <article className="tarjeta-sv tarjeta-sv--gris">
-          <span className="tarjeta-sv__icono">&#128187;</span>
+          <span className="tarjeta-sv__icono">
+            <img src="/piWeb/images/supervisor/incidencias.png" alt="Incidencias" className="tarjeta-sv__icono-img" />
+          </span>
           <div>
             <p className="tarjeta-sv__numero">5</p>
             <p className="tarjeta-sv__label">Incidencias</p>
           </div>
         </article>
         <article className="tarjeta-sv tarjeta-sv--morado">
-          <span className="tarjeta-sv__icono">&#128101;</span>
+          <span className="tarjeta-sv__icono">
+            <img src="/piWeb/images/supervisor/repartidores.png" alt="Repartidores" className="tarjeta-sv__icono-img" />
+          </span>
           <div>
             <p className="tarjeta-sv__numero">-</p>
-            <p className="tarjeta-sv__label">Entregados</p>
+            <p className="tarjeta-sv__label">Repartidores</p>
           </div>
         </article>
       </section>
@@ -116,7 +119,7 @@ export default function DashboardSupervisor() {
                 <p className="envio-card__repartidor">Luis Garcia · Luis Garcia</p>
               </div>
               <div className="envio-card__footer">
-                <span className="envio-card__estado envio-card__estado--pendiente">&#9679; Pendiente</span>
+                <span className="envio-card__estado envio-card__estado--pendiente">Pendiente</span>
                 <div className="envio-card__acciones">
                   <button className="envio-card__btn">Ver detalle</button>
                   <button className="envio-card__btn">Reasignar</button>
@@ -137,7 +140,7 @@ export default function DashboardSupervisor() {
                 <p className="envio-card__repartidor">Javier Torres · Javier Torres</p>
               </div>
               <div className="envio-card__footer">
-                <span className="envio-card__estado envio-card__estado--enruta">&#10004; En ruta</span>
+                <span className="envio-card__estado envio-card__estado--enruta">En ruta</span>
                 <div className="envio-card__acciones">
                   <button className="envio-card__btn">Ver detalle</button>
                   <button className="envio-card__btn">Reasignar</button>
@@ -158,7 +161,7 @@ export default function DashboardSupervisor() {
                 <p className="envio-card__repartidor">CDMX · Ricardo Muñoz</p>
               </div>
               <div className="envio-card__footer">
-                <span className="envio-card__estado envio-card__estado--retrasado">&#9650; Retrasado</span>
+                <span className="envio-card__estado envio-card__estado--retrasado">Retrasado</span>
                 <div className="envio-card__acciones">
                   <button className="envio-card__btn">Ver detalle</button>
                   <button className="envio-card__btn">Reasignar</button>
@@ -179,7 +182,7 @@ export default function DashboardSupervisor() {
                 <p className="envio-card__repartidor">CDMX · Jorge Medina</p>
               </div>
               <div className="envio-card__footer">
-                <span className="envio-card__estado envio-card__estado--entregado">&#10004; Entregado</span>
+                <span className="envio-card__estado envio-card__estado--entregado">Entregado</span>
                 <div className="envio-card__acciones">
                   <button className="envio-card__btn">Ver detalle</button>
                   <button className="envio-card__btn">Reasignar</button>
@@ -200,7 +203,7 @@ export default function DashboardSupervisor() {
                 <p className="envio-card__repartidor">CDMX · José Herrera</p>
               </div>
               <div className="envio-card__footer">
-                <span className="envio-card__estado envio-card__estado--entregado">&#10004; Entregado</span>
+                <span className="envio-card__estado envio-card__estado--entregado">Entregado</span>
                 <div className="envio-card__acciones">
                   <button className="envio-card__btn">Ver detalle</button>
                   <button className="envio-card__btn">Reasignar</button>
@@ -215,7 +218,7 @@ export default function DashboardSupervisor() {
         <aside className="stats-sv">
           <div className="stats-sv__header">
             <button className="stats-sv__filtro-btn">Filtro <span>&#8964;</span></button>
-            <button className="stats-sv__export-btn">&#128196; Exportar PDF <span>&#8964;</span></button>
+            <button className="stats-sv__export-btn">Exportar PDF <span>&#8964;</span></button>
           </div>
 
           <div className="stats-sv__card">
@@ -234,7 +237,7 @@ export default function DashboardSupervisor() {
           <div className="stats-sv__card stats-sv__card--resumen">
             <p className="stats-sv__label">Entregas completadas hoy</p>
             <p className="stats-sv__valor">116</p>
-            <p className="stats-sv__cumpl">Cumplimiento &#10004;</p>
+            <p className="stats-sv__cumpl">Cumplimiento OK</p>
             <button className="stats-sv__reporte-btn">Ver reporte completo</button>
           </div>
         </aside>

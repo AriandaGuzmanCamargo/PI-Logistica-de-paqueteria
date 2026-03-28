@@ -1,6 +1,9 @@
 import {
+  cancelShipmentByClient,
+  createShipmentByClient,
   getShipmentDetailById,
   getShipmentsByUser,
+  updateShipmentByClient,
 } from '../services/enviosService.js';
 
 export async function getEnviosByUsuario(req, res, next) {
@@ -24,6 +27,66 @@ export async function getDetalleEnvio(req, res, next) {
 
     res.json({
       ok: true,
+      data: envio,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createEnvioByCliente(req, res, next) {
+  try {
+    const { idUsuario, ...payload } = req.body ?? {};
+
+    const envio = await createShipmentByClient({
+      userId: idUsuario,
+      payload,
+    });
+
+    res.status(201).json({
+      ok: true,
+      message: 'Envio creado correctamente.',
+      data: envio,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateEnvioByCliente(req, res, next) {
+  try {
+    const { idEnvio } = req.params;
+    const { idUsuario, ...changes } = req.body ?? {};
+
+    const envio = await updateShipmentByClient({
+      userId: idUsuario,
+      idEnvio,
+      changes,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Envio actualizado correctamente.',
+      data: envio,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function cancelEnvioByCliente(req, res, next) {
+  try {
+    const { idEnvio } = req.params;
+    const { idUsuario } = req.body ?? {};
+
+    const envio = await cancelShipmentByClient({
+      userId: idUsuario,
+      idEnvio,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Envio cancelado correctamente.',
       data: envio,
     });
   } catch (error) {

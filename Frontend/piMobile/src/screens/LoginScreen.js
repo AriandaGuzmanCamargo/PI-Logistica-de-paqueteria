@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator, SafeAreaView, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from '../styles/LoginStyles';
 import { loginRequest } from '../services/authService';
+import { setCurrentUser } from '../services/sessionService';
 
 export default function LoginScreen({ navigation }) {
   const [tipoAcceso, setTipoAcceso] = useState(null);
@@ -43,6 +44,7 @@ export default function LoginScreen({ navigation }) {
         return;
       }
 
+      setCurrentUser(data?.usuario ?? null);
       navigation.navigate('Dashboard');
     } catch (error) {
       setErrorMessage(error.message || 'No se pudo iniciar sesion.');

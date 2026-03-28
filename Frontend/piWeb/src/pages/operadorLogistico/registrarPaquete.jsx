@@ -58,18 +58,11 @@ export default function RegistrarPaquete() {
           </div>
           <h1 className="barra-superior__titulo">Operador logístico</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">▾</span>
-        </div>
       </header>
 
-      <section className="modulo-registro">
-        <div className="registro-encabezado">
-          <span className="registro-encabezado__icono">▣</span>
-          <h2>Registrar Paquete</h2>
-        </div>
+      <h2 className="titulo-pagina-operador">Registrar Paquete</h2>
 
+      <section className="modulo-registro">
         <article className="tarjeta-formulario-registro">
           <h3>Nuevo Envío</h3>
 

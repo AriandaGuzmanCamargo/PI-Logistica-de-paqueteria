@@ -67,15 +67,13 @@ export default function DetalleEnvio() {
 					</div>
 					<h1 className="barra-superior__titulo">Operador logístico</h1>
 				</div>
-				<div className="barra-superior__perfil">
-					<img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-					<span className="barra-superior__chevron">▾</span>
-				</div>
 			</header>
+
+			<h2 className="titulo-pagina-operador">Detalles del Envío</h2>
 
 			<section className="modulo-detalle">
 				<div className="miga-detalle"><span className="miga-detalle__icono">◘</span> Envíos <span className="miga-detalle__separador">/</span> Detalles del Envío</div>
-				<h2 className="titulo-detalle">Detalles del Envío ID: <strong>{guia}</strong></h2>
+				<h2 className="titulo-detalle">Envío ID: <strong>{guia}</strong></h2>
 
 				{error ? <p style={{ color: '#b71c1c' }}>{error}</p> : null}
 

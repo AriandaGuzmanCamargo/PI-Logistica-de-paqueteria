@@ -66,18 +66,11 @@ export default function Incidencias() {
           </div>
           <h1 className="barra-superior__titulo">Operador logístico</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">▾</span>
-        </div>
       </header>
 
-      <section className="modulo-incidencias">
-        <div className="incidencias-encabezado">
-          <span className="incidencias-encabezado__icono">▣</span>
-          <h2>Incidencias</h2>
-        </div>
+      <h2 className="titulo-pagina-operador">Incidencias</h2>
 
+      <section className="modulo-incidencias">
         <div className="incidencias-resumen">
           <div className="incidencias-resumen__item"><strong>Total:</strong> {loading ? '...' : resumen.total}</div>
           <div className="incidencias-resumen__item"><strong>Abiertas:</strong> {loading ? '...' : resumen.abiertas}</div>

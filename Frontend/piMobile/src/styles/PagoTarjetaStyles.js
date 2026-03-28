@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
   },
+  errorText: {
+    color: '#C64949',
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: -2,
+  },
 });
 
 export default styles;

@@ -96,6 +96,20 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 			color: textSecondary,
 			fontSize: s(12),
 		},
+		statusRow: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			gap: s(8),
+		},
+		statusText: {
+			color: textSecondary,
+			fontSize: s(12),
+		},
+		errorText: {
+			color: '#C64949',
+			fontSize: s(12),
+			fontWeight: '600',
+		},
 		statsRow: {
 			flexDirection: 'row',
 			gap: s(8),
@@ -143,10 +157,68 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 			padding: s(9),
 		},
 		singleBox: {
-			height: s(170),
+			height: s(220),
 			...cardBase,
 			borderColor: isDarkMode ? '#334363' : '#D1D8E5',
 			backgroundColor: isDarkMode ? '#24314A' : '#DDE3EE',
+			padding: s(8),
+			gap: s(6),
+		},
+		mapBlockTitle: {
+			color: isDarkMode ? '#E2ECFF' : '#2F4E7D',
+			fontWeight: '700',
+			fontSize: s(13),
+		},
+		mapPreviewWrap: {
+			flex: 1,
+			borderRadius: s(10),
+			overflow: 'hidden',
+			backgroundColor: isDarkMode ? '#152238' : '#C9D7EE',
+		},
+		mapPreview: {
+			flex: 1,
+		},
+		mapOverlay: {
+			position: 'absolute',
+			left: 0,
+			top: 0,
+			right: 0,
+			bottom: 0,
+			alignItems: 'center',
+			justifyContent: 'center',
+			backgroundColor: 'rgba(23, 32, 51, 0.45)',
+			gap: s(6),
+		},
+		mapOverlayText: {
+			color: '#FFFFFF',
+			fontWeight: '600',
+			fontSize: s(12),
+		},
+		mapWarningText: {
+			color: isDarkMode ? '#FFDAA3' : '#8B641B',
+			fontSize: s(11),
+			fontWeight: '600',
+		},
+		mapMetricsText: {
+			color: isDarkMode ? '#C9D8F7' : '#3D5683',
+			fontSize: s(11),
+			fontWeight: '600',
+		},
+		mapFallbackWrap: {
+			flex: 1,
+			borderRadius: s(10),
+			borderWidth: 1,
+			borderColor: isDarkMode ? '#3B4B6B' : '#C8D4EA',
+			alignItems: 'center',
+			justifyContent: 'center',
+			paddingHorizontal: s(10),
+			backgroundColor: isDarkMode ? '#1B2A42' : '#E7EDF9',
+		},
+		mapFallbackText: {
+			color: isDarkMode ? '#C4D4F5' : '#48608A',
+			fontSize: s(12),
+			textAlign: 'center',
+			lineHeight: s(16),
 		},
 		searchRow: {
 			marginBottom: s(8),
@@ -268,6 +340,19 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 			color: '#3F67A8',
 			fontWeight: '600',
 			fontSize: s(12),
+		},
+		tipAvatar: {
+			width: s(42),
+			height: s(42),
+			borderRadius: s(21),
+			alignItems: 'center',
+			justifyContent: 'center',
+			backgroundColor: isDarkMode ? '#2F4E7E' : '#D6E2F6',
+		},
+		tipAvatarText: {
+			color: isDarkMode ? '#E4EEFF' : '#365484',
+			fontWeight: '700',
+			fontSize: s(15),
 		},
 	});
 }

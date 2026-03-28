@@ -38,6 +38,24 @@ export async function getDetalleEnvio(idEnvio) {
   return payload.data;
 }
 
+export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
+  const response = await fetch(`/api/asignaciones/auto/${idEnvio}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUsuario }),
+  });
+
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudo autoasignar el envio.');
+  }
+
+  return payload.data;
+}
+
 export async function getIncidenciasOperador() {
   const user = getWebUser();
 

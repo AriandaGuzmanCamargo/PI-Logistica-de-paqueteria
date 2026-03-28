@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import MenuOperador from './menuOperador.jsx';
 import {
+  autoAsignarEnvio,
   estadoEnvioClase,
   estadoEnvioTexto,
   getEnviosOperador,
+  getWebUser,
 } from '../../services/operadorService';
 
 export default function EnviosOperador() {
@@ -11,6 +13,7 @@ export default function EnviosOperador() {
   const [filtro, setFiltro] = useState('todos');
   const [busqueda, setBusqueda] = useState('');
   const [error, setError] = useState('');
+  const [assigningId, setAssigningId] = useState(null);
 
   useEffect(() => {
     const parametros = new URLSearchParams(window.location.search);
@@ -32,6 +35,44 @@ export default function EnviosOperador() {
           }
         }
   }, []);
+
+  async function reloadEnvios() {
+    const data = await getEnviosOperador();
+    setEnvios(data);
+  }
+
+  async function handleAutoAssign(item) {
+    const currentState = String(item.estado_envio || '').toLowerCase();
+
+    if (!['pendiente', 'retrasado'].includes(currentState)) {
+      window.alert('Solo se pueden autoasignar envios pendientes o retrasados.');
+      return;
+    }
+
+    const webUser = getWebUser();
+    const idUsuario = Number(webUser?.id_usuario);
+
+    if (!Number.isInteger(idUsuario) || idUsuario <= 0) {
+      window.alert('No hay sesion valida de operador. Vuelve a iniciar sesion.');
+      return;
+    }
+
+    try {
+      setAssigningId(item.id_envio);
+      setError('');
+      await autoAsignarEnvio({
+        idEnvio: item.id_envio,
+        idUsuario,
+      });
+
+      await reloadEnvios();
+      window.alert(`Envio ${item.paquete?.codigo_rastreo || item.id_envio} autoasignado.`);
+    } catch (assignError) {
+      setError(assignError.message || 'No se pudo autoasignar el envio.');
+    } finally {
+      setAssigningId(null);
+    }
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -200,6 +241,15 @@ export default function EnviosOperador() {
                         <a className="boton-detalles" href={`/operador/detalle-envio?id=${item.id_envio}`}>
                           Ver Detalles
                         </a>
+                        <button
+                          type="button"
+                          className="boton-detalles"
+                          style={{ marginLeft: '8px' }}
+                          disabled={assigningId === item.id_envio}
+                          onClick={() => handleAutoAssign(item)}
+                        >
+                          {assigningId === item.id_envio ? 'Asignando...' : 'Autoasignar'}
+                        </button>
                       </td>
                     </tr>
                   ))

@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import asignacionesRouter from '../routes/asignacionesRoutes.js';
 import authRouter from '../routes/authRoutes.js';
 import direccionesRouter from '../routes/direccionesRoutes.js';
 import enviosRouter from '../routes/enviosRoutes.js';
@@ -19,6 +20,7 @@ export function createApp() {
   });
 
   app.use('/api/auth', authRouter);
+  app.use('/api/asignaciones', asignacionesRouter);
   app.use('/api/direcciones', direccionesRouter);
   app.use('/api/envios', enviosRouter);
   app.use('/api/incidencias', incidenciasRouter);

@@ -40,7 +40,7 @@ export default function MainLayout({
                     style={styles.bellIcon}
                     resizeMode="contain"
                   />
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.avatar}>
                   <Text style={styles.avatarText}>EP</Text>
                 </TouchableOpacity>

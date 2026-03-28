@@ -60,7 +60,7 @@ export default function MenuOperador() {
       Registrar Paquete
     </a>
     <a href="/operador/dashboard" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#8981;</span>
+      <img src="/piWeb/images/escaneo.png" alt="" className="menu-hamburguesa__icono-img" />
       Escaneo
     </a>
     <a href="/operador/incidencias" className="menu-hamburguesa__item">

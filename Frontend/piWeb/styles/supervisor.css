@@ -84,6 +84,12 @@
   border-radius: 10px;
   flex-shrink: 0;
 }
+.tarjeta-sv__icono-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
 .tarjeta-sv--azul .tarjeta-sv__icono { background: #dce8ff; color: #3b6aaa; }
 .tarjeta-sv--amarillo .tarjeta-sv__icono { background: #fff3cd; color: #c49000; }
 .tarjeta-sv--rojo .tarjeta-sv__icono { background: #fdd; color: #d32f2f; }

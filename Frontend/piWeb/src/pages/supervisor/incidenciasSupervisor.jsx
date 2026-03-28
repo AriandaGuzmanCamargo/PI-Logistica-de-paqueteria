@@ -270,34 +270,26 @@ export default function IncidenciasSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Contenido Gestión de Incidencias */}
       <div className="ginc-header">
         <h2 className="ginc-titulo">Gestión de Incidencias</h2>
         <div className="ginc-header__acciones">
-          <button className="ginc-header-btn">&#9776; Filtro &#9662;</button>
-          <button className="ginc-header-btn">&#9776; &#9873; &#9662;</button>
+          <button className="ginc-header-btn">Filtro &#9662;</button>
+          <button className="ginc-header-btn">Opciones &#9662;</button>
         </div>
       </div>
 
       {/* Barra búsqueda + filtros */}
       <div className="ginc-barra">
         <div className="ginc-buscar">
-          <span className="ginc-buscar__icono">&#128269;</span>
           <input type="text" placeholder="Buscar incidencia..." />
         </div>
-        <button className="ginc-chip ginc-chip--pendiente">&#128203; Pendiente <span className="ginc-chip__count">5</span></button>
-        <button className="ginc-chip ginc-chip--progreso">&#10004; En progreso <span className="ginc-chip__count">3</span></button>
-        <button className="ginc-chip ginc-chip--resuelto">&#10004; Resuelto <span className="ginc-chip__count">14</span></button>
-        <button className="ginc-filtro-btn">&#9776; Filtro &#9662;</button>
+        <button className="ginc-chip ginc-chip--pendiente">Pendiente <span className="ginc-chip__count">5</span></button>
+        <button className="ginc-chip ginc-chip--progreso">En progreso <span className="ginc-chip__count">3</span></button>
+        <button className="ginc-chip ginc-chip--resuelto">Resuelto <span className="ginc-chip__count">14</span></button>
+        <button className="ginc-filtro-btn">Filtro &#9662;</button>
       </div>
 
       {/* Tabla de incidencias */}
@@ -322,7 +314,7 @@ export default function IncidenciasSupervisor() {
                   <div>
                     <p className="ginc-rep__nombre">Luis García</p>
                     <p className="ginc-rep__zona">Centro</p>
-                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__email">Minar Inn</p>
                   </div>
                 </div>
               </td>
@@ -330,8 +322,8 @@ export default function IncidenciasSupervisor() {
                 <p className="ginc-problema">Cliente ausente</p>
                 <p className="ginc-problema-hora">10:30 AM</p>
               </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
+              <td><button className="ginc-ver-btn">Ver detalle</button></td>
             </tr>
             <tr>
               <td><span className="ginc-guia">MXZ4567320</span></td>
@@ -341,7 +333,7 @@ export default function IncidenciasSupervisor() {
                   <div>
                     <p className="ginc-rep__nombre">Jorge Sánchez</p>
                     <p className="ginc-rep__zona">Coyoacán</p>
-                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__email">Minar Inn</p>
                   </div>
                 </div>
               </td>
@@ -349,8 +341,8 @@ export default function IncidenciasSupervisor() {
                 <p className="ginc-problema">Dirección incorrecta</p>
                 <p className="ginc-problema-hora">3:15 PM</p>
               </td>
-              <td><span className="ginc-estado ginc-estado--progreso">&#10148; En progreso</span></td>
-              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--progreso">En progreso</span></td>
+              <td><button className="ginc-ver-btn">Ver detalle</button></td>
             </tr>
             <tr>
               <td><span className="ginc-guia">MXZ67584321</span></td>
@@ -360,7 +352,7 @@ export default function IncidenciasSupervisor() {
                   <div>
                     <p className="ginc-rep__nombre">Carlos Ramirez</p>
                     <p className="ginc-rep__zona">Norte</p>
-                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__email">Minar Inn</p>
                   </div>
                 </div>
               </td>
@@ -368,8 +360,8 @@ export default function IncidenciasSupervisor() {
                 <p className="ginc-problema">Retraso logístico</p>
                 <p className="ginc-problema-hora">12:45 PM</p>
               </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
+              <td><button className="ginc-ver-btn">Ver detalle</button></td>
             </tr>
             <tr>
               <td><span className="ginc-guia">MX274760219</span></td>
@@ -379,7 +371,7 @@ export default function IncidenciasSupervisor() {
                   <div>
                     <p className="ginc-rep__nombre">Pilar Suarez</p>
                     <p className="ginc-rep__zona">Toluca</p>
-                    <p className="ginc-rep__email">&#9993; Minar Inn</p>
+                    <p className="ginc-rep__email">Minar Inn</p>
                   </div>
                 </div>
               </td>
@@ -387,8 +379,8 @@ export default function IncidenciasSupervisor() {
                 <p className="ginc-problema">Paquete dañado</p>
                 <p className="ginc-problema-hora">4:45 PM</p>
               </td>
-              <td><span className="ginc-estado ginc-estado--resuelto">&#10004; Resuelto</span></td>
-              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--resuelto">Resuelto</span></td>
+              <td><button className="ginc-ver-btn">Ver detalle</button></td>
             </tr>
             <tr>
               <td><span className="ginc-guia">MX967654321</span></td>
@@ -405,8 +397,8 @@ export default function IncidenciasSupervisor() {
                 <p className="ginc-problema">Retraso logístico</p>
                 <p className="ginc-problema-hora">1:10 PM</p>
               </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">&#10004; Pendiente</span></td>
-              <td><button className="ginc-ver-btn">&#128203; Ver detalle</button></td>
+              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
+              <td><button className="ginc-ver-btn">Ver detalle</button></td>
             </tr>
           </tbody>
         </table>

@@ -199,13 +199,6 @@ export default function MiCuentaSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Contenido Mi Cuenta */}
@@ -222,16 +215,16 @@ export default function MiCuentaSupervisor() {
           <div className="perfil-datos">
             <div className="perfil-datos__left">
               <p className="perfil-dato"><strong>Trabajo:</strong> Supervisor</p>
-              <p className="perfil-dato"><strong>Zona asignada:</strong> <span className="perfil-dato__pin">&#128205;</span> Centro</p>
+              <p className="perfil-dato"><strong>Zona asignada:</strong> Centro</p>
               <p className="perfil-dato"><strong>Correo:</strong> roberto.salazar@metzvia.com</p>
               <p className="perfil-dato"><strong>Teléfono:</strong> +32 55 1234 5678</p>
             </div>
             <div className="perfil-datos__right">
               <button className="perfil-btn">
-                <span className="perfil-btn__icon">&#9998;</span> Editar perfil
+                Editar perfil
               </button>
               <button className="perfil-btn">
-                <span className="perfil-btn__icon">&#128274;</span> Cambiar contraseña
+                Cambiar contraseña
               </button>
             </div>
           </div>

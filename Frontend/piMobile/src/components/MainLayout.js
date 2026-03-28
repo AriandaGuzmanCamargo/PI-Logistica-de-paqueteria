@@ -15,7 +15,28 @@ export default function MainLayout({
   children,
   activeTab,
   subtitle,
-}) {  return (
+}) {
+  const handleAvatarPress = () => {
+    const state = navigation.getState();
+    const currentRoute = state?.routes?.[state.index];
+
+    if (currentRoute?.name === 'DatosPersonales') {
+      if (currentRoute?.params?.fromRoute) {
+        navigation.navigate(currentRoute.params.fromRoute);
+        return;
+      }
+
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
+
+      return;
+    }
+
+    navigation.navigate('DatosPersonales', { fromRoute: currentRoute?.name });
+  };
+
+  return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.screenWrap}>
         <View style={styles.bgBubbleTop} />
@@ -41,8 +62,12 @@ export default function MainLayout({
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.avatar}>
-                  <Text style={styles.avatarText}>EP</Text>
+                <TouchableOpacity style={styles.avatar} onPress={handleAvatarPress}>
+                  <Image
+                    source={require('../../images/usuario.png')}
+                    style={styles.avatarImage}
+                    resizeMode="cover"
+                  />
                 </TouchableOpacity>
               </View>
             </View>

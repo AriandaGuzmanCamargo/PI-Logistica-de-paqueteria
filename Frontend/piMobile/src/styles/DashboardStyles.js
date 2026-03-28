@@ -2,6 +2,26 @@ import { StyleSheet } from 'react-native';
 import colors from '../theme/colors';
 
 const styles = StyleSheet.create({
+  welcomeWrap: {
+    marginTop: 8,
+    backgroundColor: '#EEF3FF',
+    borderWidth: 1,
+    borderColor: '#D8E2FA',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  welcomeTitle: {
+    color: colors.primaryDark,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  welcomeText: {
+    marginTop: 4,
+    color: colors.text,
+    fontSize: 13,
+    lineHeight: 18,
+  },
   searchWrap: {
     marginTop: 8,
     backgroundColor: colors.surface,

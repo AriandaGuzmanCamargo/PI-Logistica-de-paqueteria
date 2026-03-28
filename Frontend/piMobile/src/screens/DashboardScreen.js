@@ -50,6 +50,11 @@ export default function DashboardScreen({ navigation }) {
 
   return (
     <MainLayout title="" navigation={navigation} activeTab="Dashboard">
+      <View style={styles.welcomeWrap}>
+        <Text style={styles.welcomeTitle}>Bienvenid@</Text>
+        <Text style={styles.welcomeText}>Ahora puedes rastrear tus pedidos de forma rapida y sencilla.</Text>
+      </View>
+
       <View style={styles.searchWrap}>
         <TextInput
           style={styles.input}

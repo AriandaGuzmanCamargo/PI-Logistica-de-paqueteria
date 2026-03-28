@@ -59,6 +59,20 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 14,
   },
+  stateWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    gap: 6,
+  },
+  stateText: {
+    color: colors.muted,
+    fontSize: 13,
+  },
+  errorText: {
+    color: '#B84B4B',
+    fontWeight: '600',
+  },
   arrow: {
     color: '#7E89A8',
     fontSize: 12,

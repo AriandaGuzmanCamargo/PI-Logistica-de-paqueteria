@@ -1,16 +1,50 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MainLayout from '../components/MainLayout';
+import { getCurrentUser } from '../services/sessionService';
+import { getDireccionesByUsuario } from '../services/direccionesService';
 import styles from '../styles/NuevoEnvioStyles';
 
 export default function NuevoEnvioScreen({ navigation }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [direcciones, setDirecciones] = useState([]);
+
+  const loadDirecciones = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      const user = getCurrentUser();
+
+      if (!user?.id_usuario) {
+        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+      }
+
+      const data = await getDireccionesByUsuario(user.id_usuario);
+      setDirecciones(data);
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudieron cargar las direcciones guardadas.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadDirecciones();
+    }, [loadDirecciones])
+  );
+
+  const origenes = direcciones.slice(0, 2);
+
   return (
     <MainLayout title="Nuevo Envio" navigation={navigation} backTo="Dashboard" activeTab="RastrearEnvio">
       <View style={styles.tabsRow}>
-        <Text style={styles.tabActive}>Todos</Text>
-        <Text style={styles.tab}>Activos</Text>
-        <Text style={styles.tab}>Entregados</Text>
-        <Text style={styles.tab}>Canceladas</Text>
+        <Text style={styles.tabActive}>Registro cliente</Text>
+        <Text style={styles.tab}>Paso 1: Remitente</Text>
+        <Text style={styles.tab}>Paso 2: Destinatario</Text>
       </View>
 
       <View style={styles.vehicleRow}>
@@ -19,23 +53,45 @@ export default function NuevoEnvioScreen({ navigation }) {
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Origen</Text>
-        <View style={styles.rowWrap}><Text style={styles.row}>Casa - Av. Las Flores 123</Text><Text style={styles.arrow}>Seleccionar</Text></View>
-        <View style={styles.rowWrap}><Text style={styles.row}>Oficina - Calle Comercio 45</Text><Text style={styles.arrow}>Seleccionar</Text></View>
+        <Text style={styles.sectionTitle}>Direcciones de origen (guardadas)</Text>
+
+        {isLoading ? (
+          <View style={styles.stateWrap}>
+            <ActivityIndicator size="small" color="#007AFF" />
+            <Text style={styles.stateText}>Cargando direcciones...</Text>
+          </View>
+        ) : null}
+
+        {!isLoading && errorMessage ? (
+          <Text style={[styles.row, styles.errorText]}>{errorMessage}</Text>
+        ) : null}
+
+        {!isLoading && !errorMessage && origenes.length === 0 ? (
+          <Text style={styles.row}>Aun no tienes direcciones guardadas. Puedes crearlas en Direcciones Guardadas.</Text>
+        ) : null}
+
+        {!isLoading && !errorMessage
+          ? origenes.map((item) => (
+              <View key={item.id_direccion} style={styles.rowWrap}>
+                <Text style={styles.row}>{item.alias} - {item.direccion}</Text>
+                <Text style={styles.arrow}>{item.es_predeterminada ? 'Predeterminada' : 'Disponible'}</Text>
+              </View>
+            ))
+          : null}
       </View>
 
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Destino</Text>
-        <View style={styles.rowWrap}><Text style={styles.row}>Ana Martinez - Calle 10 #45-22</Text><Text style={styles.arrow}>Seleccionar</Text></View>
-        <View style={styles.rowWrap}><Text style={styles.row}>Jorge Gomez - Av. Central 98</Text><Text style={styles.arrow}>Seleccionar</Text></View>
+        <Text style={styles.row}>El destino se define en el formulario del destinatario.</Text>
+        <Text style={styles.row}>No se usa informacion estatica en esta vista.</Text>
       </View>
 
       <TouchableOpacity style={styles.btnPrimary} onPress={() => navigation.navigate('FormRemitente')}>
         <Text style={styles.btnPrimaryText}>Completar formulario de envio</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('PagoOpciones')}>
-        <Text style={styles.btnText}>Ir a pagos</Text>
+      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('DireccionesGuardadas')}>
+        <Text style={styles.btnText}>Gestionar direcciones guardadas</Text>
       </TouchableOpacity>
     </MainLayout>
   );

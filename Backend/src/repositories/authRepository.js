@@ -4,7 +4,7 @@ export async function findUserByEmail(correo) {
   const result = await pool.query(
     `SELECT id_usuario, nombre, apellido, correo, contrasena, rol, estado
      FROM usuarios
-     WHERE correo = $1
+     WHERE LOWER(correo) = LOWER($1)
      LIMIT 1`,
     [correo]
   );
@@ -35,6 +35,89 @@ async function hasClientesUserIdColumn() {
   );
 
   return result.rowCount > 0;
+}
+
+export async function createUser(payload) {
+  const result = await pool.query(
+    `INSERT INTO usuarios (
+      nombre,
+      apellido,
+      correo,
+      contrasena,
+      telefono,
+      rol,
+      estado
+    ) VALUES ($1, $2, $3, $4, $5, 'cliente', 'activo')
+    RETURNING id_usuario, nombre, apellido, correo, rol`,
+    [
+      payload.nombre,
+      payload.apellido,
+      payload.correo,
+      payload.contrasena,
+      payload.telefono || null,
+    ]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function createClientFromUser(payload) {
+  const hasUserColumn = await hasClientesUserIdColumn();
+
+  const baseColumns = [
+    'nombre',
+    'telefono',
+    'correo',
+    'direccion_principal',
+    'ciudad',
+    'estado',
+    'codigo_postal',
+  ];
+
+  const baseValues = [
+    payload.nombreCompleto,
+    payload.telefono || null,
+    payload.correo,
+    payload.direccion_principal,
+    payload.ciudad,
+    payload.estado,
+    payload.codigo_postal,
+  ];
+
+  if (hasUserColumn) {
+    const result = await pool.query(
+      `INSERT INTO clientes (
+        ${baseColumns.join(', ')},
+        id_usuario
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING id_cliente`,
+      [...baseValues, payload.id_usuario]
+    );
+
+    return result.rowCount > 0 ? result.rows[0] : null;
+  }
+
+  const result = await pool.query(
+    `INSERT INTO clientes (
+      ${baseColumns.join(', ')}
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING id_cliente`,
+    baseValues
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function updateUserPasswordById(idUsuario, nuevaContrasena) {
+  const result = await pool.query(
+    `UPDATE usuarios
+     SET contrasena = $1
+     WHERE id_usuario = $2
+     RETURNING id_usuario`,
+    [nuevaContrasena, idUsuario]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
 }
 
 export async function findUserProfileById(idUsuario) {

@@ -56,3 +56,57 @@ export const updatePerfilUsuarioRequest = async (idUsuario, payload) => {
 
   return data?.data;
 };
+
+export const registerRequest = async (payload) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/registro`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'No se pudo crear la cuenta.');
+  }
+
+  return data?.data;
+};
+
+export const recoverPasswordRequest = async (payload) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/recuperar-contrasena`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'No se pudo procesar la recuperacion.');
+  }
+
+  return data?.data;
+};
+
+export const changePasswordRequest = async (idUsuario, payload) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/cambiar-contrasena/${idUsuario}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'No se pudo actualizar la contrasena.');
+  }
+
+  return data?.data;
+};

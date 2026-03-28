@@ -1,6 +1,9 @@
 import {
+  createClientFromUser,
+  createUser,
   findUserByEmail,
   findUserProfileById,
+  updateUserPasswordById,
   updateClientCityByUser,
   updateUserProfileById,
 } from '../repositories/authRepository.js';
@@ -156,4 +159,144 @@ export async function updateUserProfile({ idUsuario, payload }) {
   });
 
   return getUserProfile(parsedId);
+}
+
+export async function registerUser(payload) {
+  const nombreCompleto = String(payload?.nombreCompleto || '').trim();
+  const correo = String(payload?.correo || '').trim().toLowerCase();
+  const contrasena = String(payload?.contrasena || '').trim();
+  const confirmarContrasena = String(payload?.confirmarContrasena || '').trim();
+
+  if (!nombreCompleto || !correo || !contrasena || !confirmarContrasena) {
+    const error = new Error('Nombre, correo y contrasena son obligatorios.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (contrasena.length < 6) {
+    const error = new Error('La contrasena debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (contrasena !== confirmarContrasena) {
+    const error = new Error('Las contrasenas no coinciden.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(correo)) {
+    const error = new Error('Correo invalido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const existing = await findUserByEmail(correo);
+
+  if (existing) {
+    const error = new Error('Ya existe un usuario con ese correo.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const [nombre, ...resto] = nombreCompleto.split(' ');
+  const apellido = resto.join(' ').trim() || 'Cliente';
+
+  const createdUser = await createUser({
+    nombre,
+    apellido,
+    correo,
+    contrasena,
+    telefono: null,
+  });
+
+  await createClientFromUser({
+    id_usuario: createdUser.id_usuario,
+    nombreCompleto,
+    telefono: null,
+    correo,
+    direccion_principal: 'Por definir',
+    ciudad: 'Por definir',
+    estado: 'Por definir',
+    codigo_postal: '00000',
+  });
+
+  return createdUser;
+}
+
+export async function requestPasswordRecovery(payload) {
+  const correo = String(payload?.correo || '').trim().toLowerCase();
+
+  if (!correo) {
+    const error = new Error('El correo es obligatorio.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await findUserByEmail(correo);
+
+  if (!user) {
+    const error = new Error('No existe una cuenta con ese correo.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return {
+    correo,
+    message: 'Solicitud de recuperacion registrada. Contacta al administrador para restablecerla.',
+  };
+}
+
+export async function changePassword({ idUsuario, payload }) {
+  const parsedId = Number(idUsuario);
+
+  if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    const error = new Error('El id de usuario no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const actual = String(payload?.contrasenaActual || '').trim();
+  const nueva = String(payload?.nuevaContrasena || '').trim();
+  const confirmar = String(payload?.confirmarContrasena || '').trim();
+
+  if (!actual || !nueva || !confirmar) {
+    const error = new Error('Completa todos los campos de contrasena.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva.length < 6) {
+    const error = new Error('La nueva contrasena debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva !== confirmar) {
+    const error = new Error('Las contrasenas no coinciden.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await findUserProfileById(parsedId);
+
+  if (!user) {
+    const error = new Error('Usuario no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const fullUser = await findUserByEmail(user.correo);
+
+  if (!fullUser || fullUser.contrasena !== actual) {
+    const error = new Error('La contrasena actual es incorrecta.');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  await updateUserPasswordById(parsedId, nueva);
+
+  return { id_usuario: parsedId };
 }

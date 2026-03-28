@@ -86,11 +86,6 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.cardTitle}>Direcciones</Text>
           <Text style={styles.cardDesc}>Gestiona direcciones frecuentes.</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.quickCard} onPress={() => navigation.navigate('PagoOpciones')}>
-          <Text style={styles.cardTitle}>Facturacion</Text>
-          <Text style={styles.cardDesc}>Elige y administra pago.</Text>
-        </TouchableOpacity>
       </View>
 
       {trackingData ? (

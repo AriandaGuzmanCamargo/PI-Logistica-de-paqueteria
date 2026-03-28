@@ -295,13 +295,6 @@ export default function EnviosSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Contenido Gestión de Envíos */}
@@ -310,14 +303,13 @@ export default function EnviosSupervisor() {
       {/* Barra búsqueda + filtros */}
       <div className="genv-barra">
         <div className="genv-buscar">
-          <span className="genv-buscar__icono">&#128269;</span>
           <input type="text" placeholder="Buscar dirección o número de guía" />
         </div>
         <button className="genv-chip genv-chip--todos">Todos <span className="genv-chip__flecha">&#9662;</span></button>
-        <button className="genv-chip genv-chip--pendiente">&#9201; Pendiente</button>
-        <button className="genv-chip genv-chip--retrasado">&#9888; Retrasado</button>
-        <button className="genv-chip genv-chip--entregado">&#10004; Entregado</button>
-        <button className="genv-filtro-btn">&#9776; Filtro</button>
+        <button className="genv-chip genv-chip--pendiente">Pendiente</button>
+        <button className="genv-chip genv-chip--retrasado">Retrasado</button>
+        <button className="genv-chip genv-chip--entregado">Entregado</button>
+        <button className="genv-filtro-btn">Filtro</button>
       </div>
 
       {/* Ordenar por */}
@@ -353,7 +345,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Col. Roma Norte, CDMX</span></td>
               <td><span className="genv-hora">10:00 – 11:00</span></td>
               <td><span className="genv-repartidor">Luis Garcia</span></td>
-              <td><span className="genv-estado genv-estado--pendiente">&#10148; Pendiente</span></td>
+              <td><span className="genv-estado genv-estado--pendiente">Pendiente</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
@@ -365,7 +357,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Av. Tecnológico 210, Querétaro</span></td>
               <td><span className="genv-hora">12:00 – 1:00</span></td>
               <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--enruta">&#10004; En ruta</span></td>
+              <td><span className="genv-estado genv-estado--enruta">En ruta</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
@@ -376,7 +368,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Av. Revolución 456, Col. Del Valle</span></td>
               <td><span className="genv-hora">1:00 – 3:00</span></td>
               <td><span className="genv-repartidor">Ricardo Muñoz</span></td>
-              <td><span className="genv-estado genv-estado--retrasado">&#9888; Retrasado</span></td>
+              <td><span className="genv-estado genv-estado--retrasado">Retrasado</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
@@ -388,7 +380,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Av. Universidad 789, Col. Coyoacán</span></td>
               <td><span className="genv-hora">2:00 – 3:30</span></td>
               <td><span className="genv-repartidor">Jorge Medina</span></td>
-              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
@@ -400,7 +392,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
               <td><span className="genv-hora">3:00 – 4:30</span></td>
               <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
             <tr>
@@ -412,7 +404,7 @@ export default function EnviosSupervisor() {
               <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
               <td><span className="genv-hora">3:00 – 4:30</span></td>
               <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--entregado">&#128230; Entregado</span></td>
+              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
               <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
             </tr>
           </tbody>

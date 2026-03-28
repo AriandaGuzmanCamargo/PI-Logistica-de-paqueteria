@@ -232,13 +232,6 @@ export default function GestRepartidorSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Contenido Gestión de Repartidores */}
@@ -247,14 +240,13 @@ export default function GestRepartidorSupervisor() {
       {/* Barra búsqueda + filtros */}
       <div className="grep-barra">
         <div className="grep-buscar">
-          <span className="grep-buscar__icono">&#128269;</span>
           <input type="text" placeholder="Buscar repartidor..." />
         </div>
-        <button className="grep-chip grep-chip--activos">&#10004; Activos <span className="grep-chip__count">148</span></button>
-        <button className="grep-chip grep-chip--enruta">&#9679; En ruta <span className="grep-chip__count">58</span></button>
-        <button className="grep-chip grep-chip--sin">&#9679; Sin asignación</button>
-        <button className="grep-filtro-btn">&#9776; Filtro &#9662;</button>
-        <button className="grep-agregar-btn">&#128100; Agregar Repartidor</button>
+        <button className="grep-chip grep-chip--activos">Activos <span className="grep-chip__count">148</span></button>
+        <button className="grep-chip grep-chip--enruta">En ruta <span className="grep-chip__count">58</span></button>
+        <button className="grep-chip grep-chip--sin">Sin asignación</button>
+        <button className="grep-filtro-btn">Filtro &#9662;</button>
+        <button className="grep-agregar-btn">Agregar Repartidor</button>
       </div>
 
       {/* Grid de tarjetas */}
@@ -274,9 +266,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar &gt;</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar &gt;</button>
           </div>
         </div>
 
@@ -294,9 +286,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar paquetes</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar paquetes</button>
           </div>
         </div>
 
@@ -314,9 +306,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar &gt;</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar &gt;</button>
           </div>
         </div>
 
@@ -334,9 +326,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar paquetes</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar paquetes</button>
           </div>
         </div>
 
@@ -354,9 +346,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar &gt;</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar &gt;</button>
           </div>
         </div>
 
@@ -374,9 +366,9 @@ export default function GestRepartidorSupervisor() {
             </span>
           </div>
           <div className="grep-card__acciones">
-            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128205;</span> Ver ruta</a>
-            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion"><span className="grep-accion__icono">&#128203;</span> Ver entregas</a>
-            <button className="grep-accion"><span className="grep-accion__icono">&#128260;</span> Reasignar paquetes</button>
+            <a href="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" className="grep-accion">Ver ruta</a>
+            <a href="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" className="grep-accion">Ver entregas</a>
+            <button className="grep-accion">Reasignar paquetes</button>
           </div>
         </div>
 

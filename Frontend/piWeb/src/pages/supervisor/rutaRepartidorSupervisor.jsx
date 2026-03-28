@@ -33,10 +33,10 @@ export default function RutaRepartidorSupervisor() {
             });
           }
     
-          // Icono repartidor
+          // Marcador del repartidor
           var iconRepartidor = L.divIcon({
             className: '',
-            html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">&#128666;</div>',
+            html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">R</div>',
             iconSize: [32, 32],
             iconAnchor: [16, 16]
           });
@@ -202,7 +202,7 @@ export default function RutaRepartidorSupervisor() {
     }
     .ruta-badge--zona { background: #3b6aaa; }
     .ruta-badge--vehiculo { background: #4a6fa5; }
-    .ruta-badge--vehiculo::before { content: "🚐 "; }
+    .ruta-badge--vehiculo::before { content: ""; }
 
     .ruta-driver__estado {
       display: flex;
@@ -577,13 +577,6 @@ export default function RutaRepartidorSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Encabezado de la ruta */}
@@ -626,9 +619,7 @@ export default function RutaRepartidorSupervisor() {
               <div className="ruta-entregas-mapa__header">
                 <h3 className="ruta-entregas-mapa__titulo">Entregas de la Ruta</h3>
                 <div className="ruta-entregas-mapa__meta">
-                  <span className="ruta-tiempo">
-                    <span className="ruta-tiempo__icono">&#9201;</span> Tiempo restante
-                  </span>
+                  <span className="ruta-tiempo">Tiempo restante</span>
                   <button className="ruta-entregas-mapa__more" aria-label="Más opciones">&#8943;</button>
                 </div>
               </div>

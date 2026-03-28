@@ -715,13 +715,6 @@ export default function EntregasRepartidorSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Encabezado */}
@@ -792,12 +785,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">10:00 – 11:00</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -808,12 +801,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">12:00 – 1:00</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--enruta">
-                    <span className="ent-estado-badge__icono">&#10004;</span> En ruta
+                    En ruta
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -824,12 +817,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">1:00 – 3:00 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--retrasado">
-                    <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
+                    Retrasado
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn ent-accion-btn--reasignar">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Reasignar
+                    Reasignar
                   </button>
                 </td>
               </tr>
@@ -843,12 +836,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">2:00 – 3:30 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -859,12 +852,12 @@ export default function EntregasRepartidorSupervisor() {
                 <td className="td-hora">3:00 – 4:30 PM</td>
                 <td>
                   <span className="ent-estado-badge ent-estado-badge--pendiente">
-                    <span className="ent-estado-badge__icono">&#9664;</span> Pendiente
+                    Pendiente
                   </span>
                 </td>
                 <td>
                   <button className="ent-accion-btn">
-                    <span className="ent-accion-btn__icono">&#128196;</span> Ver detalle
+                    Ver detalle
                   </button>
                 </td>
               </tr>
@@ -892,13 +885,13 @@ export default function EntregasRepartidorSupervisor() {
           &lsaquo; Volver
         </a>
         <button className="ent-bar-btn ent-bar-btn--reasignar">
-          <span className="ent-bar-btn__icono">&#128230;</span> Reasignar paquete
+          Reasignar paquete
         </button>
         <button className="ent-bar-btn ent-bar-btn--contactar">
-          <span className="ent-bar-btn__icono">&#128222;</span> Contactar repartidor
+          Contactar repartidor
         </button>
         <button className="ent-bar-btn ent-bar-btn--incidencia">
-          <span className="ent-bar-btn__icono">&#9888;</span> Marcar incidencia
+          Marcar incidencia
         </button>
       </div>
 
@@ -922,7 +915,7 @@ export default function EntregasRepartidorSupervisor() {
           <span id="modalDir" className="modal-paq__dir">Av. Revolución 456, Col. Del Valle</span>
           <span className="modal-paq__estado">
             <span id="modalEstado" className="ent-estado-badge ent-estado-badge--retrasado">
-              <span className="ent-estado-badge__icono">&#9650;</span> Retrasado
+              Retrasado
             </span>
           </span>
         </div>
@@ -932,7 +925,6 @@ export default function EntregasRepartidorSupervisor() {
       <div className="modal-seleccion">
         <p className="modal-seleccion__titulo">Seleccionar nuevo repartidor</p>
         <div className="modal-buscar">
-          <span className="modal-buscar__icono">&#128269;</span>
           <input type="text" id="modalBuscarInput" placeholder="Buscar repartidor..." />
         </div>
         <div className="modal-repartidores" id="modalRepLista">

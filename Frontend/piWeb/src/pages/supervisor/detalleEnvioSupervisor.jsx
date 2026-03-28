@@ -408,13 +408,6 @@ export default function DetalleEnvioSupervisor() {
           </div>
           <h1 className="barra-superior__titulo">Supervisor</h1>
         </div>
-        <div className="barra-superior__perfil">
-          <span className="badge-servicio">
-            <span className="header-sv__punto-verde"></span> En servicio
-          </span>
-          <img src="/piWeb/images/usuario.png" alt="Supervisor" className="barra-superior__avatar" />
-          <span className="barra-superior__chevron">&#9662;</span>
-        </div>
       </header>
 
       {/* Encabezado */}
@@ -430,7 +423,6 @@ export default function DetalleEnvioSupervisor() {
         <div className="det-card">
           <h3 className="det-card__titulo">Información del Paquete</h3>
           <div className="det-paq__guia-row">
-            <span className="det-paq__guia-icono">&#128230;</span>
             <span className="det-paq__guia">PAK123456789</span>
           </div>
           <div className="det-paq__campo">
@@ -517,13 +509,13 @@ export default function DetalleEnvioSupervisor() {
             </div>
             <div className="det-rep__acciones">
               <button className="det-rep-btn det-rep-btn--reasignar">
-                <span className="det-rep-btn__icono">&#128230;</span> Reasignar repartidor
+                Reasignar repartidor
               </button>
               <button className="det-rep-btn det-rep-btn--retraso">
-                <span className="det-rep-btn__icono">&#9888;</span> Marcar retraso
+                Marcar retraso
               </button>
               <button className="det-rep-btn det-rep-btn--incidencia">
-                <span className="det-rep-btn__icono">&#9888;</span> Reportar incidencia
+                Reportar incidencia
               </button>
             </div>
           </div>
@@ -540,11 +532,11 @@ export default function DetalleEnvioSupervisor() {
         <h3 className="det-card__titulo">Acciones Supervisor</h3>
         <div className="det-acciones-sv__btns">
           <button className="det-sv-btn det-sv-btn--reasignar">
-            <span className="det-sv-btn__icono">&#128230;</span> Reasignar repartidor
+            Reasignar repartidor
             <span className="det-sv-btn__flecha">&rsaquo;</span>
           </button>
           <button className="det-sv-btn det-sv-btn--retraso">
-            <span className="det-sv-btn__icono">&#9200;</span> Marcar retraso
+            Marcar retraso
           </button>
         </div>
       </div>

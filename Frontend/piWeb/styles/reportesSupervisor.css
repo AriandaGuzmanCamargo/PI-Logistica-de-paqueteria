@@ -95,6 +95,12 @@
   border-radius: 10px;
   flex-shrink: 0;
 }
+.rep-card__icono-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
 .rep-card--azul .rep-card__icono { background: #dce8ff; color: #3b6aaa; }
 .rep-card--verde .rep-card__icono { background: #d0f0d0; color: #2e7d32; }
 .rep-card--rojo .rep-card__icono { background: #fdd; color: #d32f2f; }

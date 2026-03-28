@@ -105,28 +105,28 @@ export default function DashboardOperador() {
 
       <section className={`resumen-operador ${loading ? 'resumen-operador--loading' : ''}`}>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/pendiente.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Pendientes por Procesar</h3>
             <p>{loading ? '...' : resumen.pendientes}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/proceso.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>En Proceso</h3>
             <p>{loading ? '...' : resumen.enRuta}</p>
           </div>
         </article>
         <article className="tarjeta-resumen tarjeta-resumen--alerta">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/pendiente.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Pendientes de Entrega</h3>
             <p>{loading ? '...' : resumen.retrasados}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
-          <span className="tarjeta-resumen__icono"></span>
+          <span className="tarjeta-resumen__icono"><img src="/piWeb/images/total.png" alt="" className="tarjeta-resumen__icono-img" /></span>
           <div>
             <h3>Total de Envíos Hoy</h3>
             <p>{loading ? '...' : resumen.total}</p>

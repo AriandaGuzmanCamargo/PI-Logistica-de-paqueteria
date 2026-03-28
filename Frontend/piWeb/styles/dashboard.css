@@ -61,6 +61,12 @@
   flex-shrink: 0;
 }
 
+.tarjeta-resumen__icono-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .tarjeta-resumen h3 {
   margin: 0;
   font-size: 17px;

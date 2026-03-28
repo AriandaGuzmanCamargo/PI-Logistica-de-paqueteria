@@ -1,5 +1,5 @@
 .modulo-registro {
-  max-width: 1260px;
+  max-width: 1600px;
   margin: 0 auto;
   background: #ffffff;
   border: 1px solid #d9e0f8;
@@ -9,18 +9,18 @@
 }
 
 .registro-encabezado {
-  min-height: 48px;
+  min-height: 56px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 14px 18px;
   border-bottom: 1px solid #e6ecfb;
   background: #f7f9ff;
 }
 
 .registro-encabezado__icono {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
@@ -32,21 +32,21 @@
 
 .registro-encabezado h2 {
   margin: 0;
-  font-size: 30px;
+  font-size: 36px;
   color: #445585;
 }
 
 .tarjeta-formulario-registro {
-  margin: 14px;
+  margin: 18px;
   border: 1px solid #d9e0f8;
   border-radius: 8px;
   background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
-  padding: 14px;
+  padding: 18px;
 }
 
 .tarjeta-formulario-registro h3 {
-  margin: 0 0 14px;
-  font-size: 34px;
+  margin: 0 0 16px;
+  font-size: 40px;
   color: #34497a;
 }
 
@@ -64,10 +64,10 @@
   border: 1px solid #d6ddfa;
   background: #f7f9ff;
   color: #5b6994;
-  height: 34px;
+  height: 40px;
   border-radius: 999px;
-  padding: 0 14px;
-  font-size: 13px;
+  padding: 0 18px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -91,8 +91,8 @@
 }
 
 .seccion-formulario__titulo {
-  margin: 0 0 12px;
-  font-size: 24px;
+  margin: 0 0 14px;
+  font-size: 28px;
   color: #425587;
   font-weight: 600;
 }
@@ -123,20 +123,20 @@ label {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
+  font-size: 16px;
   color: #556390;
   font-weight: 600;
 }
 
 input,
 select {
-  height: 38px;
+  height: 44px;
   border: 1px solid #ccd6f6;
   border-radius: 6px;
   background: #f7f9ff;
   color: #435177;
-  padding: 0 10px;
-  font-size: 13px;
+  padding: 0 12px;
+  font-size: 15px;
   outline: none;
 }
 
@@ -149,16 +149,16 @@ select:focus {
 .acciones-formulario {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  padding: 0 14px 14px;
+  gap: 12px;
+  padding: 0 18px 18px;
 }
 
 .boton-secundario,
 .boton-primario {
-  min-width: 90px;
-  height: 38px;
+  min-width: 100px;
+  height: 44px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -177,13 +177,13 @@ select:focus {
   background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
   color: #ffffff;
   cursor: pointer;
-  font-size: 20px;
-  min-width: 96px;
+  font-size: 22px;
+  min-width: 110px;
 }
 
 .boton-primario--texto {
-  font-size: 14px;
-  min-width: 126px;
+  font-size: 16px;
+  min-width: 140px;
 }
 
 .bloque-registro {
@@ -198,9 +198,9 @@ select:focus {
 }
 
 .bloque-registro__titulo {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: #3f507f;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .bloque-registro--secundario {
@@ -220,7 +220,7 @@ select:focus {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: 16px;
   color: #556390;
   font-weight: 600;
 }
@@ -242,8 +242,8 @@ select:focus {
 }
 
 .campo-titulo {
-  margin: 0 0 8px;
-  font-size: 14px;
+  margin: 0 0 10px;
+  font-size: 16px;
   color: #556390;
   font-weight: 600;
 }
@@ -290,14 +290,14 @@ select:focus {
 .modal-exito__tarjeta h2 {
   margin: 0;
   color: #2d5078;
-  font-size: 34px;
+  font-size: 38px;
 }
 
 .modal-exito__tarjeta p {
   margin: 10px auto 0;
   max-width: 380px;
   color: #5c678f;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 

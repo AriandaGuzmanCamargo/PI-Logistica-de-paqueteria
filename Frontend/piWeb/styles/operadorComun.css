@@ -31,7 +31,7 @@ body {
 
 .panel-principal--full {
   width: 100%;
-  padding: 0 26px 24px;
+  padding: 0 36px 32px;
 }
 .panel-principal--full .barra-superior {
   margin: 0 -26px 18px;
@@ -182,10 +182,10 @@ body {
 }
 
 .barra-superior {
-  height: 80px;
+  height: 90px;
   background: linear-gradient(135deg, #1a2d50 0%, #2a4a7a 25%, #3b6aaa 50%, #4a7ec0 75%, #5a90d0 100%);
-  margin: 0 -26px 18px;
-  padding: 0 28px;
+  margin: 0 -36px 22px;
+  padding: 0 36px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -201,7 +201,7 @@ body {
 .barra-superior__titulo {
   margin: 0;
   color: #f0f5ff;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.5px;
@@ -291,7 +291,7 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 290px;
+  width: 320px;
   height: 100vh;
   z-index: 200;
   transform: translateX(-110%);
@@ -377,7 +377,7 @@ body {
   font-weight: 400;
   letter-spacing: 3px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 15px;
+  font-size: 18px;
   text-transform: uppercase;
 }
 .menu-hamburguesa__links {
@@ -391,12 +391,12 @@ body {
 .menu-hamburguesa__item {
   color: #c8d8f8;
   text-decoration: none;
-  font-size: 14px;
-  padding: 10px 12px;
+  font-size: 17px;
+  padding: 12px 14px;
   border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   transition: background 0.2s;
 }
 .menu-hamburguesa__item:hover,
@@ -405,15 +405,15 @@ body {
   color: #fff;
 }
 .menu-hamburguesa__icono {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .menu-hamburguesa__icono-txt {
-  font-size: 20px;
-  width: 24px;
+  font-size: 24px;
+  width: 28px;
   text-align: center;
   flex-shrink: 0;
   line-height: 1;
@@ -464,7 +464,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: #495781;
 }
@@ -486,8 +486,8 @@ thead {
 
 th,
 td {
-  padding: 11px 10px;
-  font-size: 13px;
+  padding: 13px 14px;
+  font-size: 15px;
   text-align: left;
   border-bottom: 1px solid #e6ecf8;
   color: #465274;
@@ -499,9 +499,9 @@ tbody tr:hover {
 
 .estado {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 999px;
-  padding: 4px 8px;
+  padding: 5px 10px;
   display: inline-block;
 }
 
@@ -553,9 +553,10 @@ tbody tr:hover {
   background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
   color: #ffffff;
   font-weight: 700;
-  padding: 7px 13px;
+  padding: 9px 18px;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 15px;
 }
 
 /* Mobile menu overlay (used when window <= 992px) */
@@ -572,7 +573,7 @@ tbody tr:hover {
   }
 
   .barra-superior__titulo {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .leyenda-estados {
@@ -583,7 +584,7 @@ tbody tr:hover {
 @media (max-width: 1100px) {
   th,
   td {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -600,7 +601,7 @@ tbody tr:hover {
   .btn-toggle-sidebar { display: inline-flex; }
 
   .barra-superior__titulo {
-    font-size: 22px;
+    font-size: 26px;
   }
 
   .header-logo {

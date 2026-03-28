@@ -1,14 +1,14 @@
 .barra-superior__titulo {
-  font-size: 24px;
+  font-size: 30px;
 }
 
 .modulo-cuenta {
-  max-width: 760px;
+  max-width: 960px;
   margin: 0 auto;
   background: linear-gradient(180deg, #ecf1ff 0%, #dde7fb 100%);
   border: 1px solid #c7d5f2;
   border-radius: 10px;
-  padding: 12px;
+  padding: 16px;
 }
 
 .cuenta-fondo-superior {
@@ -28,8 +28,8 @@
 }
 
 .cuenta-perfil-principal__avatar {
-  width: 78px;
-  height: 78px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: 3px solid #d8ddfa;
   object-fit: cover;
@@ -38,7 +38,7 @@
 
 .cuenta-perfil-principal h2 {
   margin: 8px 0 4px;
-  font-size: 34px;
+  font-size: 40px;
   color: #34497d;
   line-height: 1;
 }
@@ -46,7 +46,7 @@
 .cuenta-perfil-principal__estado {
   margin: 0;
   color: #5a6d9b;
-  font-size: 16px;
+  font-size: 18px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -60,19 +60,19 @@
 }
 
 .cuenta-datos {
-  margin-top: 10px;
+  margin-top: 14px;
   background: linear-gradient(180deg, #f8fbff 0%, #eef3fc 100%);
   border: 1px solid #c8d5ef;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 14px 18px;
 }
 
 .cuenta-datos__fila {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 6px;
+  grid-template-columns: 180px 1fr;
+  gap: 8px;
   align-items: center;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #e0e4f7;
 }
 
@@ -83,22 +83,22 @@
 .cuenta-datos__etiqueta {
   color: #495885;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .cuenta-datos__valor {
   color: #586894;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .cuenta-datos__selector {
-  height: 34px;
+  height: 40px;
   border: 1px solid #c4d0eb;
   border-radius: 6px;
   background: #f8fbff;
   color: #4d5b84;
-  padding: 0 10px;
-  font-size: 13px;
+  padding: 0 12px;
+  font-size: 15px;
 }
 
 @media (max-width: 900px) {
@@ -107,13 +107,13 @@
   }
 
   .cuenta-perfil-principal h2 {
-    font-size: 28px;
+    font-size: 34px;
   }
 
   .cuenta-perfil-principal__estado,
   .cuenta-datos__etiqueta,
   .cuenta-datos__valor {
-    font-size: 14px;
+    font-size: 15px;
   }
 }
 
@@ -124,6 +124,6 @@
   }
 
   .barra-superior__titulo {
-    font-size: 24px;
+    font-size: 28px;
   }
 }

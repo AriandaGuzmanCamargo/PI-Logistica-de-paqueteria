@@ -59,7 +59,7 @@ export async function getShipmentsByUser(userId) {
     throw error;
   }
 
-  if (user.rol === 'operador' || user.rol === 'admin') {
+  if (user.rol === 'operador' || user.rol === 'admin' || user.rol === 'conductor') {
     const shipments = await listShipmentsForOperator();
     return shipments.map(mapShipment);
   }

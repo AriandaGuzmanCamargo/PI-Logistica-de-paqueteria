@@ -40,6 +40,7 @@ export default function LoginScreen({ navigation }) {
       }
 
       if (tipoAcceso === 'chofer') {
+        setCurrentUser(data?.usuario ?? null);
         navigation.navigate('DashboardR');
         return;
       }

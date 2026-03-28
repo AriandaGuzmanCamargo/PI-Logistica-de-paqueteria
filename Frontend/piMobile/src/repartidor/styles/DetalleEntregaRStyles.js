@@ -149,6 +149,53 @@ export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
       backgroundColor: isDarkMode ? '#24314A' : '#DDE5F0',
       marginTop: s(2),
       marginBottom: s(6),
+      overflow: 'hidden',
+      position: 'relative',
+    },
+    mapOverlay: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      backgroundColor: 'rgba(15, 23, 42, 0.2)',
+    },
+    mapLoadingWrap: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: s(6),
+    },
+    mapLoadingText: {
+      color: isDarkMode ? '#D7E4FF' : '#39558C',
+      fontSize: s(11),
+      fontWeight: '600',
+    },
+    mapFallbackWrap: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: s(12),
+    },
+    mapFallbackText: {
+      color: isDarkMode ? '#B9C8E6' : '#556C99',
+      fontSize: s(11),
+      lineHeight: s(15),
+      textAlign: 'center',
+    },
+    mapErrorText: {
+      color: isDarkMode ? '#FFD2D2' : '#B33A3A',
+      fontSize: s(11),
+      lineHeight: s(15),
+      textAlign: 'center',
+    },
+    routeBtn: {
+      borderRadius: s(7),
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: s(8),
+      backgroundColor: '#2E63D7',
+      marginBottom: s(4),
     },
     metricsRow: {
       flexDirection: 'row',
@@ -159,6 +206,12 @@ export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
     metricText: {
       color: isDarkMode ? '#B4C3E3' : '#697A9F',
       fontSize: s(12),
+    },
+    warningText: {
+      color: isDarkMode ? '#FDE68A' : '#8A4B08',
+      fontSize: s(11),
+      lineHeight: s(15),
+      marginTop: s(2),
     },
     actionRow: {
       flexDirection: 'row',

@@ -19,6 +19,12 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 			justifyContent: 'center',
 			paddingVertical: s(12),
 		},
+		webPhoneFrame: {
+			borderRadius: s(22),
+			overflow: 'hidden',
+			borderWidth: 1,
+			borderColor: '#C3CEE6',
+		},
 		safeArea: {
 			flex: 1,
 			backgroundColor: colors.primaryDark,
@@ -61,6 +67,52 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 			borderColor: border,
 			backgroundColor: isDarkMode ? '#24314A' : '#DDE5F0',
 			overflow: 'hidden',
+			position: 'relative',
+		},
+		mapOverlay: {
+			position: 'absolute',
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: 0,
+			backgroundColor: 'rgba(15, 23, 42, 0.2)',
+		},
+		mapFallbackWrap: {
+			flex: 1,
+			alignItems: 'center',
+			justifyContent: 'center',
+			paddingHorizontal: s(14),
+			gap: s(8),
+		},
+		mapFallbackTitle: {
+			color: isDarkMode ? '#E2EBFF' : '#314A78',
+			fontSize: s(14),
+			fontWeight: '700',
+			textAlign: 'center',
+		},
+		mapFallbackText: {
+			color: isDarkMode ? '#B7C7E8' : '#5A6F9A',
+			fontSize: s(11),
+			lineHeight: s(16),
+			textAlign: 'center',
+		},
+		mapLoadingWrap: {
+			flex: 1,
+			alignItems: 'center',
+			justifyContent: 'center',
+			gap: s(8),
+		},
+		mapLoadingText: {
+			color: isDarkMode ? '#D7E4FF' : '#39558C',
+			fontSize: s(12),
+			fontWeight: '600',
+		},
+		mapErrorText: {
+			color: isDarkMode ? '#FFD2D2' : '#B33A3A',
+			fontSize: s(11),
+			textAlign: 'center',
+			paddingHorizontal: s(12),
+			lineHeight: s(15),
 		},
 		card: {
 			borderRadius: s(10),
@@ -121,6 +173,12 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 		metricStrong: {
 			color: isDarkMode ? '#E2EBFF' : '#3F4E73',
 			fontWeight: '700',
+		},
+		warningText: {
+			color: isDarkMode ? '#FDE68A' : '#8A4B08',
+			fontSize: s(11),
+			lineHeight: s(15),
+			marginBottom: s(8),
 		},
 		startBtn: {
 			borderRadius: s(7),

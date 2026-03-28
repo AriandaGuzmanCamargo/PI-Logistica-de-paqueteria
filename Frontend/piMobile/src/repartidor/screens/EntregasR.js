@@ -15,6 +15,8 @@ import getEntregasRStyles from '../styles/EntregasRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
+import { getCurrentUser } from '../../services/sessionService';
+import { getEnviosByUsuario } from '../../services/enviosService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -22,15 +24,17 @@ const deliveries = [
 	{
 		id: 'PAK927365789',
 		name: 'Ana Martinez',
-		address: 'L103 Amailanesz, Sulf., 123\nCol. Roma Norte, CDMX - PAK123456789',
+		address: 'Londres 247, Col. Juarez, Ciudad de Mexico',
+		phone: '+52 55 1234 5678',
 		done: false,
 		hasIncident: false,
 		pinBlue: false,
 	},
 	{
-		id: 'PAK927365789',
-		name: 'Ana Martinez',
-		address: 'L103 Amailanesz, Sulf., 123\nCol. Roma Norte, CDMX - PAK123456789',
+		id: 'PAK927365790',
+		name: 'Carlos Rivas',
+		address: 'Av. Universidad 1200, Coyoacan, Ciudad de Mexico',
+		phone: '+52 55 9876 5432',
 		done: false,
 		hasIncident: true,
 		pinBlue: false,
@@ -38,20 +42,42 @@ const deliveries = [
 	{
 		id: 'PAK967654035',
 		name: 'Laura Gomez',
-		address: 'Av. Revolucion 996, Col.\nDel Valle, CDMX',
+		address: 'Av. Revolucion 996, Del Valle, Ciudad de Mexico',
+		phone: '+52 55 4433 2211',
 		done: true,
 		hasIncident: false,
 		pinBlue: true,
 	},
 	{
 		id: 'PAK9676554035',
-		name: 'Laura Gomez',
-		address: 'Av. Revolucion 996, Col.\nDel Valle, CDMX',
+		name: 'Monica Ruiz',
+		address: 'Calz. de Tlalpan 1480, Portales, Ciudad de Mexico',
+		phone: '+52 55 2211 8899',
 		done: false,
 		hasIncident: false,
 		pinBlue: true,
 	},
 ];
+
+function toDeliveryItem(envio, index) {
+	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
+	const nombre = envio?.destinatario?.nombre || 'Destinatario';
+	const addressParts = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean);
+	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
+	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
+	const done = estadoEnvio === 'entregado' || estadoPaquete === 'entregado';
+
+	return {
+		id: codigo,
+		name: nombre,
+		address: addressParts.length > 0 ? addressParts.join(', ') : 'Direccion pendiente',
+		phone: envio?.destinatario?.telefono || '',
+		done,
+		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
+		pinBlue: done,
+		id_envio: envio?.id_envio,
+	};
+}
 
 const FILTER_OPTIONS = ['Todas', 'Pendientes', 'Entregadas', 'Incidencias'];
 const SECTION_TITLES = {
@@ -63,6 +89,10 @@ const SECTION_TITLES = {
 
 export default function EntregasR({ navigation, route }) {
 	const [activeFilter, setActiveFilter] = useState('Todas');
+	const [searchText, setSearchText] = useState('');
+	const [isLoadingDeliveries, setIsLoadingDeliveries] = useState(true);
+	const [deliveriesError, setDeliveriesError] = useState('');
+	const [realDeliveries, setRealDeliveries] = useState([]);
 	const [incidentReports, setIncidentReports] = useState([
 		{
 			id: 'INC-DEFAULT-1',
@@ -91,18 +121,70 @@ export default function EntregasR({ navigation, route }) {
 		}
 	}, [route?.params?.newIncidentReport, route?.params?.initialFilter, navigation]);
 
+	useEffect(() => {
+		let isCancelled = false;
+
+		async function loadDeliveries() {
+			setIsLoadingDeliveries(true);
+			setDeliveriesError('');
+
+			try {
+				const user = getCurrentUser();
+				const userId = Number(user?.id_usuario);
+
+				if (!Number.isInteger(userId) || userId <= 0) {
+					throw new Error('No hay sesion activa de chofer para cargar entregas.');
+				}
+
+				const envios = await getEnviosByUsuario(userId);
+				const mapped = envios.map(toDeliveryItem);
+
+				if (!isCancelled) {
+					setRealDeliveries(mapped);
+				}
+			} catch (error) {
+				if (!isCancelled) {
+					setRealDeliveries([]);
+					setDeliveriesError(error.message || 'No se pudieron cargar entregas reales.');
+				}
+			} finally {
+				if (!isCancelled) {
+					setIsLoadingDeliveries(false);
+				}
+			}
+		}
+
+		loadDeliveries();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, []);
+
+	const sourceDeliveries = useMemo(() => {
+		return realDeliveries.length > 0 ? realDeliveries : deliveries;
+	}, [realDeliveries]);
+
 	const filteredDeliveries = useMemo(() => {
+		const normalizedSearch = searchText.trim().toLowerCase();
+		const searched = normalizedSearch
+			? sourceDeliveries.filter((item) => {
+					const haystack = `${item.id} ${item.name} ${item.address}`.toLowerCase();
+					return haystack.includes(normalizedSearch);
+				})
+			: sourceDeliveries;
+
 		switch (activeFilter) {
 			case 'Pendientes':
-				return deliveries.filter((item) => !item.done && !item.hasIncident);
+				return searched.filter((item) => !item.done && !item.hasIncident);
 			case 'Entregadas':
-				return deliveries.filter((item) => item.done);
+				return searched.filter((item) => item.done);
 			case 'Incidencias':
 				return [];
 			default:
-				return deliveries;
+				return searched;
 		}
-	}, [activeFilter]);
+	}, [activeFilter, searchText, sourceDeliveries]);
 
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
@@ -126,8 +208,16 @@ export default function EntregasR({ navigation, route }) {
 							style={styles.searchInput}
 							placeholder="Buscar direccion o rastreo"
 							placeholderTextColor="#7D8EB1"
+							value={searchText}
+							onChangeText={setSearchText}
 						/>
 					</View>
+
+					{isLoadingDeliveries ? <Text style={styles.emptyText}>Cargando entregas reales...</Text> : null}
+					{!isLoadingDeliveries && deliveriesError ? <Text style={styles.emptyText}>{deliveriesError}</Text> : null}
+					{!isLoadingDeliveries && !deliveriesError && realDeliveries.length > 0 ? (
+						<Text style={styles.emptyText}>Mostrando entregas reales del backend.</Text>
+					) : null}
 
 					<View style={styles.filtersRow}>
 						{FILTER_OPTIONS.map((option) => {
@@ -171,7 +261,7 @@ export default function EntregasR({ navigation, route }) {
 
 											<TouchableOpacity
 												style={[styles.actionBtn, item.done && styles.actionBtnDone]}
-												onPress={() => !item.done && navigation.navigate('DetalleEntregaR')}
+												onPress={() => !item.done && navigation.navigate('DetalleEntregaR', { delivery: item, idEnvio: item.id_envio })}
 											>
 												<Text style={styles.actionText}>{item.done ? 'Entregado' : 'Ver Detalle'}</Text>
 											</TouchableOpacity>

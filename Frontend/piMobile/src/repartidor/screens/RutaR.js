@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+	ActivityIndicator,
+	Alert,
+	Linking,
 	Platform,
 	SafeAreaView,
 	ScrollView,
@@ -14,12 +17,187 @@ import getRutaRStyles from '../styles/RutaRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
+import {
+	buildGoogleMapsDirectionsUrl,
+	geocodeAddress,
+	getDrivingRoute,
+	normalizeAddressQuery,
+	toKm,
+	toMinutes,
+} from '../services/rutaMapService';
+
+let MapViewComponent = null;
+let MarkerComponent = null;
+let PolylineComponent = null;
+
+if (Platform.OS !== 'web') {
+	const Maps = require('react-native-maps');
+	MapViewComponent = Maps.default || Maps;
+	MarkerComponent = Maps.Marker;
+	PolylineComponent = Maps.Polyline;
+}
+
+const DELIVERY_SAMPLE = {
+	clientName: 'Ana Martinez',
+	address: 'Londres 247, Col. Juarez, Ciudad de Mexico',
+	phone: '+52 55 1234 5678',
+};
+
+const DEFAULT_ORIGIN = {
+	latitude: 19.432608,
+	longitude: -99.133209,
+};
+
+const DEFAULT_DESTINATION = {
+	latitude: 19.421906,
+	longitude: -99.163537,
+};
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-export default function RutaR({ navigation }) {
+export default function RutaR({ navigation, route }) {
 	const { width } = useWindowDimensions();
 	const { isDarkMode } = useDarkMode();
+	const selectedDelivery = route?.params?.delivery;
+	const deliveryData = useMemo(
+		() => ({
+			...DELIVERY_SAMPLE,
+			...(selectedDelivery || {}),
+		}),
+		[selectedDelivery]
+	);
+	const [mapState, setMapState] = useState({
+		loading: true,
+		error: '',
+		warning: '',
+		origin: DEFAULT_ORIGIN,
+		destination: DEFAULT_DESTINATION,
+		routeCoordinates: [],
+		distanceMeters: null,
+		durationSeconds: null,
+	});
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		async function resolveRoute() {
+			setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
+
+			try {
+				const { default: Location } = await import('expo-location');
+
+				let origin = { ...DEFAULT_ORIGIN };
+				let destination = null;
+				let warning = '';
+
+				const { status } = await Location.requestForegroundPermissionsAsync();
+
+				if (status === 'granted') {
+					const position = await Location.getCurrentPositionAsync({
+						accuracy: Location.Accuracy.Balanced,
+					});
+
+					origin = {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+					};
+				}
+
+				const normalizedAddress = normalizeAddressQuery(deliveryData.address);
+
+				try {
+					const localResults = await Location.geocodeAsync(normalizedAddress);
+					const localFirst = Array.isArray(localResults) ? localResults[0] : null;
+
+					if (localFirst?.latitude && localFirst?.longitude) {
+						destination = {
+							latitude: localFirst.latitude,
+							longitude: localFirst.longitude,
+						};
+					}
+				} catch {
+					destination = null;
+				}
+
+				if (!destination) {
+					try {
+						destination = await geocodeAddress(deliveryData.address);
+					} catch {
+						destination = { ...DEFAULT_DESTINATION };
+						warning = 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
+					}
+				}
+
+				const routeData = await getDrivingRoute(origin, destination);
+
+				if (!isCancelled) {
+					setMapState({
+						loading: false,
+						error: '',
+						warning,
+						origin,
+						destination,
+						routeCoordinates: routeData.coordinates,
+						distanceMeters: routeData.distanceMeters,
+						durationSeconds: routeData.durationSeconds,
+					});
+				}
+			} catch (error) {
+				if (!isCancelled) {
+					setMapState((prev) => ({
+						...prev,
+						loading: false,
+						error: '',
+						warning: error.message || 'No fue posible calcular la ruta exacta.',
+					}));
+				}
+			}
+		}
+
+		resolveRoute();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [deliveryData.address]);
+
+	const mapRegion = useMemo(() => {
+		if (mapState.origin && mapState.destination) {
+			const latitude = (mapState.origin.latitude + mapState.destination.latitude) / 2;
+			const longitude = (mapState.origin.longitude + mapState.destination.longitude) / 2;
+
+			return {
+				latitude,
+				longitude,
+				latitudeDelta: Math.max(0.06, Math.abs(mapState.origin.latitude - mapState.destination.latitude) * 1.8),
+				longitudeDelta: Math.max(0.06, Math.abs(mapState.origin.longitude - mapState.destination.longitude) * 1.8),
+			};
+		}
+
+		return {
+			latitude: DEFAULT_ORIGIN.latitude,
+			longitude: DEFAULT_ORIGIN.longitude,
+			latitudeDelta: 0.08,
+			longitudeDelta: 0.08,
+		};
+	}, [mapState.destination, mapState.origin]);
+
+	const openExternalNavigation = async () => {
+		if (!mapState.origin || !mapState.destination) {
+			Alert.alert('Ruta no disponible', 'Todavia no se cargaron los puntos para navegar.');
+			return;
+		}
+
+		const url = buildGoogleMapsDirectionsUrl(mapState.origin, mapState.destination);
+		const canOpen = await Linking.canOpenURL(url);
+
+		if (!canOpen) {
+			Alert.alert('No disponible', 'No se pudo abrir Google Maps en este dispositivo.');
+			return;
+		}
+
+		await Linking.openURL(url);
+	};
 	const isWeb = Platform.OS === 'web';
 	const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
@@ -41,10 +219,61 @@ export default function RutaR({ navigation }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<TopHeaderR s={s} navigation={navigation} />
+				<TopHeaderR s={s} navigation={navigation} title="Ruta del Dia" />
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-					<View style={styles.mapCard} />
+					<View style={styles.mapCard}>
+						{isWeb ? (
+							<View style={styles.mapFallbackWrap}>
+								<Text style={styles.mapFallbackTitle}>Mapa en vista previa web</Text>
+								<Text style={styles.mapFallbackText}>
+									Ejecuta la app en Android/iOS para ver marcadores y trazo real de ruta.
+								</Text>
+							</View>
+						) : MapViewComponent && MarkerComponent && PolylineComponent ? (
+							<>
+								<MapViewComponent
+									style={{ flex: 1 }}
+									initialRegion={mapRegion}
+									region={mapRegion}
+								>
+									{mapState.origin ? (
+										<MarkerComponent coordinate={mapState.origin} title="Tu ubicacion" pinColor="#2563EB" />
+									) : null}
+									{mapState.destination ? (
+										<MarkerComponent
+											coordinate={mapState.destination}
+											title={deliveryData.clientName || deliveryData.name}
+											description={deliveryData.address}
+											pinColor="#D97706"
+										/>
+									) : null}
+									{mapState.routeCoordinates.length > 0 ? (
+										<PolylineComponent coordinates={mapState.routeCoordinates} strokeWidth={4} strokeColor="#1D4ED8" />
+									) : null}
+								</MapViewComponent>
+								{mapState.loading ? (
+									<View style={styles.mapOverlay}>
+										<View style={styles.mapLoadingWrap}>
+											<ActivityIndicator size="large" color="#2E63D7" />
+											<Text style={styles.mapLoadingText}>Calculando ruta real...</Text>
+										</View>
+									</View>
+								) : null}
+								{!mapState.loading && mapState.error ? (
+									<View style={styles.mapOverlay}>
+										<View style={styles.mapFallbackWrap}>
+											<Text style={styles.mapErrorText}>{mapState.error}</Text>
+										</View>
+									</View>
+								) : null}
+							</>
+						) : (
+							<View style={styles.mapFallbackWrap}>
+								<Text style={styles.mapErrorText}>No se pudo inicializar el componente de mapa en este dispositivo.</Text>
+							</View>
+						)}
+					</View>
 
 					<View style={styles.card}>
 						<View style={styles.clientRow}>
@@ -52,19 +281,21 @@ export default function RutaR({ navigation }) {
 								<View style={styles.pinDot} />
 							</View>
 							<View style={styles.clientInfo}>
-								<Text style={styles.clientName}>Ana Martinez</Text>
-								<Text style={styles.clientAddress}>103 Amalianez, Sulf., 123, Col. Roma Norte, CDMX</Text>
+								<Text style={styles.clientName}>{deliveryData.clientName || deliveryData.name}</Text>
+								<Text style={styles.clientAddress}>{deliveryData.address}</Text>
 							</View>
 						</View>
 
-						<Text style={styles.phone}>+52 55 1234 5678</Text>
+						<Text style={styles.phone}>{deliveryData.phone || DELIVERY_SAMPLE.phone}</Text>
 
 						<View style={styles.metricsRow}>
-							<Text style={styles.metricText}>Distancia total: <Text style={styles.metricStrong}>16 km</Text></Text>
-							<Text style={styles.metricText}>Tiempo estimado: <Text style={styles.metricStrong}>48 min</Text></Text>
+							<Text style={styles.metricText}>Distancia total: <Text style={styles.metricStrong}>{toKm(mapState.distanceMeters)} km</Text></Text>
+							<Text style={styles.metricText}>Tiempo estimado: <Text style={styles.metricStrong}>{toMinutes(mapState.durationSeconds)} min</Text></Text>
 						</View>
 
-						<TouchableOpacity style={styles.startBtn}>
+						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
+
+						<TouchableOpacity style={styles.startBtn} onPress={openExternalNavigation}>
 							<Text style={styles.startBtnText}>Iniciar navegacion</Text>
 						</TouchableOpacity>
 					</View>

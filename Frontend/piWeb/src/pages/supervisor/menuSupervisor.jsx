@@ -58,7 +58,7 @@ export default function MenuSupervisor() {
     </a>
  
     <a href="/supervisor/incidencias" className="menu-hamburguesa__item">
-      <img src="/piWeb/images/incidencias.png" alt="" className="menu-hamburguesa__icono-img" />
+      <img src="/piWeb/images/supervisor/incidencias.png" alt="" className="menu-hamburguesa__icono-img" />
       Incidencias
     </a>
     <a href="/supervisor/reportes" className="menu-hamburguesa__item">

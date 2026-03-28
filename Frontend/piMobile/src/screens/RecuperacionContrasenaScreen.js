@@ -43,7 +43,6 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
         <View style={styles.content}>
           <View style={styles.heroRow}>
             <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.heroText}>Metzvia</Text>
           </View>
 
           <View style={styles.card}>

@@ -1,105 +1,100 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function RutaRepartidorSupervisor() {
 
   useEffect(() => {
-    // ── Mapa Leaflet ──
-        (function () {
-          var map = L.map('rutaMapa', {
-            zoomControl: false
-          }).setView([19.4326, -99.1332], 14);
-    
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors',
-            maxZoom: 19
-          }).addTo(map);
-    
-          // Icono almacén
-          var iconAlmacen = L.divIcon({
-            className: '',
-            html: '<div style="background:#3b6aaa;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#9642; Almacén</div>',
-            iconSize: [80, 30],
-            iconAnchor: [40, 15]
-          });
-    
-          // Icono punto de entrega
-          function iconEntrega(numero, color) {
-            return L.divIcon({
-              className: '',
-              html: '<div style="background:' + color + ';color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.25);">' + numero + '</div>',
-              iconSize: [30, 30],
-              iconAnchor: [15, 15]
-            });
-          }
-    
-          // Marcador del repartidor
-          var iconRepartidor = L.divIcon({
-            className: '',
-            html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">R</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-    
-          // Puntos de la ruta (simulados sobre CDMX)
-          var almacen = [19.4280, -99.1480];
-          var puntos = [
-            { coord: [19.4230, -99.1400], nombre: 'Ana García', color: '#3b6aaa' },
-            { coord: [19.4260, -99.1350], nombre: 'Carlos Ramírez', color: '#3b6aaa' },
-            { coord: [19.4310, -99.1300], nombre: 'Laura Gómez', color: '#3b6aaa' },
-            { coord: [19.4380, -99.1250], nombre: 'Jorge Sánchez', color: '#f5a623' },
-            { coord: [19.4420, -99.1200], nombre: 'Pilar Suárez', color: '#3b6aaa' }
-          ];
-    
-          // Marcador almacén
-          L.marker(almacen, { icon: iconAlmacen }).addTo(map)
-            .bindPopup('<strong>Almacén Central</strong><br>Punto de salida');
-    
-          // Marcadores de entrega
-          puntos.forEach(function (p, i) {
-            L.marker(p.coord, { icon: iconEntrega(i + 1, p.color) }).addTo(map)
-              .bindPopup('<strong>' + p.nombre + '</strong>');
-          });
-    
-          // Repartidor actual
-          L.marker([19.4260, -99.1370], { icon: iconRepartidor }).addTo(map)
-            .bindPopup('<strong>Luis García</strong><br>Repartidor en ruta');
-    
-          // Ruta como línea
-          var rutaCoords = [almacen].concat(puntos.map(function (p) { return p.coord; }));
-          L.polyline(rutaCoords, {
-            color: '#3b6aaa',
-            weight: 4,
-            opacity: 0.8,
-            dashArray: '8, 6'
-          }).addTo(map);
-    
-          // Ajustar vista
-          var bounds = L.latLngBounds(rutaCoords);
-          map.fitBounds(bounds, { padding: [40, 40] });
-    
-          // Actualización automática simulada (cada 30 seg)
-          var updateInterval = setInterval(function () {
-            // En producción: fetch a API para obtener posición actual del repartidor
-            console.log('Actualizando posición del repartidor...');
-          }, 30000);
-    
-          // Limpiar interval al salir
-          window.addEventListener('beforeunload', function () {
-            clearInterval(updateInterval);
-          });
-        })();
-    
-        // ── Tabs ──
-        (function () {
-          var tabs = document.querySelectorAll('.ruta-tab');
-          tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
-              tabs.forEach(function (t) { t.classList.remove('ruta-tab--activo'); });
-              tab.classList.add('ruta-tab--activo');
-            });
-          });
-        })();
+    const mapEl = document.getElementById('rutaMapa');
+    if (!mapEl) return undefined;
+
+    const map = L.map(mapEl, {
+      zoomControl: false
+    }).setView([19.4326, -99.1332], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    const iconAlmacen = L.divIcon({
+      className: '',
+      html: '<div style="background:#3b6aaa;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#9642; Almacén</div>',
+      iconSize: [80, 30],
+      iconAnchor: [40, 15]
+    });
+
+    function iconEntrega(numero, color) {
+      return L.divIcon({
+        className: '',
+        html: '<div style="background:' + color + ';color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.25);">' + numero + '</div>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+    }
+
+    const iconRepartidor = L.divIcon({
+      className: '',
+      html: '<div style="background:#f5a623;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);">R</div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const almacen = [19.4280, -99.1480];
+    const puntos = [
+      { coord: [19.4230, -99.1400], nombre: 'Ana García', color: '#3b6aaa' },
+      { coord: [19.4260, -99.1350], nombre: 'Carlos Ramírez', color: '#3b6aaa' },
+      { coord: [19.4310, -99.1300], nombre: 'Laura Gómez', color: '#3b6aaa' },
+      { coord: [19.4380, -99.1250], nombre: 'Jorge Sánchez', color: '#f5a623' },
+      { coord: [19.4420, -99.1200], nombre: 'Pilar Suárez', color: '#3b6aaa' }
+    ];
+
+    L.marker(almacen, { icon: iconAlmacen }).addTo(map)
+      .bindPopup('<strong>Almacén Central</strong><br>Punto de salida');
+
+    puntos.forEach(function (p, i) {
+      L.marker(p.coord, { icon: iconEntrega(i + 1, p.color) }).addTo(map)
+        .bindPopup('<strong>' + p.nombre + '</strong>');
+    });
+
+    L.marker([19.4260, -99.1370], { icon: iconRepartidor }).addTo(map)
+      .bindPopup('<strong>Luis García</strong><br>Repartidor en ruta');
+
+    const rutaCoords = [almacen].concat(puntos.map(function (p) { return p.coord; }));
+    L.polyline(rutaCoords, {
+      color: '#3b6aaa',
+      weight: 4,
+      opacity: 0.8,
+      dashArray: '8, 6'
+    }).addTo(map);
+
+    const bounds = L.latLngBounds(rutaCoords);
+    map.fitBounds(bounds, { padding: [40, 40] });
+
+    const updateInterval = setInterval(function () {
+      console.log('Actualizando posición del repartidor...');
+    }, 30000);
+
+    const tabs = document.querySelectorAll('.ruta-tab');
+    const handlers = [];
+    tabs.forEach(function (tab) {
+      const onClick = function () {
+        tabs.forEach(function (t) { t.classList.remove('ruta-tab--activo'); });
+        tab.classList.add('ruta-tab--activo');
+      };
+      handlers.push({ tab: tab, onClick: onClick });
+      tab.addEventListener('click', onClick);
+    });
+
+    return () => {
+      clearInterval(updateInterval);
+      handlers.forEach(function (h) {
+        h.tab.removeEventListener('click', h.onClick);
+      });
+      map.remove();
+    };
   }, []);
   return (
     <>
@@ -590,9 +585,9 @@ export default function RutaRepartidorSupervisor() {
       {/* Encabezado de la ruta */}
       <div className="ruta-header">
         <h2 className="ruta-header__titulo">Ruta del Repartidor</h2>
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ruta-header__volver">
+        <Link to="/supervisor/gestion-repartidores" className="ruta-header__volver">
           &lsaquo; Volver
-        </a>
+        </Link>
       </div>
 
       {/* Layout 2 columnas */}

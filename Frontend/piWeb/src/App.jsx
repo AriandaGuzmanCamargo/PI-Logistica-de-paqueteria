@@ -59,12 +59,18 @@ export default function App() {
       <Route path="/piWeb/supervisor/dashboard" element={<DashboardSupervisor />} />
       <Route path="/supervisor/detalle-envio" element={<DetalleEnvioSupervisor />} />
       <Route path="/supervisor/entregas-repartidor" element={<EntregasRepartidorSupervisor />} />
+      <Route path="/piWeb/supervisor/entregas-repartidor" element={<EntregasRepartidorSupervisor />} />
       <Route path="/supervisor/envios" element={<EnviosSupervisor />} />
       <Route path="/supervisor/gestion-repartidores" element={<GestRepartidorSupervisor />} />
       <Route path="/supervisor/incidencias" element={<IncidenciasSupervisor />} />
       <Route path="/supervisor/mi-cuenta" element={<MiCuentaSupervisor />} />
       <Route path="/supervisor/reportes" element={<ResportesSupervisor />} />
       <Route path="/supervisor/ruta-repartidor" element={<RutaRepartidorSupervisor />} />
+      <Route path="/piWeb/supervisor/ruta-repartidor" element={<RutaRepartidorSupervisor />} />
+
+      {/* Compatibilidad con rutas antiguas .html */}
+      <Route path="/piWeb/src/pages/supervisor/rutaRepartidorSupervisor.html" element={<RutaRepartidorSupervisor />} />
+      <Route path="/piWeb/src/pages/supervisor/entregasRepartidorSupervisor.html" element={<EntregasRepartidorSupervisor />} />
 
       {/* Evita pantalla en blanco si la ruta no coincide */}
       <Route path="*" element={<Navigate to="/login" replace />} />

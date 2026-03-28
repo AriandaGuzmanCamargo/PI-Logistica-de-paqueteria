@@ -48,15 +48,15 @@ export default function MenuOperador() {
   </div>
   <div className="menu-hamburguesa__links">
     <a href="/operador/dashboard" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9783;</span>
+      <img src="/piWeb/images/dasboard.png" alt="" className="menu-hamburguesa__icono-img" />
       Dashboard
     </a>
     <a href="/operador/envios" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9993;</span>
+      <img src="/piWeb/images/envio.png" alt="" className="menu-hamburguesa__icono-img" />
       Envios
     </a>
     <a href="/operador/registrar-paquete" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9744;</span>
+      <img src="/piWeb/images/registrar.png" alt="" className="menu-hamburguesa__icono-img" />
       Registrar Paquete
     </a>
     <a href="/operador/dashboard" className="menu-hamburguesa__item">
@@ -64,18 +64,18 @@ export default function MenuOperador() {
       Escaneo
     </a>
     <a href="/operador/incidencias" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9888;</span>
+      <img src="/piWeb/images/incidencias.png" alt="" className="menu-hamburguesa__icono-img" />
       Incidencias
       <span className="badge">4</span>
     </a>
     <a href="/operador/mi-cuenta" className="menu-hamburguesa__item">
-      <span className="menu-hamburguesa__icono-txt">&#9787;</span>
+      <img src="/piWeb/images/perfil.png" alt="" className="menu-hamburguesa__icono-img" />
       Mi Cuenta
     </a>
   </div>
   <div className="menu-hamburguesa__pie">
     <a href="/login" className="menu-hamburguesa__item menu-hamburguesa__item--salir">
-      <span className="menu-hamburguesa__icono-txt">&#10154;</span>
+      <img src="/piWeb/images/salida.png" alt="" className="menu-hamburguesa__icono-img" />
       Salir
     </a>
   </div>

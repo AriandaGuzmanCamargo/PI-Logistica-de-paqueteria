@@ -420,6 +420,13 @@ body {
   flex-shrink: 0;
   line-height: 1;
 }
+.menu-hamburguesa__icono-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: brightness(0) invert(0.85);
+}
 .menu-hamburguesa__pie {
   padding: 10px 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.10);

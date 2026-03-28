@@ -1,96 +1,138 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MenuSupervisor from './menuSupervisor.jsx';
 
 export default function EntregasRepartidorSupervisor() {
 
   useEffect(() => {
-    (function () {
-          var backdrop = document.getElementById('modalReasignarBackdrop');
-          var cerrarBtn = document.getElementById('modalCerrarBtn');
-          var cancelarBtn = document.getElementById('modalCancelarBtn');
-          var confirmarBtn = document.getElementById('modalConfirmarBtn');
-          var repItems = document.querySelectorAll('.modal-rep');
-          var buscarInput = document.getElementById('modalBuscarInput');
-          var modalGuia = document.getElementById('modalGuia');
-          var modalCliente = document.getElementById('modalCliente');
-          var modalDir = document.getElementById('modalDir');
-          var selectedRep = null;
-    
-          // Abrir modal desde botones "Reasignar" en la tabla
-          document.querySelectorAll('.ent-accion-btn--reasignar').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-              var row = btn.closest('tr');
-              if (row) {
-                var guia = row.querySelector('.td-guia');
-                var cliente = row.querySelector('.td-cliente');
-                var dir = row.querySelector('.td-dir');
-                if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
-                if (cliente) modalCliente.textContent = cliente.textContent;
-                if (dir) modalDir.textContent = dir.textContent;
-              }
-              abrirModal();
-            });
-          });
-    
-          // Botón "Reasignar paquete" de la barra inferior
-          document.querySelector('.ent-bar-btn--reasignar').addEventListener('click', function () {
-            modalGuia.textContent = '—';
-            modalCliente.textContent = 'Seleccione desde la tabla';
-            modalDir.textContent = '';
-            abrirModal();
-          });
-    
-          function abrirModal() {
-            selectedRep = null;
-            repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-            confirmarBtn.disabled = true;
-            document.getElementById('modalMotivo').value = '';
-            buscarInput.value = '';
-            filtrarRepartidores('');
-            backdrop.classList.add('modal-reasignar-backdrop--visible');
-          }
-    
-          function cerrarModal() {
-            backdrop.classList.remove('modal-reasignar-backdrop--visible');
-          }
-    
-          cerrarBtn.addEventListener('click', cerrarModal);
-          cancelarBtn.addEventListener('click', cerrarModal);
-          backdrop.addEventListener('click', function (e) {
-            if (e.target === backdrop) cerrarModal();
-          });
-    
-          // Seleccionar repartidor
-          repItems.forEach(function (item) {
-            item.addEventListener('click', function () {
-              repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
-              item.classList.add('modal-rep--selected');
-              selectedRep = item.getAttribute('data-rep');
-              confirmarBtn.disabled = false;
-            });
-          });
-    
-          // Buscar repartidor
-          buscarInput.addEventListener('input', function () {
-            filtrarRepartidores(buscarInput.value.toLowerCase());
-          });
-    
-          function filtrarRepartidores(query) {
-            repItems.forEach(function (item) {
-              var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
-              var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
-              item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
-            });
-          }
-    
-          // Confirmar
-          confirmarBtn.addEventListener('click', function () {
-            if (!selectedRep) return;
-            var repName = document.querySelector('.modal-rep--selected .modal-rep__nombre').textContent;
-            alert('Paquete reasignado exitosamente a ' + repName);
-            cerrarModal();
-          });
-        })();
+    var backdrop = document.getElementById('modalReasignarBackdrop');
+    var cerrarBtn = document.getElementById('modalCerrarBtn');
+    var cancelarBtn = document.getElementById('modalCancelarBtn');
+    var confirmarBtn = document.getElementById('modalConfirmarBtn');
+    var repItems = Array.from(document.querySelectorAll('.modal-rep'));
+    var buscarInput = document.getElementById('modalBuscarInput');
+    var modalGuia = document.getElementById('modalGuia');
+    var modalCliente = document.getElementById('modalCliente');
+    var modalDir = document.getElementById('modalDir');
+    var modalMotivo = document.getElementById('modalMotivo');
+    var tableBtns = Array.from(document.querySelectorAll('.ent-accion-btn--reasignar'));
+    var barReasignarBtn = document.querySelector('.ent-bar-btn--reasignar');
+
+    if (!backdrop || !cerrarBtn || !cancelarBtn || !confirmarBtn || !buscarInput || !modalGuia || !modalCliente || !modalDir || !modalMotivo || repItems.length === 0) {
+      return undefined;
+    }
+
+    var selectedRep = null;
+    var tableHandlers = [];
+    var repHandlers = [];
+
+    function filtrarRepartidores(query) {
+      repItems.forEach(function (item) {
+        var nombre = item.querySelector('.modal-rep__nombre').textContent.toLowerCase();
+        var zona = item.querySelector('.modal-rep__zona').textContent.toLowerCase();
+        item.style.display = (nombre.indexOf(query) !== -1 || zona.indexOf(query) !== -1) ? '' : 'none';
+      });
+    }
+
+    function abrirModal() {
+      selectedRep = null;
+      repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+      confirmarBtn.disabled = true;
+      modalMotivo.value = '';
+      buscarInput.value = '';
+      filtrarRepartidores('');
+      backdrop.classList.add('modal-reasignar-backdrop--visible');
+    }
+
+    function cerrarModal() {
+      backdrop.classList.remove('modal-reasignar-backdrop--visible');
+    }
+
+    function onBackdropClick(e) {
+      if (e.target === backdrop) cerrarModal();
+    }
+
+    function onBuscarInput() {
+      filtrarRepartidores(buscarInput.value.toLowerCase());
+    }
+
+    function onConfirmarClick() {
+      if (!selectedRep) return;
+      var repSelected = document.querySelector('.modal-rep--selected .modal-rep__nombre');
+      var repName = repSelected ? repSelected.textContent : 'repartidor';
+      alert('Paquete reasignado exitosamente a ' + repName);
+      cerrarModal();
+    }
+
+    tableBtns.forEach(function (btn) {
+      var onBtnClick = function () {
+        var row = btn.closest('tr');
+        if (row) {
+          var guia = row.querySelector('.td-guia');
+          var cliente = row.querySelector('.td-cliente');
+          var dir = row.querySelector('.td-dir');
+          if (guia) modalGuia.textContent = guia.textContent.trim().split('\n')[0];
+          if (cliente) modalCliente.textContent = cliente.textContent;
+          if (dir) modalDir.textContent = dir.textContent;
+        }
+        abrirModal();
+      };
+      btn.addEventListener('click', onBtnClick);
+      tableHandlers.push({ btn: btn, handler: onBtnClick });
+    });
+
+    var onBarReasignarClick = null;
+    if (barReasignarBtn) {
+      onBarReasignarClick = function () {
+        modalGuia.textContent = '—';
+        modalCliente.textContent = 'Seleccione desde la tabla';
+        modalDir.textContent = '';
+        abrirModal();
+      };
+      barReasignarBtn.addEventListener('click', onBarReasignarClick);
+    }
+
+    repItems.forEach(function (item) {
+      var onRepClick = function () {
+        repItems.forEach(function (r) { r.classList.remove('modal-rep--selected'); });
+        item.classList.add('modal-rep--selected');
+        selectedRep = item.getAttribute('data-rep');
+        confirmarBtn.disabled = false;
+      };
+      item.addEventListener('click', onRepClick);
+      repHandlers.push({ item: item, handler: onRepClick });
+    });
+
+    cerrarBtn.addEventListener('click', cerrarModal);
+    cancelarBtn.addEventListener('click', cerrarModal);
+    backdrop.addEventListener('click', onBackdropClick);
+    buscarInput.addEventListener('input', onBuscarInput);
+    confirmarBtn.addEventListener('click', onConfirmarClick);
+
+    var openReasignar = new URLSearchParams(window.location.search).get('openReasignar') === '1';
+    if (openReasignar) {
+      modalGuia.textContent = '—';
+      modalCliente.textContent = 'Seleccione desde la tabla';
+      modalDir.textContent = '';
+      abrirModal();
+    }
+
+    return function () {
+      tableHandlers.forEach(function (entry) {
+        entry.btn.removeEventListener('click', entry.handler);
+      });
+      repHandlers.forEach(function (entry) {
+        entry.item.removeEventListener('click', entry.handler);
+      });
+      if (barReasignarBtn && onBarReasignarClick) {
+        barReasignarBtn.removeEventListener('click', onBarReasignarClick);
+      }
+      cerrarBtn.removeEventListener('click', cerrarModal);
+      cancelarBtn.removeEventListener('click', cerrarModal);
+      backdrop.removeEventListener('click', onBackdropClick);
+      buscarInput.removeEventListener('input', onBuscarInput);
+      confirmarBtn.removeEventListener('click', onConfirmarClick);
+    };
   }, []);
   return (
     <>
@@ -728,9 +770,9 @@ export default function EntregasRepartidorSupervisor() {
       {/* Encabezado */}
       <div className="ent-header">
         <h2 className="ent-header__titulo">Entregas del Repartidor</h2>
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-header__volver">
+        <Link to="/supervisor/gestion-repartidores" className="ent-header__volver">
           &lsaquo; Volver
-        </a>
+        </Link>
       </div>
 
       {/* Info del repartidor + estadísticas */}
@@ -889,9 +931,9 @@ export default function EntregasRepartidorSupervisor() {
 
       {/* Barra de acciones inferior */}
       <div className="ent-acciones-bar">
-        <a href="/piWeb/src/pages/supervisor/gestRepartidorSupervisor.html" className="ent-bar-btn ent-bar-btn--volver">
+        <Link to="/supervisor/gestion-repartidores" className="ent-bar-btn ent-bar-btn--volver">
           &lsaquo; Volver
-        </a>
+        </Link>
         <button className="ent-bar-btn ent-bar-btn--reasignar">
           Reasignar paquete
         </button>

@@ -280,7 +280,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar &gt;</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar &gt;</Link>
           </div>
         </div>
 
@@ -300,7 +300,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar paquetes</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar paquetes</Link>
           </div>
         </div>
 
@@ -320,7 +320,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar &gt;</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar &gt;</Link>
           </div>
         </div>
 
@@ -340,7 +340,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar paquetes</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar paquetes</Link>
           </div>
         </div>
 
@@ -360,7 +360,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar &gt;</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar &gt;</Link>
           </div>
         </div>
 
@@ -380,7 +380,7 @@ export default function GestRepartidorSupervisor() {
           <div className="grep-card__acciones">
             <Link to="/supervisor/ruta-repartidor" className="grep-accion">Ver ruta</Link>
             <Link to="/supervisor/entregas-repartidor" className="grep-accion">Ver entregas</Link>
-            <button className="grep-accion">Reasignar paquetes</button>
+            <Link to="/supervisor/entregas-repartidor?openReasignar=1" className="grep-accion">Reasignar paquetes</Link>
           </div>
         </div>
 

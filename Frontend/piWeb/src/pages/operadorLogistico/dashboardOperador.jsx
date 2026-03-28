@@ -11,6 +11,7 @@ export default function DashboardOperador() {
   const [envios, setEnvios] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +53,28 @@ export default function DashboardOperador() {
 
   const user = getWebUser();
   const nombreMostrado = user ? `${user.nombre || ''} ${user.apellido || ''}`.trim() : 'Operador';
+
+  const enviosFiltrados = useMemo(() => {
+    const query = busqueda.trim().toLowerCase();
+
+    if (!query) {
+      return envios;
+    }
+
+    return envios.filter((item) => {
+      const texto = [
+        item.paquete?.codigo_rastreo,
+        item.destinatario?.nombre,
+        item.remitente?.nombre,
+        item.id_envio,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return texto.includes(query);
+    });
+  }, [envios, busqueda]);
 
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
@@ -118,7 +141,13 @@ export default function DashboardOperador() {
       <section className="contenido-operador">
         <div className="panel-tabla">
           <div className="panel-tabla__encabezado">
-            <input type="text" placeholder="Buscar ID o destinatario..." className="panel-tabla__busqueda" />
+            <input
+              type="text"
+              placeholder="Buscar ID o destinatario..."
+              className="panel-tabla__busqueda"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
             <a href="/operador/envios" className="panel-tabla__ver">Ver Todo</a>
           </div>
           <div className="leyenda-estados leyenda-estados--compacta" aria-label="Leyenda de estados de envio">
@@ -162,13 +191,13 @@ export default function DashboardOperador() {
                       Cargando envios...
                     </td>
                   </tr>
-                ) : envios.length === 0 ? (
+                ) : enviosFiltrados.length === 0 ? (
                   <tr>
                     <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
-                      No hay envios para mostrar.
+                      No hay resultados para la busqueda.
                     </td>
                   </tr>
-                ) : envios.slice(0, 3).map((item) => (
+                ) : enviosFiltrados.slice(0, 3).map((item) => (
                   <tr key={item.id_envio}>
                     <td>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</td>
                     <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>

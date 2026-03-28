@@ -38,6 +38,23 @@ export async function getDetalleEnvio(idEnvio) {
   return payload.data;
 }
 
+export async function getIncidenciasOperador() {
+  const user = getWebUser();
+
+  if (!user?.id_usuario) {
+    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+  }
+
+  const response = await fetch(`/api/incidencias/usuario/${user.id_usuario}`);
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudieron cargar las incidencias.');
+  }
+
+  return payload.data || [];
+}
+
 function normalizeEstado(estado) {
   return String(estado || '').toLowerCase().trim().replace(/\s+/g, '_');
 }
@@ -66,4 +83,25 @@ export function estadoEnvioClase(estado) {
   if (normalized === 'cancelado') return 'estado--cancelado';
 
   return 'estado--pendiente';
+}
+
+export function estadoIncidenciaTexto(estado) {
+  const normalized = String(estado || '').toLowerCase().trim();
+
+  const map = {
+    abierta: 'Abierta',
+    en_proceso: 'En proceso',
+    cerrada: 'Cerrada',
+  };
+
+  return map[normalized] || 'Sin estado';
+}
+
+export function estadoIncidenciaClase(estado) {
+  const normalized = String(estado || '').toLowerCase().trim();
+
+  if (normalized === 'cerrada') return 'estado-incidencia--cerrada';
+  if (normalized === 'en_proceso') return 'estado-incidencia--proceso';
+
+  return 'estado-incidencia--abierta';
 }

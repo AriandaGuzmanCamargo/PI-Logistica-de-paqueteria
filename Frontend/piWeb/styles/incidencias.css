@@ -38,10 +38,26 @@
 
 .incidencias-resumen {
   margin: 14px;
-  height: 74px;
+  min-height: 74px;
   border: 1px solid #d9e0f8;
   border-radius: 8px;
   background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+}
+
+.incidencias-resumen__item {
+  border: 1px solid #e6ecfb;
+  border-radius: 6px;
+  background: #f7f9ff;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #48567f;
 }
 
 .tabla-incidencias {
@@ -91,6 +107,18 @@
   background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
 }
 
+.estado-incidencia--abierta {
+  background: linear-gradient(180deg, #e58b8b 0%, #d86f6f 100%);
+}
+
+.estado-incidencia--proceso {
+  background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
+}
+
+.estado-incidencia--cerrada {
+  background: linear-gradient(180deg, #76c59b 0%, #5bb486 100%);
+}
+
 .repartidor-celda {
   display: inline-flex;
   align-items: center;
@@ -105,6 +133,10 @@
 }
 
 @media (max-width: 1200px) {
+  .incidencias-resumen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .tabla-incidencias {
     overflow-x: auto;
   }
@@ -117,5 +149,9 @@
 @media (max-width: 768px) {
   .incidencias-encabezado h2 {
     font-size: 24px;
+  }
+
+  .incidencias-resumen {
+    grid-template-columns: 1fr;
   }
 }

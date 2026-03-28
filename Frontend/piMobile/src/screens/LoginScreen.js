@@ -4,7 +4,7 @@ import styles from '../styles/LoginStyles';
 import { loginRequest } from '../services/authService';
 
 export default function LoginScreen({ navigation }) {
-  const [tipoAcceso, setTipoAcceso] = useState('usuario');
+  const [tipoAcceso, setTipoAcceso] = useState(null);
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }) {
       }
 
       if (tipoAcceso === 'chofer' && rol !== 'conductor') {
-        throw new Error('Esta cuenta no corresponde al acceso de chofer.');
+        throw new Error('Esta cuenta no corresponde al acceso de repartidor.');
       }
 
       if (tipoAcceso === 'chofer') {
@@ -57,7 +57,7 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.content}>
           <View style={styles.hero}>
             <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.heroText}>Sistema de Logistica de Transporte de Paqueteria</Text>
+            <Text style={styles.heroText}>Metzvia</Text>
           </View>
 
           <View style={styles.card}>
@@ -80,46 +80,50 @@ export default function LoginScreen({ navigation }) {
                 onPress={() => setTipoAcceso('chofer')}
               >
                 <Text style={[styles.roleBtnText, tipoAcceso === 'chofer' && styles.roleBtnTextActive]}>
-                  Chofer
+                  Repartidor
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Correo electronico"
-              placeholderTextColor="#9AA4BF"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={correo}
-              onChangeText={setCorreo}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Contrasena"
-              placeholderTextColor="#9AA4BF"
-              secureTextEntry
-              value={contrasena}
-              onChangeText={setContrasena}
-            />
+            {tipoAcceso && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Correo electronico"
+                  placeholderTextColor="#9AA4BF"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={correo}
+                  onChangeText={setCorreo}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Contrasena"
+                  placeholderTextColor="#9AA4BF"
+                  secureTextEntry
+                  value={contrasena}
+                  onChangeText={setContrasena}
+                />
 
-            {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+                {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-            <TouchableOpacity
-              style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
-              onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
-              )}
+                <TouchableOpacity
+                  style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                  ) : (
+                    <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
+                  )}
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
+              <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
-              <Text style={styles.link}>Olvidaste tu contrasena?</Text>
-            </TouchableOpacity>
+              </>
+            )}
 
             <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
               <Text style={styles.note}>No tienes cuenta? <Text style={styles.linkStrong}>Registrate</Text></Text>

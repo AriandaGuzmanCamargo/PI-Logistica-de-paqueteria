@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
-import HeaderLogoR from '../components/HeaderLogoR';
-import UserAvatarR from '../components/UserAvatarR';
+import TopHeaderR from '../components/TopHeaderR';
 import getCambiarContrasenaRStyles from '../styles/CambiarContrasenaRStyles';
 import { useDarkMode } from '../context/DarkModeContext';
 
@@ -69,16 +68,7 @@ export default function CambiarContrasenaR({ navigation }) {
       >
         <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-        <View style={styles.topHeader}>
-          <View style={styles.topHeaderLeft}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={styles.backText}>{'<'}</Text>
-            </TouchableOpacity>
-            <HeaderLogoR s={s} />
-            <Text style={styles.topHeaderTitle}>Cambiar Contraseña</Text>
-          </View>
-          <UserAvatarR s={s} />
-        </View>
+        <TopHeaderR s={s} navigation={navigation} title="Cambiar Contraseña" />
 
         <View style={styles.content}>
           <View style={styles.card}>

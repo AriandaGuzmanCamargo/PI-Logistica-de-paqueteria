@@ -12,8 +12,7 @@ import {
 } from 'react-native';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
-import HeaderLogoR from '../components/HeaderLogoR';
-import UserAvatarR from '../components/UserAvatarR';
+import TopHeaderR from '../components/TopHeaderR';
 import getConfiguracionRStyles from '../styles/ConfiguracionRStyles';
 import { useDarkMode } from '../context/DarkModeContext';
 
@@ -44,22 +43,13 @@ export default function ConfiguracionR({ navigation }) {
       >
         <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-        <View style={styles.topHeader}>
-          <View style={styles.topHeaderLeft}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={styles.backText}>{'<'}</Text>
-            </TouchableOpacity>
-            <HeaderLogoR s={s} />
-            <Text style={styles.topHeaderTitle}>Configuracion</Text>
-          </View>
-          <UserAvatarR s={s} />
-        </View>
+        <TopHeaderR s={s} navigation={navigation} title="Configuración" />
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <View style={styles.sectionCard}>
             <Text style={styles.sectionTitle}>Cuenta</Text>
             <TouchableOpacity style={styles.optionRow} onPress={() => navigation.navigate('CambiarContrasenaR')}>
-              <Text style={styles.optionText}>Cambiar contrasena</Text>
+              <Text style={styles.optionText}>Cambiar contraseña</Text>
               <Text style={styles.optionArrow}>{'>'}</Text>
             </TouchableOpacity>
           </View>
@@ -84,18 +74,6 @@ export default function ConfiguracionR({ navigation }) {
                 thumbColor="#FFFFFF"
               />
             </View>
-          </View>
-
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>Soporte</Text>
-            <TouchableOpacity style={styles.optionRow}>
-              <Text style={styles.optionText}>Ayuda</Text>
-              <Text style={styles.optionArrow}>{'>'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.optionRow}>
-              <Text style={styles.optionText}>Reportar problema</Text>
-              <Text style={styles.optionArrow}>{'>'}</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
 

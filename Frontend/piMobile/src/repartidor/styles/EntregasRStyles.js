@@ -11,7 +11,11 @@ export default function getEntregasRStyles(s, isDarkMode = false) {
   const textSecondary = isDarkMode ? '#B8C5E2' : '#556A95';
 
   return StyleSheet.create({
-    nativeRoot: { flex: 1 },
+    nativeRoot: {
+      flex: 1,
+      backgroundColor: bgWeb,
+      padding: s(6),
+    },
     webRoot: {
       flex: 1,
       backgroundColor: bgWeb,
@@ -22,6 +26,8 @@ export default function getEntregasRStyles(s, isDarkMode = false) {
     safeArea: {
       flex: 1,
       backgroundColor: colors.primaryDark,
+      borderRadius: s(20),
+      overflow: 'hidden',
     },
     topHeader: {
       height: s(56),
@@ -67,6 +73,7 @@ export default function getEntregasRStyles(s, isDarkMode = false) {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: s(10),
+      marginTop: s(8),
       marginBottom: s(10),
     },
     searchInput: {

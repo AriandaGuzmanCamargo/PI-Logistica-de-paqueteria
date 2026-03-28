@@ -17,19 +17,25 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 420,
   },
-  hero: {
+  heroRow: {
+    flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: 16,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: 12,
   },
   brandLogo: {
-    width: 180,
-    height: 76,
-    marginBottom: 4,
+    width: 200,
+    height: 150,
+    marginBottom: -25,
   },
   heroText: {
-    textAlign: 'center',
-    color: '#CFD7EE',
-    fontWeight: '600',
+    color: '#14286b',
+    fontWeight: '700',
+    fontSize: 32,
+    fontFamily: 'serif',
+    marginTop: -15,
+    marginBottom: 25
   },
   card: {
     backgroundColor: colors.surface,
@@ -46,7 +52,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 28,
+    fontSize: 20,
     color: '#3D4567',
     fontWeight: '700',
     textAlign: 'center',
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   primaryBtn: {
-    backgroundColor: colors.gold,
+    backgroundColor: '#1e5b9d',
     borderRadius: 10,
     padding: 13,
     marginTop: 6,
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
     color: '#5F678A',
   },
   linkStrong: {
-    color: colors.gold,
+    color: '#5B9FE6',
     fontWeight: '700',
   },
   secondaryBtn: {

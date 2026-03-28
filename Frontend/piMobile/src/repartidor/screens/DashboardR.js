@@ -6,8 +6,7 @@ import {
 import colors from '../../theme/colors';
 import getDashboardRStyles from '../styles/DashboardRStyles';
 import BottomNavR from '../components/BottomNavR';
-import UserAvatarR from '../components/UserAvatarR';
-import HeaderLogoR from '../components/HeaderLogoR';
+import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -35,16 +34,7 @@ export default function DashboardR({ navigation }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-			<View style={styles.header}>
-				<View style={styles.brandWrap}>
-					<HeaderLogoR s={s} />
-					<Text style={styles.brandText}>METZVIA</Text>
-				</View>
-
-				<View style={styles.headerRight}>
-					<UserAvatarR s={s} />
-				</View>
-			</View>
+			<TopHeaderR s={s} navigation={navigation} />
 
 			<ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 				<Text style={styles.welcome}>Bienvenido, Juan Perez</Text>

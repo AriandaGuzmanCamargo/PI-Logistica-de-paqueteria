@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   Platform,
@@ -11,15 +11,16 @@ import {
 } from 'react-native';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
-import HeaderLogoR from '../components/HeaderLogoR';
-import UserAvatarR from '../components/UserAvatarR';
+import TopHeaderR from '../components/TopHeaderR';
 import getPerfilRStyles from '../styles/PerfilR';
 import { useDarkMode } from '../context/DarkModeContext';
+import { clearCurrentUser, getCurrentUser } from '../../services/authService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export default function PerfilR({ navigation }) {
 	const { isDarkMode } = useDarkMode();
+  const [usuario, setUsuario] = useState(null);
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
   const phoneWidth = isWeb ? clamp(width - 24, 320, 390) : width;
@@ -27,7 +28,32 @@ export default function PerfilR({ navigation }) {
   const s = (size) => Math.round(size * scale);
   const styles = getPerfilRStyles(s, isDarkMode);
 
+  useEffect(() => {
+    setUsuario(getCurrentUser());
+  }, []);
+
+  const nombreCompleto = useMemo(() => {
+    const nombre = usuario?.nombre?.trim() || '';
+    const apellido = usuario?.apellido?.trim() || '';
+    const fullName = `${nombre} ${apellido}`.trim();
+
+    return fullName || 'Repartidor';
+  }, [usuario]);
+
+  const rolTexto = useMemo(() => {
+    if (usuario?.rol === 'conductor') {
+      return 'Repartidor';
+    }
+
+    if (usuario?.rol === 'cliente') {
+      return 'Usuario';
+    }
+
+    return usuario?.rol || 'Sin rol';
+  }, [usuario]);
+
   const handleLogout = () => {
+    clearCurrentUser();
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],
@@ -48,13 +74,7 @@ export default function PerfilR({ navigation }) {
       >
         <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-        <View style={styles.topHeader}>
-          <View style={styles.topHeaderLeft}>
-            <HeaderLogoR s={s} />
-            <Text style={styles.topHeaderTitle}>Perfil Repartidor</Text>
-          </View>
-          <UserAvatarR s={s} />
-        </View>
+        <TopHeaderR s={s} navigation={navigation} />
 
         <View style={styles.coverArea} />
 
@@ -63,24 +83,24 @@ export default function PerfilR({ navigation }) {
             <Image source={require('../../../images/usuario.png')} style={styles.profilePhoto} resizeMode="cover" />
           </View>
 
-          <Text style={styles.profileName}>Juan Perez</Text>
+          <Text style={styles.profileName}>{nombreCompleto}</Text>
           <View style={styles.roleRow}>
             <View style={styles.onlineDot} />
-            <Text style={styles.roleText}>Repartidor</Text>
+            <Text style={styles.roleText}>{rolTexto}</Text>
           </View>
 
           <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Rol:</Text>
-              <Text style={styles.infoValue}>Repartidor</Text>
+              <Text style={styles.infoValue}>{rolTexto}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Email:</Text>
-              <Text style={styles.infoValue}>juanperes@email.com</Text>
+              <Text style={styles.infoValue}>{usuario?.correo || 'No registrado'}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Telefono:</Text>
-              <Text style={styles.infoValue}>+32 55 1234 5678</Text>
+              <Text style={styles.infoValue}>{usuario?.telefono || 'No registrado'}</Text>
             </View>
           </View>
 

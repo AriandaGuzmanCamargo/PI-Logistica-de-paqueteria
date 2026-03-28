@@ -7,7 +7,11 @@ export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
   const border = isDarkMode ? '#2E3C5D' : '#D8DFEF';
 
   return StyleSheet.create({
-    nativeRoot: { flex: 1 },
+    nativeRoot: {
+      flex: 1,
+      backgroundColor: bgWeb,
+      padding: s(6),
+    },
     webRoot: {
       flex: 1,
       backgroundColor: bgWeb,
@@ -24,6 +28,8 @@ export default function getDetalleEntregaRStyles(s, isDarkMode = false) {
     safeArea: {
       flex: 1,
       backgroundColor: colors.primaryDark,
+      borderRadius: s(20),
+      overflow: 'hidden',
     },
     topHeader: {
       height: s(56),

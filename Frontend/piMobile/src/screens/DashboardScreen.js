@@ -5,7 +5,7 @@ import styles from '../styles/DashboardStyles';
 
 export default function DashboardScreen({ navigation }) {
   return (
-    <MainLayout title="Inicio" navigation={navigation} activeTab="Dashboard">
+    <MainLayout title="" navigation={navigation} activeTab="Dashboard">
       <View style={styles.searchWrap}>
         <TextInput style={styles.input} placeholder="Ingresar el numero de rastreo" placeholderTextColor="#9AA4BF" />
         <TouchableOpacity style={styles.searchBtn} onPress={() => navigation.navigate('RastrearEnvio')}>

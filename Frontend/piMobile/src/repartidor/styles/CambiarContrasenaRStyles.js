@@ -8,7 +8,11 @@ export default function getCambiarContrasenaRStyles(s, isDarkMode = false) {
   const panelBorder = isDarkMode ? '#344766' : '#D9E1F0';
 
   return StyleSheet.create({
-    nativeRoot: { flex: 1 },
+    nativeRoot: {
+      flex: 1,
+      backgroundColor: bgWeb,
+      padding: s(6),
+    },
     webRoot: {
       flex: 1,
       backgroundColor: bgWeb,
@@ -19,6 +23,8 @@ export default function getCambiarContrasenaRStyles(s, isDarkMode = false) {
     safeArea: {
       flex: 1,
       backgroundColor: bgApp,
+      borderRadius: s(20),
+      overflow: 'hidden',
     },
     topHeader: {
       height: s(56),

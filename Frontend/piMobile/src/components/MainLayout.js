@@ -5,7 +5,6 @@ import styles from '../styles/MainLayoutStyles';
 const tabs = [
   { label: 'Inicio', route: 'Dashboard' },
   { label: 'Envios', route: 'RastrearEnvio' },
-  { label: 'Perfil', route: 'ConfiguracionUsuario' },
   { label: 'Menu', route: 'MenuUsuario' },
 ];
 
@@ -16,8 +15,7 @@ export default function MainLayout({
   children,
   activeTab,
   subtitle,
-}) {
-  return (
+}) {  return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.screenWrap}>
         <View style={styles.bgBubbleTop} />
@@ -26,35 +24,40 @@ export default function MainLayout({
         <View style={styles.shell}>
           <View style={styles.header}>
             <View style={styles.headerRow}>
-              <TouchableOpacity
-                style={styles.circleBtn}
-                onPress={() => (backTo ? navigation.navigate(backTo) : navigation.navigate('MenuUsuario'))}
-              >
-                <Text style={styles.circleBtnText}>{backTo ? 'Atras' : 'Menu'}</Text>
-              </TouchableOpacity>
-
-              <Image
-                source={require('../../images/logoSinFondo.png')}
-                style={styles.brandLogo}
-                resizeMode="contain"
-              />
+              <View style={styles.brandWrap}>
+                <Image
+                  source={require('../../images/logoSinFondo.png')}
+                  style={styles.brandLogo}
+                  resizeMode="contain"
+                />
+                <Text style={styles.brandText}>Metzvia</Text>
+              </View>
 
               <View style={styles.rightGroup}>
-                <View style={styles.iconCircle}>
+                <TouchableOpacity style={styles.iconCircle} onPress={() => navigation.navigate('Notificaciones')}>
                   <Image
                     source={require('../../images/bell_9972125.png')}
                     style={styles.bellIcon}
                     resizeMode="contain"
                   />
-                </View>
-                <TouchableOpacity style={styles.avatar}>
-                  <Text style={styles.avatarText}>EP</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate('ConfiguracionUsuario')}>
+                  <Image
+                    source={require('../../images/usuario.png')}
+                    style={styles.avatarIcon}
+                    resizeMode="contain"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
-            <Text style={styles.title}>{title}</Text>
-            {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
           </View>
+
+          {(title || subtitle) ? (
+            <View style={styles.pageHeading}>
+              {title ? <Text style={styles.title}>{title}</Text> : null}
+              {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+            </View>
+          ) : null}
 
           <ScrollView contentContainerStyle={styles.mainArea} showsVerticalScrollIndicator={false}>
             {children}

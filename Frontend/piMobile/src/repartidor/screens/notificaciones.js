@@ -10,9 +10,8 @@ import {
 } from 'react-native';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
-import UserAvatarR from '../components/UserAvatarR';
 import getNotificacionesRStyles from '../styles/NotificacionesRStyles';
-import HeaderLogoR from '../components/HeaderLogoR';
+import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -66,13 +65,7 @@ export default function NotificacionesR({ navigation }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<View style={styles.topHeader}>
-					<View style={styles.topHeaderLeft}>
-						<HeaderLogoR s={s} />
-						<Text style={styles.topHeaderTitle}>Notificaciones</Text>
-					</View>
-					<UserAvatarR s={s} />
-				</View>
+				<TopHeaderR s={s} navigation={navigation} />
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
 					<View style={styles.sectionCard}>

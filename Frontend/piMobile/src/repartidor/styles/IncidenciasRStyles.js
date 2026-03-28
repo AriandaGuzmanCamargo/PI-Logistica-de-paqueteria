@@ -14,7 +14,11 @@ export default function getIncidenciasRStyles(s, isDarkMode = false) {
   };
 
   return StyleSheet.create({
-    nativeRoot: { flex: 1 },
+    nativeRoot: {
+      flex: 1,
+      backgroundColor: bgWeb,
+      padding: s(6),
+    },
     webRoot: {
       flex: 1,
       backgroundColor: bgWeb,
@@ -31,6 +35,8 @@ export default function getIncidenciasRStyles(s, isDarkMode = false) {
     safeArea: {
       flex: 1,
       backgroundColor: colors.primaryDark,
+      borderRadius: s(20),
+      overflow: 'hidden',
     },
     topHeader: {
       height: s(56),

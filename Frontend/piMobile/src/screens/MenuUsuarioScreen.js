@@ -12,7 +12,6 @@ export default function MenuUsuarioScreen({ navigation }) {
     ['Cotizar', 'CotizarEnvio'],
     ['Direcciones Guardadas', 'DireccionesGuardadas'],
     ['Facturacion', 'PagoOpciones'],
-    ['Notificaciones', 'Notificaciones'],
     ['Configuracion', 'ConfiguracionUsuario'],
   ];
 

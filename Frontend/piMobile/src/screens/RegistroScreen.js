@@ -7,9 +7,9 @@ export default function RegistroScreen({ navigation }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.content}>
-          <View style={styles.hero}>
+          <View style={styles.heroRow}>
             <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.heroText}>Sistema de Logistica de Transporte de Paqueteria</Text>
+            <Text style={styles.heroText}>Metzvia</Text>
           </View>
 
           <View style={styles.card}>

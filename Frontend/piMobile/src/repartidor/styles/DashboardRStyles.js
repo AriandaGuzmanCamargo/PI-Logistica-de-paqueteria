@@ -29,6 +29,8 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 	return StyleSheet.create({
 		nativeRoot: {
 			flex: 1,
+			backgroundColor: bgWeb,
+			padding: s(6),
 		},
 		webRoot: {
 			flex: 1,
@@ -38,8 +40,10 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 			paddingVertical: s(12),
 		},
 		safeArea: {
-			flex: 15,
+			flex: 4,
 			backgroundColor: colors.primaryDark,
+			borderRadius: s(20),
+			overflow: 'hidden',
 		},
 		header: {
 			height: s(56),

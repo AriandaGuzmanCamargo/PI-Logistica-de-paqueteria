@@ -13,8 +13,7 @@ import {
 import colors from '../../theme/colors';
 import getEntregasRStyles from '../styles/EntregasRStyles';
 import BottomNavR from '../components/BottomNavR';
-import UserAvatarR from '../components/UserAvatarR';
-import HeaderLogoR from '../components/HeaderLogoR';
+import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -119,19 +118,9 @@ export default function EntregasR({ navigation, route }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<View style={styles.topHeader}>
-					<View style={styles.topHeaderLeft}>
-						<HeaderLogoR s={s} />
-						<Text style={styles.topHeaderTitle}>Mis Entregas</Text>
-					</View>
-					<UserAvatarR s={s} />
-				</View>
+				<TopHeaderR s={s} navigation={navigation} />
 
 				<View style={styles.content}>
-					<View style={styles.secondTitleRow}>
-						<Text style={styles.secondTitle}>Mis Entregas</Text>
-					</View>
-
 					<View style={styles.searchWrap}>
 						<TextInput
 							style={styles.searchInput}

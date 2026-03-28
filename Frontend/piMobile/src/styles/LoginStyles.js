@@ -16,17 +16,20 @@ const styles = StyleSheet.create({
   content: { width: '100%', maxWidth: 420 },
   hero: {
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: 8,
   },
   brandLogo: {
-    width: 180,
-    height: 78,
-    marginBottom: 4,
+    width: 300,
+    height: 230,
+    marginBottom: -70,
   },
   heroText: {
     textAlign: 'center',
-    color: '#CFD7EE',
-    fontWeight: '600',
+    color: '#14286b',
+    fontWeight: '700',
+    fontSize: 35,
+    marginBottom: 30,
+    fontFamily: 'serif',
   },
   card: {
     backgroundColor: colors.surface,
@@ -43,14 +46,14 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#3D4567',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
   },
   subtitle: {
     textAlign: 'center',
     color: '#6B7393',
-    marginBottom: 18,
+    marginBottom: 20,
     marginTop: 4,
   },
   roleLabel: {
@@ -72,8 +75,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   roleBtnActive: {
-    borderColor: colors.gold,
-    backgroundColor: '#FFF3D4',
+    borderColor: '#3178c5',
+    backgroundColor: '#E8F0FF',
   },
   roleBtnText: {
     textAlign: 'center',
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   roleBtnTextActive: {
-    color: '#8A6511',
+    color: '#1E40AF',
     fontWeight: '700',
   },
   input: {
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   primaryBtn: {
-    backgroundColor: colors.gold,
+    backgroundColor: '#1e5b9d',
     borderRadius: 10,
     padding: 13,
     marginTop: 4,
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
     color: '#5F678A',
   },
   linkStrong: {
-    color: colors.gold,
+    color: '#5B9FE6',
     fontWeight: '700',
   },
 });

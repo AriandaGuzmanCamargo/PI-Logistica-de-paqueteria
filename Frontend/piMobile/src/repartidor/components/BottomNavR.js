@@ -36,7 +36,6 @@ export default function BottomNavR({
     { label: 'Inicio', route: 'DashboardR' },
     { label: 'Entregas', route: 'EntregasR' },
     { label: 'Ruta', route: 'RutaR', showBadge: showRutaBadge },
-    { label: 'Perfil', route: 'NotificacionesR', iconSource: require('../../../images/bell_9972125.png'), hideLabel: true },
   ];
 
   return (

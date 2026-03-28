@@ -5,8 +5,7 @@ import {Image,Platform,SafeAreaView,ScrollView,StatusBar,Text,TextInput,
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
 import getIncidenciasRStyles from '../styles/IncidenciasRStyles';
-import UserAvatarR from '../components/UserAvatarR';
-import HeaderLogoR from '../components/HeaderLogoR';
+import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -74,17 +73,7 @@ export default function IncidenciasR({ navigation }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<View style={styles.topHeader}>
-					<View style={styles.headerLeft}>
-						<TouchableOpacity onPress={() => navigation.goBack()}>
-							<Text style={styles.backText}>{'<'}</Text>
-						</TouchableOpacity>
-						<HeaderLogoR s={s} />
-						<Text style={styles.topHeaderTitle}>Reportar Incidencia</Text>
-					</View>
-
-					<UserAvatarR s={s} />
-				</View>
+				<TopHeaderR s={s} navigation={navigation} title="Reportar Incidencia" />
 
 				<View style={styles.content}>
 					<View style={styles.idRow}>

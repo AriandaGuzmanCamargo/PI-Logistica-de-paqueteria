@@ -7,7 +7,11 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
   const border = isDarkMode ? '#344766' : '#D9E1F0';
 
   return StyleSheet.create({
-    nativeRoot: { flex: 1 },
+    nativeRoot: {
+      flex: 1,
+      backgroundColor: bgWeb,
+      padding: s(6),
+    },
     webRoot: {
       flex: 1,
       backgroundColor: bgWeb,
@@ -18,6 +22,8 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
     safeArea: {
       flex: 1,
       backgroundColor: colors.primaryDark,
+      borderRadius: s(20),
+      overflow: 'hidden',
     },
     topHeader: {
       height: s(56),

@@ -7,13 +7,23 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 	const border = isDarkMode ? '#2E3C5D' : '#D7DFEF';
 
 	return StyleSheet.create({
-		nativeRoot: { flex: 1 },
+		nativeRoot: {
+			flex: 1,
+			backgroundColor: bgWeb,
+			padding: s(6),
+		},
 		webRoot: {
 			flex: 1,
 			backgroundColor: bgWeb,
 			alignItems: 'center',
 			justifyContent: 'center',
 			paddingVertical: s(12),
+		},
+		safeArea: {
+			flex: 1,
+			backgroundColor: colors.primaryDark,
+			borderRadius: s(20),
+			overflow: 'hidden',
 		},
 		topHeader: {
 			height: s(56),
@@ -36,6 +46,7 @@ export default function getRutaRStyles(s, isDarkMode = false) {
 		content: {
 			flex: 1,
 			backgroundColor: bgApp,
+			marginTop: s(8),
 		},
 		contentContainer: {
 			paddingHorizontal: s(10),

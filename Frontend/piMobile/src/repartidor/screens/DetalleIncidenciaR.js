@@ -13,8 +13,7 @@ import {
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
 import getDetalleIncidenciaRStyles from '../styles/DetalleIncidenciaRStyles';
-import UserAvatarR from '../components/UserAvatarR';
-import HeaderLogoR from '../components/HeaderLogoR';
+import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -43,17 +42,7 @@ export default function DetalleIncidenciaR({ navigation, route }) {
       >
         <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-        <View style={styles.topHeader}>
-          <View style={styles.headerLeft}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={styles.backText}>{'<'}</Text>
-            </TouchableOpacity>
-            <HeaderLogoR s={s} />
-            <Text style={styles.topHeaderTitle}>Detalle de Incidencia</Text>
-          </View>
-
-          <UserAvatarR s={s} />
-        </View>
+        <TopHeaderR s={s} navigation={navigation} title="Detalle de Incidencia" />
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <View style={styles.card}>

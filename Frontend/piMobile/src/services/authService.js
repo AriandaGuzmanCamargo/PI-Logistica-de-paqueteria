@@ -1,5 +1,13 @@
 import { API_BASE_URL } from '../config/api';
 
+let currentUser = null;
+
+export const getCurrentUser = () => currentUser;
+
+export const clearCurrentUser = () => {
+  currentUser = null;
+};
+
 export const loginRequest = async ({ correo, contrasena, tipoAcceso }) => {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: 'POST',
@@ -24,6 +32,8 @@ export const loginRequest = async ({ correo, contrasena, tipoAcceso }) => {
   if (!response.ok) {
     throw new Error(data?.message || 'No se pudo iniciar sesion.');
   }
+
+  currentUser = data?.usuario ?? null;
 
   return data;
 };

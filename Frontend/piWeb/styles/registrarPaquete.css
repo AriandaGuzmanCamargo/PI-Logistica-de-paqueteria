@@ -9,31 +9,21 @@
 }
 
 .registro-encabezado {
-  min-height: 56px;
+  min-height: auto;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;
-  border-bottom: 1px solid #e6ecfb;
-  background: #f7f9ff;
+  padding: 0 18px;
+  margin: 24px 0 18px;
+  border-bottom: none;
+  background: none;
 }
 
-.registro-encabezado__icono {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  background: #4f72c1;
-  font-size: 14px;
-}
-
-.registro-encabezado h2 {
+.registro-encabezado__icono {\n  display: none;\n}\n\n.registro-encabezado h2 {
   margin: 0;
-  font-size: 36px;
-  color: #445585;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a2d50;
 }
 
 .tarjeta-formulario-registro {
@@ -46,7 +36,7 @@
 
 .tarjeta-formulario-registro h3 {
   margin: 0 0 16px;
-  font-size: 40px;
+  font-size: 20px;
   color: #34497a;
 }
 
@@ -92,7 +82,7 @@
 
 .seccion-formulario__titulo {
   margin: 0 0 14px;
-  font-size: 28px;
+  font-size: 18px;
   color: #425587;
   font-weight: 600;
 }
@@ -200,7 +190,7 @@ select:focus {
 .bloque-registro__titulo {
   margin: 0 0 14px;
   color: #3f507f;
-  font-size: 28px;
+  font-size: 18px;
 }
 
 .bloque-registro--secundario {

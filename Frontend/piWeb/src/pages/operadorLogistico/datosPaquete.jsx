@@ -45,12 +45,9 @@ export default function DatosPaquete() {
         </div>
       </header>
 
-      <section className="modulo-registro">
-        <div className="registro-encabezado">
-          <span className="registro-encabezado__icono">▣</span>
-          <h2>Registrar Paquete</h2>
-        </div>
+      <h2 className="titulo-pagina-operador">Registrar Paquete</h2>
 
+      <section className="modulo-registro">
         <article className="tarjeta-formulario-registro">
           <section className="bloque-registro">
             <h3 className="bloque-registro__titulo">Datos del Paquete</h3>

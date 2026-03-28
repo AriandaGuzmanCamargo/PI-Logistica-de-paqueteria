@@ -23,8 +23,9 @@
 .titulo-detalle {
   margin: 0;
   padding: 18px;
-  font-size: 34px;
-  color: #415189;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a2d50;
   border-bottom: 1px solid #e6ecfb;
 }
 

@@ -37,6 +37,20 @@ body {
   margin: 0 -26px 18px;
 }
 
+.titulo-pagina-operador {
+  max-width: 1600px;
+  margin: 0 auto 16px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a2d50;
+  text-align: center;
+  letter-spacing: 0.5px;
+  background: #ffffff;
+  border: 1px solid #d8dff8;
+  border-radius: 12px;
+  padding: 16px 24px;
+  box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+}
 
 
 .tablero-operador.sidebar-collapsed {

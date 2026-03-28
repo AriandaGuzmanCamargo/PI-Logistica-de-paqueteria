@@ -68,12 +68,9 @@ export default function Incidencias() {
         </div>
       </header>
 
-      <section className="modulo-incidencias">
-        <div className="incidencias-encabezado">
-          <span className="incidencias-encabezado__icono">▣</span>
-          <h2>Incidencias</h2>
-        </div>
+      <h2 className="titulo-pagina-operador">Incidencias</h2>
 
+      <section className="modulo-incidencias">
         <div className="incidencias-resumen">
           <div className="incidencias-resumen__item"><strong>Total:</strong> {loading ? '...' : resumen.total}</div>
           <div className="incidencias-resumen__item"><strong>Abiertas:</strong> {loading ? '...' : resumen.abiertas}</div>

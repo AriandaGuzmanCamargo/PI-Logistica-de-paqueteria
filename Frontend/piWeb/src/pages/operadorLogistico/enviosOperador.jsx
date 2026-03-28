@@ -100,13 +100,14 @@ export default function EnviosOperador() {
         </div>
       </header>
 
+      <h2 className="titulo-pagina-operador">Envíos</h2>
+
       <section className="modulo-envios">
         <div className="alerta-registro alerta-registro--oculta" id="alerta-registro">
           Envío registrado correctamente.
         </div>
 
         <div className="envios-encabezado">
-          <h2 className="envios-encabezado__titulo">// Envíos</h2>
           <a href="#" className="envios-encabezado__ver">Ver Todo</a>
         </div>
 

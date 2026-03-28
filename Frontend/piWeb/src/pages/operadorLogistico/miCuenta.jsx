@@ -21,6 +21,8 @@ export default function MiCuenta() {
         </div>
       </header>
 
+      <h2 className="titulo-pagina-operador">Mi Cuenta</h2>
+
       <section className="modulo-cuenta">
         <div className="cuenta-fondo-superior"></div>
 

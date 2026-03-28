@@ -9,31 +9,21 @@
 }
 
 .incidencias-encabezado {
-  min-height: 56px;
+  min-height: auto;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;
-  border-bottom: 1px solid #e6ecfb;
-  background: #f7f9ff;
+  padding: 0 18px;
+  margin: 24px 0 18px;
+  border-bottom: none;
+  background: none;
 }
 
-.incidencias-encabezado__icono {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  background: #4f72c1;
-  font-size: 14px;
-}
-
-.incidencias-encabezado h2 {
+.incidencias-encabezado__icono {\n  display: none;\n}\n\n.incidencias-encabezado h2 {
   margin: 0;
-  font-size: 36px;
-  color: #445585;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a2d50;
 }
 
 .incidencias-resumen {

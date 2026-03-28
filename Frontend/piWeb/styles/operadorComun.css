@@ -444,6 +444,20 @@ body {
   margin: 0 0 18px;
   padding: 0 28px;
 }
+.panel-principal--supervisor {
+  padding-top: 108px;
+}
+
+.barra-superior--supervisor-fija {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0 36px;
+  z-index: 150;
+}
 .barra-superior--con-logo .barra-superior__left {
   gap: 14px;
 }
@@ -600,6 +614,14 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .tablero-operador {
     grid-template-columns: 1fr;
+  }
+
+  .panel-principal--supervisor {
+    padding-top: 96px;
+  }
+
+  .barra-superior--supervisor-fija {
+    padding: 0 20px;
   }
 
   .barra-lateral--izquierda {

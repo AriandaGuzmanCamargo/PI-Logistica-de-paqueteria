@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MenuOperador from './menuOperador.jsx';
+import {
+  estadoEnvioClase,
+  estadoEnvioTexto,
+  getEnviosOperador,
+} from '../../services/operadorService';
 
 export default function EnviosOperador() {
+  const [envios, setEnvios] = useState([]);
+  const [filtro, setFiltro] = useState('todos');
+  const [busqueda, setBusqueda] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const parametros = new URLSearchParams(window.location.search);
@@ -23,6 +32,55 @@ export default function EnviosOperador() {
           }
         }
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadEnvios() {
+      try {
+        setError('');
+        const data = await getEnviosOperador();
+        if (isMounted) {
+          setEnvios(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message || 'No se pudieron cargar los envios.');
+        }
+      }
+    }
+
+    loadEnvios();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const enviosFiltrados = useMemo(() => {
+    return envios.filter((item) => {
+      const coincideEstado =
+        filtro === 'todos' || String(item.estado_envio || '').toLowerCase() === filtro;
+
+      const query = busqueda.trim().toLowerCase();
+      if (!query) {
+        return coincideEstado;
+      }
+
+      const texto = [
+        item.paquete?.codigo_rastreo,
+        item.destinatario?.nombre,
+        item.remitente?.nombre,
+        item.ciudad_origen,
+        item.ciudad_destino,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return coincideEstado && texto.includes(query);
+    });
+  }, [envios, filtro, busqueda]);
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
 
@@ -60,11 +118,12 @@ export default function EnviosOperador() {
           <div className="filtros-envios__fila">
             <div className="campo-filtro">
               <label htmlFor="filtro-estado">Estado</label>
-              <select id="filtro-estado">
-                <option>Estado</option>
-                <option>Pendiente</option>
-                <option>En Tránsito</option>
-                <option>Retrasado</option>
+              <select id="filtro-estado" value={filtro} onChange={(e) => setFiltro(e.target.value)}>
+                <option value="todos">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="en_ruta">En ruta</option>
+                <option value="retrasado">Retrasado</option>
+                <option value="entregado">Entregado</option>
               </select>
             </div>
             <div className="campo-filtro campo-filtro--fecha">
@@ -72,9 +131,39 @@ export default function EnviosOperador() {
               <input id="filtro-fecha" type="text" defaultValue="24/04/2024 - 24/04/2024" />
             </div>
             <div className="buscador-envios">
-              <input type="text" placeholder="Buscar ID o destinatario..." />
-              <button>Buscar</button>
+              <input
+                type="text"
+                placeholder="Buscar guia, remitente o destinatario..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+              <button type="button">Buscar</button>
             </div>
+          </div>
+
+          {error ? <p style={{ color: '#b71c1c', margin: '0 0 10px 0' }}>{error}</p> : null}
+
+          <div className="leyenda-estados" aria-label="Leyenda de estados de envio">
+            <span className="leyenda-estados__item">
+              <span className="estado estado--pendiente">●</span>
+              Pendiente
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--transito">●</span>
+              En ruta
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--retrasado">●</span>
+              Retrasado
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--entregado">●</span>
+              Entregado
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--cancelado">●</span>
+              Cancelado
+            </span>
           </div>
 
           <div className="tabla-envios">
@@ -91,51 +180,33 @@ export default function EnviosOperador() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>PAK123456789</td>
-                  <td><strong>Ana Martínez</strong></td>
-                  <td><span className="estado estado--pendiente">● Pendiente</span></td>
-                  <td><span className="prioridad prioridad--expres">□ Exprés</span></td>
-                  <td>CDMX-015</td>
-                  <td><strong>Hoy; 12:45 PM</strong></td>
-                  <td><a className="boton-detalles" href="/operador/detalle-envio?id=PAK123456789">Ver Detalles</a></td>
-                </tr>
-                <tr>
-                  <td>PAK987654321</td>
-                  <td><strong>Carlos Ramírez</strong></td>
-                  <td><span className="estado estado--transito">● En Tránsito</span></td>
-                  <td><span className="prioridad prioridad--normal">□ Normal</span></td>
-                  <td>GDL-024</td>
-                  <td><strong>Hoy; 12:32 PM</strong></td>
-                  <td><a className="boton-detalles" href="/operador/detalle-envio?id=PAK987654321">Ver Detalles</a></td>
-                </tr>
-                <tr>
-                  <td>PAK456123789</td>
-                  <td><strong>Juan Pérez</strong></td>
-                  <td><span className="estado estado--retrasado">● Retrasado</span></td>
-                  <td><span className="prioridad prioridad--expres">□ Exprés</span></td>
-                  <td>CDMX-030</td>
-                  <td><strong>Hoy; 11:54 AM</strong></td>
-                  <td><a className="boton-detalles" href="/operador/detalle-envio?id=PAK456123789">Ver Detalles</a></td>
-                </tr>
-                <tr>
-                  <td>PAK789654123</td>
-                  <td><strong>Lorena Morales</strong></td>
-                  <td><span className="estado estado--pendiente">● Pendiente</span></td>
-                  <td><span className="prioridad prioridad--normal">□ Normal</span></td>
-                  <td>MTY-042</td>
-                  <td><strong>Hoy; 09:51 AM</strong></td>
-                  <td><a className="boton-detalles" href="/operador/detalle-envio?id=PAK789654123">Ver Detalles</a></td>
-                </tr>
-                <tr>
-                  <td>PAK654987213</td>
-                  <td><strong>Samuel Torres</strong></td>
-                  <td><span className="estado estado--transito">● En Tránsito</span></td>
-                  <td><span className="prioridad prioridad--normal">□ Normal</span></td>
-                  <td>QRO-018</td>
-                  <td><strong>Pasa 2 días ago, 3:45 PM</strong></td>
-                  <td><a className="boton-detalles" href="/operador/detalle-envio?id=PAK654987213">Ver Detalles</a></td>
-                </tr>
+                {enviosFiltrados.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '14px' }}>
+                      No hay envios para mostrar.
+                    </td>
+                  </tr>
+                ) : (
+                  enviosFiltrados.map((item) => (
+                    <tr key={item.id_envio}>
+                      <td>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</td>
+                      <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
+                      <td>
+                        <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
+                          ● {estadoEnvioTexto(item.estado_envio)}
+                        </span>
+                      </td>
+                      <td><span className="prioridad prioridad--normal">□ {item.paquete?.tipo_servicio || 'normal'}</span></td>
+                      <td>{item.ciudad_origen} - {item.ciudad_destino}</td>
+                      <td><strong>{new Date(item.fecha_creacion).toLocaleString()}</strong></td>
+                      <td>
+                        <a className="boton-detalles" href={`/operador/detalle-envio?id=${item.id_envio}`}>
+                          Ver Detalles
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

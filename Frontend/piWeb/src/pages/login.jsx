@@ -33,6 +33,8 @@ export default function Login() {
         return;
       }
 
+      localStorage.setItem('piWebUser', JSON.stringify(data.usuario));
+
       const rol = String(data.usuario?.rol || '').toLowerCase();
 
       if (rol === 'admin' || rol === 'supervisor') {

@@ -32,6 +32,19 @@
   color: #2f4168;
 }
 
+.detalle-loading {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  color: #4f5e89;
+  font-weight: 600;
+  border-bottom: 1px solid #e6ecfb;
+}
+
+.detalle-loading p {
+  margin: 0;
+}
+
 .detalle-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

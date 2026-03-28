@@ -55,7 +55,7 @@ export default function DatosPaquete() {
           <h2>Registrar Paquete</h2>
         </div>
 
-        <article className="tarjeta-formulario">
+        <article className="tarjeta-formulario-registro">
           <section className="bloque-registro">
             <h3 className="bloque-registro__titulo">Datos del Paquete</h3>
 

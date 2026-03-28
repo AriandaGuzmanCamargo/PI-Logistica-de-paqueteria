@@ -1,4 +1,7 @@
-import { getShipmentsByUser } from '../services/enviosService.js';
+import {
+  getShipmentDetailById,
+  getShipmentsByUser,
+} from '../services/enviosService.js';
 
 export async function getEnviosByUsuario(req, res, next) {
   try {
@@ -8,6 +11,20 @@ export async function getEnviosByUsuario(req, res, next) {
     res.json({
       ok: true,
       data: envios,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getDetalleEnvio(req, res, next) {
+  try {
+    const { idEnvio } = req.params;
+    const envio = await getShipmentDetailById(idEnvio);
+
+    res.json({
+      ok: true,
+      data: envio,
     });
   } catch (error) {
     next(error);

@@ -1,7 +1,58 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MenuOperador from './menuOperador.jsx';
+import {
+  estadoEnvioClase,
+  estadoEnvioTexto,
+  getEnviosOperador,
+  getWebUser,
+} from '../../services/operadorService';
 
 export default function DashboardOperador() {
+  const [envios, setEnvios] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadEnvios() {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await getEnviosOperador();
+        if (isMounted) {
+          setEnvios(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message || 'No se pudieron cargar los envios.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadEnvios();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const resumen = useMemo(() => {
+    const total = envios.length;
+    const pendientes = envios.filter((e) => e.estado_envio === 'pendiente').length;
+    const enRuta = envios.filter((e) => ['en_ruta', 'en_transito'].includes(String(e.estado_envio || '').toLowerCase())).length;
+    const retrasados = envios.filter((e) => e.estado_envio === 'retrasado').length;
+
+    return { total, pendientes, enRuta, retrasados };
+  }, [envios]);
+
+  const user = getWebUser();
+  const nombreMostrado = user ? `${user.nombre || ''} ${user.apellido || ''}`.trim() : 'Operador';
+
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
 
@@ -28,36 +79,38 @@ export default function DashboardOperador() {
 
       <section className="bienvenida">
         <img src="/piWeb/images/usuario.png" alt="" className="bienvenida__avatar" />
-        <p>Bienvenido de vuelta, <strong>Alejandro Ríos</strong></p>
+        <p>Bienvenido de vuelta, <strong>{nombreMostrado}</strong></p>
       </section>
 
-      <section className="resumen-operador">
+      {error ? <p style={{ color: '#b71c1c', margin: '0 auto 12px', maxWidth: '1260px' }}>{error}</p> : null}
+
+      <section className={`resumen-operador ${loading ? 'resumen-operador--loading' : ''}`}>
         <article className="tarjeta-resumen">
           <span className="tarjeta-resumen__icono"></span>
           <div>
             <h3>Pendientes por Procesar</h3>
-            <p>5</p>
+            <p>{loading ? '...' : resumen.pendientes}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
           <span className="tarjeta-resumen__icono"></span>
           <div>
             <h3>En Proceso</h3>
-            <p>8</p>
+            <p>{loading ? '...' : resumen.enRuta}</p>
           </div>
         </article>
         <article className="tarjeta-resumen tarjeta-resumen--alerta">
           <span className="tarjeta-resumen__icono"></span>
           <div>
             <h3>Pendientes de Entrega</h3>
-            <p>2</p>
+            <p>{loading ? '...' : resumen.retrasados}</p>
           </div>
         </article>
         <article className="tarjeta-resumen">
           <span className="tarjeta-resumen__icono"></span>
           <div>
             <h3>Total de Envíos Hoy</h3>
-            <p>25</p>
+            <p>{loading ? '...' : resumen.total}</p>
           </div>
         </article>
       </section>
@@ -67,6 +120,28 @@ export default function DashboardOperador() {
           <div className="panel-tabla__encabezado">
             <input type="text" placeholder="Buscar ID o destinatario..." className="panel-tabla__busqueda" />
             <a href="/operador/envios" className="panel-tabla__ver">Ver Todo</a>
+          </div>
+          <div className="leyenda-estados leyenda-estados--compacta" aria-label="Leyenda de estados de envio">
+            <span className="leyenda-estados__item">
+              <span className="estado estado--pendiente">●</span>
+              Pendiente
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--transito">●</span>
+              En ruta
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--retrasado">●</span>
+              Retrasado
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--entregado">●</span>
+              Entregado
+            </span>
+            <span className="leyenda-estados__item">
+              <span className="estado estado--cancelado">●</span>
+              Cancelado
+            </span>
           </div>
           <div className="tabla-envios">
             <table>
@@ -80,27 +155,36 @@ export default function DashboardOperador() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>PAK123456789</td>
-                  <td><strong>Ana Martínez</strong></td>
-                  <td><span className="estado estado--transito">● En Tránsito</span></td>
-                  <td>Juan Morales</td>
-                  <td><button className="boton-detalles">Ver Detalles</button></td>
-                </tr>
-                <tr>
-                  <td>PAK987654321</td>
-                  <td><strong>Carlos Ramírez</strong></td>
-                  <td><span className="estado estado--pendiente">● Recogido</span></td>
-                  <td>Miguel López</td>
-                  <td><button className="boton-detalles">Ver Detalles</button></td>
-                </tr>
-                <tr>
-                  <td>PAK456123789</td>
-                  <td><strong>Juan Pérez</strong></td>
-                  <td><span className="estado estado--retrasado">● Pendiente</span></td>
-                  <td>Javier Torres</td>
-                  <td><button className="boton-detalles">Ver Detalles</button></td>
-                </tr>
+                {loading ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                      <span className="ui-spinner" aria-hidden="true"></span>
+                      Cargando envios...
+                    </td>
+                  </tr>
+                ) : envios.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                      No hay envios para mostrar.
+                    </td>
+                  </tr>
+                ) : envios.slice(0, 3).map((item) => (
+                  <tr key={item.id_envio}>
+                    <td>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</td>
+                    <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
+                    <td>
+                      <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
+                        ● {estadoEnvioTexto(item.estado_envio)}
+                      </span>
+                    </td>
+                    <td>{item.remitente?.nombre || 'Sin remitente'}</td>
+                    <td>
+                      <a className="boton-detalles" href={`/operador/detalle-envio?id=${item.id_envio}`}>
+                        Ver Detalles
+                      </a>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

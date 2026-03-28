@@ -446,6 +446,35 @@ body {
   background: rgba(241, 244, 255, 0.7);
 }
 
+.leyenda-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #dce2fa;
+  background: #f4f7ff;
+}
+
+.leyenda-estados--compacta {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.leyenda-estados__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495781;
+}
+
+.leyenda-estados__item .estado {
+  min-width: 24px;
+  text-align: center;
+  padding: 3px 6px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -491,6 +520,34 @@ tbody tr:hover {
   color: #af4268;
 }
 
+.estado--entregado {
+  background: #d7efe0;
+  color: #2f7f59;
+}
+
+.estado--cancelado {
+  background: #f9d9d9;
+  color: #b33f3f;
+}
+
+.ui-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #c9d5f8;
+  border-top-color: #4a6bb2;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: -2px;
+  animation: ui-spin 0.8s linear infinite;
+}
+
+@keyframes ui-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .boton-detalles {
   border: none;
   background: linear-gradient(180deg, #e4bd4a 0%, #d5a627 100%);
@@ -516,6 +573,10 @@ tbody tr:hover {
 
   .barra-superior__titulo {
     font-size: 30px;
+  }
+
+  .leyenda-estados {
+    gap: 6px;
   }
 }
 

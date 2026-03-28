@@ -76,6 +76,8 @@ function toDeliveryItem(envio, index) {
 		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
 		pinBlue: done,
 		id_envio: envio?.id_envio,
+		asignadoAlConductor: Boolean(envio?.asignado_al_conductor),
+		idAsignacionActiva: envio?.id_asignacion_activa || null,
 	};
 }
 
@@ -165,6 +167,17 @@ export default function EntregasR({ navigation, route }) {
 		return realDeliveries.length > 0 ? realDeliveries : deliveries;
 	}, [realDeliveries]);
 
+	const assignmentSummary = useMemo(() => {
+		if (realDeliveries.length === 0) {
+			return null;
+		}
+
+		const assignedCount = realDeliveries.filter((item) => item.asignadoAlConductor).length;
+		const availableCount = realDeliveries.length - assignedCount;
+
+		return { assignedCount, availableCount };
+	}, [realDeliveries]);
+
 	const filteredDeliveries = useMemo(() => {
 		const normalizedSearch = searchText.trim().toLowerCase();
 		const searched = normalizedSearch
@@ -218,6 +231,11 @@ export default function EntregasR({ navigation, route }) {
 					{!isLoadingDeliveries && !deliveriesError && realDeliveries.length > 0 ? (
 						<Text style={styles.emptyText}>Mostrando entregas reales del backend.</Text>
 					) : null}
+					{assignmentSummary ? (
+						<Text style={styles.assignmentSummary}>
+							Asignadas por operador: {assignmentSummary.assignedCount} | Disponibles del sistema: {assignmentSummary.availableCount}
+						</Text>
+					) : null}
 
 					<View style={styles.filtersRow}>
 						{FILTER_OPTIONS.map((option) => {
@@ -269,6 +287,11 @@ export default function EntregasR({ navigation, route }) {
 
 										<Text style={styles.deliveryName}>{item.name}</Text>
 										<Text style={styles.deliveryAddress}>{item.address}</Text>
+										{item.asignadoAlConductor ? (
+											<Text style={styles.assignedBadge}>Asignado por operador</Text>
+										) : (
+											<Text style={styles.availableBadge}>Pendiente de asignacion operativa</Text>
+										)}
 									</View>
 								))}
 

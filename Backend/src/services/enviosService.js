@@ -4,6 +4,7 @@ import {
   findShipmentById,
   findUserById,
   findClientIdByUserId,
+  listShipmentsAssignedToDriverByUserId,
   listShipmentsForOperator,
   listShipmentsByClientId,
   updateClientProfileById,
@@ -39,6 +40,8 @@ function mapShipment(item) {
           estado_actual: item.estado_paquete,
         }
       : null,
+    asignado_al_conductor: Boolean(item.asignado_al_conductor),
+    id_asignacion_activa: item.id_asignacion_activa || null,
   };
 }
 
@@ -59,7 +62,24 @@ export async function getShipmentsByUser(userId) {
     throw error;
   }
 
-  if (user.rol === 'operador' || user.rol === 'admin' || user.rol === 'conductor') {
+  if (user.rol === 'conductor') {
+    const assignedShipments = await listShipmentsAssignedToDriverByUserId(parsedId);
+    const allShipments = await listShipmentsForOperator();
+
+    const assignedMap = new Map(
+      assignedShipments.map((item) => [item.id_envio, item.id_asignacion || null])
+    );
+
+    return allShipments.map((item) =>
+      mapShipment({
+        ...item,
+        asignado_al_conductor: assignedMap.has(item.id_envio),
+        id_asignacion_activa: assignedMap.get(item.id_envio) || null,
+      })
+    );
+  }
+
+  if (user.rol === 'operador' || user.rol === 'admin') {
     const shipments = await listShipmentsForOperator();
     return shipments.map(mapShipment);
   }

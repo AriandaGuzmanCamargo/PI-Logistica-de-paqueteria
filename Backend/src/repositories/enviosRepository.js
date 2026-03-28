@@ -106,6 +106,61 @@ export async function listShipmentsForOperator() {
   return result.rows;
 }
 
+async function hasAssignmentTables() {
+  const result = await pool.query(
+    `SELECT table_name
+     FROM information_schema.tables
+     WHERE table_schema = 'public'
+       AND table_name IN ('conductores', 'asignaciones_ruta', 'envio_ruta')`
+  );
+
+  const names = new Set(result.rows.map((row) => row.table_name));
+  return names.has('conductores') && names.has('asignaciones_ruta') && names.has('envio_ruta');
+}
+
+export async function listShipmentsAssignedToDriverByUserId(userId) {
+  const hasTables = await hasAssignmentTables();
+
+  if (!hasTables) {
+    return [];
+  }
+
+  const result = await pool.query(
+    `SELECT DISTINCT ON (e.id_envio)
+        ar.id_asignacion,
+        e.id_envio,
+        e.estado_envio,
+        e.direccion_origen,
+        e.direccion_destino,
+        e.ciudad_origen,
+        e.ciudad_destino,
+        e.fecha_creacion,
+        e.fecha_estimada_entrega,
+        e.fecha_entrega_real,
+        e.costo_total,
+        c_rem.nombre AS remitente_nombre,
+        c_des.nombre AS destinatario_nombre,
+        p.id_paquete,
+        p.codigo_rastreo,
+        p.estado_actual AS estado_paquete
+     FROM usuarios u
+     JOIN conductores c ON c.id_usuario = u.id_usuario
+     JOIN asignaciones_ruta ar ON ar.id_conductor = c.id_conductor
+     JOIN envio_ruta er ON er.id_asignacion = ar.id_asignacion
+     JOIN envios e ON e.id_envio = er.id_envio
+     JOIN clientes c_rem ON c_rem.id_cliente = e.id_cliente_remitente
+     JOIN clientes c_des ON c_des.id_cliente = e.id_cliente_destinatario
+     LEFT JOIN envio_paquete ep ON ep.id_envio = e.id_envio
+     LEFT JOIN paquetes p ON p.id_paquete = ep.id_paquete
+     WHERE u.id_usuario = $1
+       AND ar.estado_asignacion IN ('programada', 'en_proceso')
+     ORDER BY e.id_envio, e.fecha_creacion DESC`,
+    [userId]
+  );
+
+  return result.rows;
+}
+
 export async function findShipmentById(idEnvio) {
   const result = await pool.query(
     `SELECT

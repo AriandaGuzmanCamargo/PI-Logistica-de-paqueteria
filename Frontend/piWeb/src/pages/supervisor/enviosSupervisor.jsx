@@ -6,11 +6,20 @@ export default function EnviosSupervisor() {
     <>
       <style>{`
     /* ── Gestión de Envíos ── */
+    .genv-header-title {
+      margin: 24px 0 18px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
+      text-align: center;
+    }
     .genv-titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
-      margin: 24px 0 18px;
+      margin: 0;
     }
 
     /* Barra de búsqueda y filtros */
@@ -298,7 +307,9 @@ export default function EnviosSupervisor() {
       </header>
 
       {/* Contenido Gestión de Envíos */}
-      <h2 className="genv-titulo">Gestión de Envíos</h2>
+      <div className="genv-header-title">
+        <h2 className="genv-titulo">Gestión de Envíos</h2>
+      </div>
 
       {/* Barra búsqueda + filtros */}
       <div className="genv-barra">

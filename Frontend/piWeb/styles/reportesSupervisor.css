@@ -7,9 +7,9 @@
   max-width: 1260px;
   margin: 0 auto 16px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 12px;
 }
 .rep-header__titulo {
@@ -17,11 +17,15 @@
   font-size: 26px;
   font-weight: 700;
   color: #1a2d50;
+  text-align: center;
 }
 .rep-header__controles {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+  align-self: flex-end;
+  justify-content: flex-end;
 }
 .rep-header__fecha {
   background: #fff;

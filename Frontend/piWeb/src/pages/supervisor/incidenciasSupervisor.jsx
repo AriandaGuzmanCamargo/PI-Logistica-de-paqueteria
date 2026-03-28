@@ -8,22 +8,26 @@ export default function IncidenciasSupervisor() {
     /* ── Gestión de Incidencias ── */
     .ginc-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       margin: 24px 0 18px;
-      flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
     .ginc-titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .ginc-header__acciones {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+      align-self: flex-end;
+      justify-content: flex-end;
     }
     .ginc-header-btn {
       display: flex;

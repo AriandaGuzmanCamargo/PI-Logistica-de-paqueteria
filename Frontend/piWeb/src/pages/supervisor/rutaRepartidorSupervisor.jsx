@@ -107,15 +107,23 @@ export default function RutaRepartidorSupervisor() {
     /* ── Ruta del Repartidor ── */
     .ruta-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       margin: 20px 0 18px;
+      gap: 12px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
     }
     .ruta-header__titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .ruta-header__volver {
       display: inline-flex;

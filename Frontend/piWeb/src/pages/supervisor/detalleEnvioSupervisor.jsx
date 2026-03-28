@@ -8,15 +8,22 @@ export default function DetalleEnvioSupervisor() {
     /* ── Detalle del Envío ── */
     .det-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       margin: 20px 0 22px;
+      background: #ffffff;
+      border: 1px solid #d8dff8;
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
     }
     .det-header__titulo {
       font-size: 26px;
       font-weight: 700;
       color: #1a2d50;
       margin: 0;
+      text-align: center;
     }
     .det-header__guia {
       display: inline-block;

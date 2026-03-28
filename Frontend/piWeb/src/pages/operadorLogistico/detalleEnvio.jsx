@@ -67,10 +67,6 @@ export default function DetalleEnvio() {
 					</div>
 					<h1 className="barra-superior__titulo">Operador logístico</h1>
 				</div>
-				<div className="barra-superior__perfil">
-					<img src="/piWeb/images/usuario.png" alt="Operador" className="barra-superior__avatar" />
-					<span className="barra-superior__chevron">▾</span>
-				</div>
 			</header>
 
 			<section className="modulo-detalle">

@@ -41,8 +41,10 @@ export default function App() {
     <Routes>
       {/* Redirigir raíz al login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/piWeb" element={<Navigate to="/login" replace />} />
+      <Route path="/login.html" element={<Navigate to="/login" replace />} />
+      <Route path="/piWeb/login.html" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/piWeb/login" element={<Login />} />
 
       {/* Operador Logístico */}
       <Route path="/operador/dashboard" element={<DashboardOperador />} />

@@ -7,13 +7,75 @@ export default function Login() {
   const [contrasena, setContrasena] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [toast, setToast] = useState(null);
+
+  function showToast(type, text) {
+    setToast({ type, text });
+    window.setTimeout(() => {
+      setToast((current) => {
+        if (!current || current.text !== text) {
+          return current;
+        }
+
+        return null;
+      });
+    }, 2800);
+  }
+
+  function normalizeRole(value) {
+    return String(value || '')
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+  }
+
+  function getRouteByRole(rolValue) {
+    const rol = normalizeRole(rolValue);
+
+    if (rol === 'admin' || rol === 'administrador' || rol === 'supervisor') {
+      return '/supervisor/dashboard';
+    }
+
+    if (
+      rol === 'operador' ||
+      rol === 'operadorlogistico' ||
+      rol === 'logistico' ||
+      rol === 'usuario' ||
+      rol === 'cliente' ||
+      rol === 'conductor' ||
+      rol === 'repartidor' ||
+      rol === 'chofer'
+    ) {
+      return '/operador/dashboard';
+    }
+
+    return null;
+  }
+
+  function redirectByRole(rolValue) {
+    const target = getRouteByRole(rolValue);
+
+    if (!target) {
+      return false;
+    }
+
+    window.location.replace(target);
+    return true;
+  }
 
   const handleLogin = async () => {
-    setError('');
+    if (isLoading) {
+      return;
+    }
 
-    if (!correo || !contrasena) {
-      setError('Completa correo y contrasena.');
+    setToast(null);
+
+    const correoLimpio = correo.trim().toLowerCase();
+
+    if (!correoLimpio || !contrasena) {
+      showToast('error', 'Completa correo y contrasena.');
       return;
     }
 
@@ -24,33 +86,39 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ correo, contrasena }),
+        body: JSON.stringify({ correo: correoLimpio, contrasena }),
       });
 
-      const data = await response.json();
+      let data = null;
 
-      if (!response.ok || !data.ok) {
-        setError(data.message || 'No se pudo iniciar sesion.');
+      try {
+        data = await response.json();
+      } catch (_jsonError) {
+        data = null;
+      }
+
+      if (!response.ok || !data?.ok) {
+        const backendMessage = String(data?.message || '').trim();
+        const isInvalidCredentials = response.status === 401 || /credenciales invalidas/i.test(backendMessage);
+
+        if (isInvalidCredentials) {
+          showToast('error', 'Credenciales invalidas. Verifica tu correo y contrasena.');
+          return;
+        }
+
+        showToast('error', backendMessage || 'No se pudo iniciar sesion.');
         return;
       }
 
       localStorage.setItem('piWebUser', JSON.stringify(data.usuario));
 
-      const rol = String(data.usuario?.rol || '').toLowerCase();
-
-      if (rol === 'admin' || rol === 'supervisor') {
-        navigate('/supervisor/dashboard');
+      if (redirectByRole(data.usuario?.rol)) {
         return;
       }
 
-      if (rol === 'operador' || rol === 'usuario' || rol === 'cliente' || rol === 'conductor') {
-        navigate('/operador/dashboard');
-        return;
-      }
-
-      setError('Rol sin pantalla asignada en web.');
+      showToast('error', 'Rol sin pantalla asignada en web.');
     } catch (_error) {
-      setError('No se pudo conectar con el servidor.');
+      showToast('error', 'No se pudo conectar con el servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -77,6 +145,22 @@ export default function Login() {
 
         <section className="contenedor-inicio__derecha">
           <div className="tarjeta-formulario">
+            {toast ? (
+              <div
+                style={{
+                  marginBottom: '12px',
+                  borderRadius: '8px',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  color: toast.type === 'error' ? '#b4232f' : '#1d7a43',
+                  background: toast.type === 'error' ? '#fff0f2' : '#ecfff1',
+                  border: toast.type === 'error' ? '1px solid #f7c6cf' : '1px solid #bdeccc',
+                }}
+              >
+                {toast.text}
+              </div>
+            ) : null}
             <h2>Iniciar Sesión</h2>
             <p className="tarjeta-formulario__subtitulo">Bienvenido. Por favor inicie sesión para continuar.</p>
 
@@ -89,6 +173,11 @@ export default function Login() {
                 placeholder="Correo electronico"
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleLogin();
+                  }
+                }}
               />
             </div>
 
@@ -102,6 +191,11 @@ export default function Login() {
                 className="input-contrasena"
                 value={contrasena}
                 onChange={(e) => setContrasena(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleLogin();
+                  }
+                }}
               />
               <button
                 className="grupo-campo__ojo"
@@ -123,8 +217,6 @@ export default function Login() {
                 />
               </button>
             </div>
-
-            {error ? <p style={{ color: '#b71c1c', marginBottom: '12px' }}>{error}</p> : null}
 
             <button className="boton boton--primario" onClick={handleLogin} disabled={isLoading}>
               {isLoading ? 'Validando...' : 'Iniciar Sesion'}

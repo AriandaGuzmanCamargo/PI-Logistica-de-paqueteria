@@ -46,6 +46,18 @@ function inPeriod(value, periodo) {
   return date >= start && date <= end;
 }
 
+function isToday(value) {
+  const date = normalizeDate(value);
+  if (!date) return false;
+
+  const now = new Date();
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  );
+}
+
 function formatPeriodoLabel(periodo) {
   if (periodo === 'hoy') return 'Hoy';
   if (periodo === '7d') return '7 dias';
@@ -88,10 +100,13 @@ export default function DashboardSupervisor() {
 
   useEffect(() => {
     let isMounted = true;
+    let hasLoadedOnce = false;
 
     async function loadDashboard() {
       try {
-        setLoading(true);
+        if (!hasLoadedOnce) {
+          setLoading(true);
+        }
         setError('');
 
         const [enviosData, incidenciasData] = await Promise.all([
@@ -122,13 +137,19 @@ export default function DashboardSupervisor() {
         if (isMounted) {
           setLoading(false);
         }
+        hasLoadedOnce = true;
       }
     }
 
     loadDashboard();
 
+    const intervalId = window.setInterval(loadDashboard, 20000);
+    window.addEventListener('focus', loadDashboard);
+
     return () => {
       isMounted = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', loadDashboard);
     };
   }, []);
 
@@ -148,17 +169,44 @@ export default function DashboardSupervisor() {
     return incidencias.filter((item) => inPeriod(item.fecha_reporte, periodo));
   }, [incidencias, periodo]);
 
-  const resumen = useMemo(() => {
+  const resumenOperativo = useMemo(() => {
+    const pendientes = envios.filter((e) => String(e.estado_envio || '').toLowerCase() === 'pendiente').length;
+    const enRuta = envios.filter((e) => String(e.estado_envio || '').toLowerCase() === 'en_ruta').length;
+    const retrasados = envios.filter((e) => String(e.estado_envio || '').toLowerCase() === 'retrasado').length;
+    const entregasHoy = envios.filter(
+      (e) => String(e.estado_envio || '').toLowerCase() === 'entregado' && isToday(e.fecha_entrega_real)
+    ).length;
+    const incidenciasActivas = incidencias.filter((i) => {
+      const estado = String(i.estado || '').toLowerCase();
+      return estado === 'abierta' || estado === 'en_proceso';
+    }).length;
+
+    return {
+      pendientes,
+      enRuta,
+      retrasados,
+      entregasHoy,
+      incidenciasActivas,
+    };
+  }, [envios, incidencias]);
+
+  const cumplimientoHoy = useMemo(() => {
+    const programadasHoy = envios.filter((e) => isToday(e.fecha_estimada_entrega)).length;
+
+    if (programadasHoy <= 0) {
+      return 0;
+    }
+
+    return Math.min(100, Math.round((resumenOperativo.entregasHoy * 100) / programadasHoy));
+  }, [envios, resumenOperativo.entregasHoy]);
+
+  const resumenPeriodo = useMemo(() => {
     const total = enviosPorPeriodo.length;
-    const pendientes = enviosPorPeriodo.filter((e) => String(e.estado_envio || '').toLowerCase() === 'pendiente').length;
-    const enRuta = enviosPorPeriodo.filter((e) => String(e.estado_envio || '').toLowerCase() === 'en_ruta').length;
     const retrasados = enviosPorPeriodo.filter((e) => String(e.estado_envio || '').toLowerCase() === 'retrasado').length;
     const entregados = enviosPorPeriodo.filter((e) => String(e.estado_envio || '').toLowerCase() === 'entregado').length;
 
     return {
       total,
-      pendientes,
-      enRuta,
       retrasados,
       entregados,
       incidencias: incidenciasPorPeriodo.length,
@@ -247,12 +295,12 @@ export default function DashboardSupervisor() {
           <p><strong>Generado:</strong> ${escapeHtml(fecha)}</p>
 
           <div class="resumen">
-            <div class="item"><strong>Total:</strong> ${resumen.total}</div>
-            <div class="item"><strong>Entregados:</strong> ${resumen.entregados}</div>
-            <div class="item"><strong>Pendientes:</strong> ${resumen.pendientes}</div>
-            <div class="item"><strong>En ruta:</strong> ${resumen.enRuta}</div>
-            <div class="item"><strong>Retrasados:</strong> ${resumen.retrasados}</div>
-            <div class="item"><strong>Incidencias:</strong> ${resumen.incidencias}</div>
+            <div class="item"><strong>Total:</strong> ${resumenPeriodo.total}</div>
+            <div class="item"><strong>Entregados:</strong> ${resumenPeriodo.entregados}</div>
+            <div class="item"><strong>Pendientes:</strong> ${resumenOperativo.pendientes}</div>
+            <div class="item"><strong>En ruta:</strong> ${resumenOperativo.enRuta}</div>
+            <div class="item"><strong>Retrasados:</strong> ${resumenPeriodo.retrasados}</div>
+            <div class="item"><strong>Incidencias:</strong> ${resumenPeriodo.incidencias}</div>
           </div>
 
           <table>
@@ -316,7 +364,7 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/supervisor/entregas.png" alt="Entregas" className="tarjeta-sv__icono-img" />
           </span>
           <div>
-            <p className="tarjeta-sv__numero">{loading ? '...' : resumen.total}</p>
+            <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.entregasHoy}</p>
             <p className="tarjeta-sv__label">Entregas hoy</p>
           </div>
         </article>
@@ -325,7 +373,7 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/supervisor/pendiente.png" alt="Pendientes" className="tarjeta-sv__icono-img" />
           </span>
           <div>
-            <p className="tarjeta-sv__numero">{loading ? '...' : resumen.pendientes}</p>
+            <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.pendientes}</p>
             <p className="tarjeta-sv__label">Pendientes</p>
           </div>
         </article>
@@ -334,7 +382,7 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/supervisor/retrasadas.png" alt="Retrasadas" className="tarjeta-sv__icono-img" />
           </span>
           <div>
-            <p className="tarjeta-sv__numero">{loading ? '...' : resumen.retrasados}</p>
+            <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.retrasados}</p>
             <p className="tarjeta-sv__label">Retrasadas</p>
           </div>
         </article>
@@ -343,8 +391,8 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/supervisor/incidencias.png" alt="Incidencias" className="tarjeta-sv__icono-img" />
           </span>
           <div>
-            <p className="tarjeta-sv__numero">{loading ? '...' : resumen.incidencias}</p>
-            <p className="tarjeta-sv__label">Incidencias</p>
+            <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.incidenciasActivas}</p>
+            <p className="tarjeta-sv__label">Incidencias activas</p>
           </div>
         </article>
         <article className="tarjeta-sv tarjeta-sv--morado">
@@ -352,7 +400,7 @@ export default function DashboardSupervisor() {
             <img src="/piWeb/images/supervisor/repartidores.png" alt="Repartidores" className="tarjeta-sv__icono-img" />
           </span>
           <div>
-            <p className="tarjeta-sv__numero">{loading ? '...' : resumen.enRuta}</p>
+            <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.enRuta}</p>
             <p className="tarjeta-sv__label">En ruta</p>
           </div>
         </article>
@@ -480,25 +528,21 @@ export default function DashboardSupervisor() {
 
           <div className="stats-sv__card">
             <p className="stats-sv__label">Entregas completadas hoy</p>
-            <p className="stats-sv__valor">{loading ? '...' : resumen.entregados}</p>
-          </div>
-          <div className="stats-sv__card">
-            <p className="stats-sv__label">Tiempo promedio</p>
-            <p className="stats-sv__valor">N/D</p>
+            <p className="stats-sv__valor">{loading ? '...' : resumenOperativo.entregasHoy}</p>
           </div>
           <div className="stats-sv__card">
             <p className="stats-sv__label">Cumplimiento</p>
             <p className="stats-sv__valor">
-              {loading || resumen.total === 0
+              {loading
                 ? '...'
-                : `${Math.round((resumen.entregados * 100) / resumen.total)}%`}
+                : `${cumplimientoHoy}%`}
             </p>
           </div>
 
           <div className="stats-sv__card stats-sv__card--resumen">
             <p className="stats-sv__label">Entregas completadas hoy</p>
-            <p className="stats-sv__valor">{loading ? '...' : resumen.entregados}</p>
-            <p className="stats-sv__cumpl">{resumen.retrasados > 0 ? 'Revisar retrasos' : 'Cumplimiento OK'}</p>
+            <p className="stats-sv__valor">{loading ? '...' : resumenOperativo.entregasHoy}</p>
+            <p className="stats-sv__cumpl">{resumenOperativo.retrasados > 0 ? 'Revisar retrasos' : 'Cumplimiento OK'}</p>
             <a href="/supervisor/reportes" className="stats-sv__reporte-btn">Ver reporte completo</a>
           </div>
         </aside>

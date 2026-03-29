@@ -100,10 +100,13 @@ export default function ResportesSupervisor() {
 
   useEffect(() => {
     let mounted = true;
+    let hasLoadedOnce = false;
 
     async function loadData() {
       try {
-        setLoading(true);
+        if (!hasLoadedOnce) {
+          setLoading(true);
+        }
         setError('');
 
         const [enviosData, incidenciasData, conductoresData] = await Promise.all([
@@ -124,13 +127,19 @@ export default function ResportesSupervisor() {
         setConductores([]);
       } finally {
         if (mounted) setLoading(false);
+        hasLoadedOnce = true;
       }
     }
 
     loadData();
 
+    const intervalId = window.setInterval(loadData, 20000);
+    window.addEventListener('focus', loadData);
+
     return () => {
       mounted = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', loadData);
     };
   }, []);
 
@@ -138,10 +147,7 @@ export default function ResportesSupervisor() {
 
   const enviosFiltrados = useMemo(() => {
     return envios.filter((item) => {
-      return isWithinRange(
-        item.fecha_entrega_real || item.fecha_estimada_entrega || item.fecha_creacion,
-        rangoActual
-      );
+      return isWithinRange(item.fecha_creacion, rangoActual);
     });
   }, [envios, rangoActual]);
 
@@ -214,13 +220,21 @@ export default function ResportesSupervisor() {
   }, [enviosFiltrados]);
 
   const rendimientoConductores = useMemo(() => {
-    const sorted = [...conductores].sort((a, b) => Number(b.total_envios || 0) - Number(a.total_envios || 0));
-    const max = Math.max(1, ...sorted.map((item) => Number(item.total_envios || 0)));
+    const base = conductores.map((item) => {
+      const activos = Number(item.en_ruta || 0) + Number(item.pendientes || 0);
+      return {
+        ...item,
+        activos,
+      };
+    });
+
+    const sorted = [...base].sort((a, b) => Number(b.activos || 0) - Number(a.activos || 0));
+    const max = Math.max(1, ...sorted.map((item) => Number(item.activos || 0)));
 
     return sorted.map((item) => ({
       ...item,
-      total_envios: Number(item.total_envios || 0),
-      fillPct: Math.round((Number(item.total_envios || 0) * 100) / max),
+      activos: Number(item.activos || 0),
+      fillPct: Math.round((Number(item.activos || 0) * 100) / max),
     }));
   }, [conductores]);
 
@@ -272,7 +286,7 @@ export default function ResportesSupervisor() {
         (item) => `
           <tr>
             <td>${escapeHtml(item.id_incidencia)}</td>
-            <td>${escapeHtml(item.codigo_rastreo || `ENV-${item.id_envio}`)}</td>
+            <td>${escapeHtml(item.paquete?.codigo_rastreo || `ENV-${item.envio?.id_envio || item.id_incidencia}`)}</td>
             <td>${escapeHtml(item.tipo_incidencia || 'General')}</td>
             <td>${escapeHtml(item.reportado_por?.nombre || 'Sin nombre')}</td>
             <td>${escapeHtml(item.estado || 'abierta')}</td>
@@ -531,7 +545,7 @@ export default function ResportesSupervisor() {
                     <tr key={item.id_conductor}>
                       <td>{item.nombre}</td>
                       <td>
-                        <span className="rep-rend__num">{item.total_envios}</span>
+                        <span className="rep-rend__num">{item.activos}</span>
                         <div className="rep-rend__bar"><div className="rep-rend__fill" style={{ width: `${item.fillPct}%`, background: item.fillPct > 50 ? '#4caf50' : '#f2c44e' }}></div></div>
                       </td>
                       <td>{item.asignacion_activa?.ruta_nombre || 'Sin ruta'}</td>
@@ -621,7 +635,7 @@ export default function ResportesSupervisor() {
                   incidenciasRecientes.map((item) => (
                     <tr key={item.id_incidencia}>
                       <td>{item.id_incidencia}</td>
-                      <td>{item.codigo_rastreo || `ENV-${item.id_envio}`}</td>
+                      <td>{item.paquete?.codigo_rastreo || `ENV-${item.envio?.id_envio || item.id_incidencia}`}</td>
                       <td><strong>{item.tipo_incidencia || 'General'}</strong></td>
                       <td>{item.reportado_por?.nombre || 'Sin nombre'}</td>
                       <td>{formatDateTime(item.fecha_reporte)}</td>

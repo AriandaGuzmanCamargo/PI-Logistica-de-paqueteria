@@ -44,7 +44,7 @@ export default function MenuOperador() {
       <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
     </div>
     <h2 className="menu-hamburguesa__marca">METZVIA</h2>
-    <button className="menu-hamburguesa__cerrar" aria-label="Cerrar menu">&times;</button>
+    <button className="menu-hamburguesa__cerrar" aria-label="Cerrar menú">&times;</button>
   </div>
   <div className="menu-hamburguesa__links">
     <a href="/operador/dashboard" className="menu-hamburguesa__item">
@@ -53,7 +53,7 @@ export default function MenuOperador() {
     </a>
     <a href="/operador/envios" className="menu-hamburguesa__item">
       <img src="/piWeb/images/envio.png" alt="" className="menu-hamburguesa__icono-img" />
-      Envios
+      Envíos
     </a>
     <a href="/operador/registrar-paquete" className="menu-hamburguesa__item">
       <img src="/piWeb/images/registrar.png" alt="" className="menu-hamburguesa__icono-img" />

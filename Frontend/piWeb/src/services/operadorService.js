@@ -14,14 +14,14 @@ export async function getEnviosOperador() {
   const user = getWebUser();
 
   if (!user?.id_usuario) {
-    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
   }
 
   const response = await fetch(`/api/envios/usuario/${user.id_usuario}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
-    throw new Error(payload.message || 'No se pudieron cargar los envios.');
+    throw new Error(payload.message || 'No se pudieron cargar los envíos.');
   }
 
   return payload.data || [];
@@ -32,7 +32,7 @@ export async function getDetalleEnvio(idEnvio) {
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
-    throw new Error(payload.message || 'No se pudo cargar el detalle del envio.');
+    throw new Error(payload.message || 'No se pudo cargar el detalle del envío.');
   }
 
   return payload.data;
@@ -50,7 +50,7 @@ export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
-    throw new Error(payload.message || 'No se pudo autoasignar el envio.');
+    throw new Error(payload.message || 'No se pudo autoasignar el envío.');
   }
 
   return payload.data;
@@ -60,7 +60,7 @@ export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsig
   const user = getWebUser();
 
   if (!user?.id_usuario) {
-    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
   }
 
   const response = await fetch(`/api/asignaciones/manual/${idEnvio}`, {
@@ -78,7 +78,7 @@ export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsig
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
-    throw new Error(payload.message || 'No se pudo asignar el envio al conductor seleccionado.');
+    throw new Error(payload.message || 'No se pudo asignar el envío al conductor seleccionado.');
   }
 
   return payload.data;
@@ -88,7 +88,7 @@ export async function getIncidenciasOperador() {
   const user = getWebUser();
 
   if (!user?.id_usuario) {
-    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
   }
 
   const response = await fetch(`/api/incidencias/usuario/${user.id_usuario}`);
@@ -105,7 +105,7 @@ export async function createEnvioWeb(payload) {
   const user = getWebUser();
 
   if (!user?.id_usuario) {
-    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
   }
 
   const response = await fetch('/api/envios', {
@@ -150,7 +150,7 @@ export function estadoEnvioTexto(estado) {
   const map = {
     pendiente: 'Pendiente',
     en_ruta: 'En ruta',
-    en_transito: 'En transito',
+    en_transito: 'En tránsito',
     entregado: 'Entregado',
     retrasado: 'Retrasado',
     cancelado: 'Cancelado',

@@ -349,7 +349,11 @@ export default function GestRepartidorSupervisor() {
                 return (
                   <div className="grep-card" key={conductor.id_conductor}>
                     <div className="grep-card__top">
-                      <img src="/piWeb/images/usuario.png" alt={conductor.nombre} className="grep-card__foto" />
+                      <img
+                        src={conductor.foto_perfil_url || '/piWeb/images/usuario.png'}
+                        alt={conductor.nombre}
+                        className="grep-card__foto"
+                      />
                       <div className="grep-card__info">
                         <p className="grep-card__nombre">{conductor.nombre}</p>
                         <p className="grep-card__zona">{zona}</p>

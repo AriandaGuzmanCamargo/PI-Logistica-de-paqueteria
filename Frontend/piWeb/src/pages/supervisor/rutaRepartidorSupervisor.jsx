@@ -81,7 +81,14 @@ export default function RutaRepartidorSupervisor() {
         {!loading && detalle ? (
           <section className="modulo-detalle">
             <article className="tarjeta-detalle" style={{ marginBottom: '14px' }}>
-              <h3>{conductor?.nombre || 'Conductor'}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                <img
+                  src={conductor?.foto_perfil_url || '/piWeb/images/usuario.png'}
+                  alt={conductor?.nombre || 'Conductor'}
+                  style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #cbd8f0' }}
+                />
+                <h3 style={{ margin: 0 }}>{conductor?.nombre || 'Conductor'}</h3>
+              </div>
               <div className="info-lista info-lista--dos-columnas">
                 <p><span>Correo:</span> {conductor?.correo || '-'}</p>
                 <p><span>Telefono:</span> {conductor?.telefono || '-'}</p>

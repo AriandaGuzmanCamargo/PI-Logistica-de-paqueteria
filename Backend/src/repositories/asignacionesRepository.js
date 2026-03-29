@@ -9,6 +9,13 @@ const REQUIRED_TABLES = [
   'envios',
 ];
 
+async function ensureUserPhotoColumn() {
+  await pool.query(
+    `ALTER TABLE usuarios
+     ADD COLUMN IF NOT EXISTS foto_perfil_url TEXT`
+  );
+}
+
 export async function hasAssignmentInfrastructure() {
   const result = await pool.query(
     `SELECT table_name
@@ -239,6 +246,8 @@ export async function findAvailableDriverById(idConductor, fechaAsignacion) {
 }
 
 export async function listDriversSummary() {
+  await ensureUserPhotoColumn();
+
   const result = await pool.query(
     `SELECT
         c.id_conductor,
@@ -246,6 +255,7 @@ export async function listDriversSummary() {
         u.nombre,
         u.apellido,
         u.correo,
+        u.foto_perfil_url,
         u.estado AS estado_usuario,
         c.estado AS estado_conductor,
         active_assignment.id_asignacion,
@@ -286,6 +296,8 @@ export async function listDriversSummary() {
 }
 
 export async function findDriverByConductorId(idConductor) {
+  await ensureUserPhotoColumn();
+
   const result = await pool.query(
     `SELECT
         c.id_conductor,
@@ -295,6 +307,7 @@ export async function findDriverByConductorId(idConductor) {
         u.apellido,
         u.correo,
         u.telefono,
+        u.foto_perfil_url,
         u.estado AS estado_usuario
      FROM conductores c
      JOIN usuarios u ON u.id_usuario = c.id_usuario

@@ -105,7 +105,14 @@ export default function EntregasRepartidorSupervisor() {
         {!loading && detalle ? (
           <section className="modulo-incidencias">
             <div className="incidencias-resumen">
-              <div className="incidencias-resumen__item"><strong>Repartidor:</strong> {conductor?.nombre || '-'}</div>
+              <div className="incidencias-resumen__item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <img
+                  src={conductor?.foto_perfil_url || '/piWeb/images/usuario.png'}
+                  alt={conductor?.nombre || 'Repartidor'}
+                  style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #cbd8f0' }}
+                />
+                <span><strong>Repartidor:</strong> {conductor?.nombre || '-'}</span>
+              </div>
               <div className="incidencias-resumen__item"><strong>Total:</strong> {resumen?.total_envios ?? 0}</div>
               <div className="incidencias-resumen__item"><strong>En ruta:</strong> {resumen?.en_ruta ?? 0}</div>
               <div className="incidencias-resumen__item"><strong>Entregados:</strong> {resumen?.entregados ?? 0}</div>

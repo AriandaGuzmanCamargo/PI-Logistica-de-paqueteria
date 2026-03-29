@@ -321,6 +321,7 @@ export async function getDriversSummary({ idUsuario }) {
       id_usuario: row.id_usuario,
       nombre: `${row.nombre} ${row.apellido}`.trim(),
       correo: row.correo,
+      foto_perfil_url: row.foto_perfil_url || null,
       estado: status,
       total_envios: Number(row.total_envios || 0),
       asignacion_activa: row.id_asignacion
@@ -399,6 +400,7 @@ export async function getDriverDetailForSupervisor({ idUsuario, idConductor }) {
       nombre: `${driver.nombre} ${driver.apellido}`.trim(),
       correo: driver.correo,
       telefono: driver.telefono,
+      foto_perfil_url: driver.foto_perfil_url || null,
       estado: status,
     },
     resumen: {

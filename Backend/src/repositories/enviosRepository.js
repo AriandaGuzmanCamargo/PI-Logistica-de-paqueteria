@@ -196,6 +196,7 @@ export async function findShipmentById(idEnvio) {
         p.estado_actual AS estado_paquete,
         asignacion.id_asignacion,
         asignacion.estado_asignacion,
+        asignacion.fecha_salida AS fecha_salida_asignacion,
         asignacion.id_conductor AS id_conductor_asignado,
         asignacion.conductor_nombre,
         asignacion.conductor_correo
@@ -208,6 +209,7 @@ export async function findShipmentById(idEnvio) {
        SELECT
          ar.id_asignacion,
          ar.estado_asignacion,
+         ar.fecha_salida,
          c.id_conductor,
          CONCAT(u.nombre, ' ', u.apellido) AS conductor_nombre,
          u.correo AS conductor_correo

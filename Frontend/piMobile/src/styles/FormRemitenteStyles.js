@@ -29,6 +29,12 @@ const styles = StyleSheet.create({
     color: colors.text,
     minHeight: 44,
   },
+  helperText: {
+    color: '#6A5A2C',
+    fontSize: 12,
+    marginTop: -2,
+    marginBottom: 2,
+  },
   btn: {
     backgroundColor: colors.primary,
     borderRadius: 10,

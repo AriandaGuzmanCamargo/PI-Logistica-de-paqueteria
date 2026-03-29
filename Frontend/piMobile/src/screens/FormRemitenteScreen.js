@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import MainLayout from '../components/MainLayout';
 import styles from '../styles/FormRemitenteStyles';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import {
+  buildPersonPayload,
+  sanitizeIdentity,
+  sanitizePhone,
+  sanitizeText,
+} from '../utils/shipmentFormValidation';
 
 export default function FormRemitenteScreen({ navigation, route }) {
   const formData = route?.params?.formData || {};
@@ -17,36 +21,33 @@ export default function FormRemitenteScreen({ navigation, route }) {
   const [ciudad, setCiudad] = useState(remitenteData.ciudad || '');
 
   const goNext = () => {
-    const sanitized = {
-      nombre: nombre.trim(),
-      documento: documento.trim(),
-      telefono: telefono.trim(),
-      correo: correo.trim().toLowerCase(),
-      direccion: direccion.trim(),
-      ciudad: ciudad.trim(),
-    };
+    try {
+      const sanitized = buildPersonPayload(
+        {
+          nombre,
+          documento,
+          telefono,
+          correo,
+          direccion,
+          ciudad,
+        },
+        {
+          nameLabel: 'Nombre del remitente',
+          identityLabel: 'CURP o ID alterno del remitente',
+          addressLabel: 'Direccion de recogida',
+          cityLabel: 'Ciudad de origen',
+        }
+      );
 
-    if (!sanitized.nombre || !sanitized.documento || !sanitized.telefono || !sanitized.correo || !sanitized.direccion || !sanitized.ciudad) {
-      Alert.alert('Campos obligatorios', 'Completa todos los campos del remitente.');
-      return;
+      navigation.navigate('FormDestinatario', {
+        formData: {
+          ...formData,
+          remitente: sanitized,
+        },
+      });
+    } catch (error) {
+      Alert.alert('Datos invalidos', error.message || 'Revisa los datos capturados.');
     }
-
-    if (!/^\d{8,15}$/.test(sanitized.telefono)) {
-      Alert.alert('Teléfono inválido', 'Ingresa solo dígitos (8 a 15).');
-      return;
-    }
-
-    if (!EMAIL_REGEX.test(sanitized.correo)) {
-      Alert.alert('Correo inválido', 'Ingresa un correo electrónico válido.');
-      return;
-    }
-
-    navigation.navigate('FormDestinatario', {
-      formData: {
-        ...formData,
-        remitente: sanitized,
-      },
-    });
   };
 
   return (
@@ -55,11 +56,12 @@ export default function FormRemitenteScreen({ navigation, route }) {
 
       <View style={styles.card}>
         <TextInput style={styles.input} placeholder="Nombre completo" placeholderTextColor="#9AA4BF" value={nombre} onChangeText={setNombre} />
-        <TextInput style={styles.input} placeholder="Documento de identidad" placeholderTextColor="#9AA4BF" value={documento} onChangeText={setDocumento} />
-        <TextInput style={styles.input} placeholder="Teléfono" placeholderTextColor="#9AA4BF" value={telefono} onChangeText={setTelefono} keyboardType="numeric" />
+        <TextInput style={styles.input} placeholder="CURP o ID alterno (INE/PASAPORTE)" placeholderTextColor="#9AA4BF" value={documento} onChangeText={(value) => setDocumento(sanitizeIdentity(value))} autoCapitalize="characters" maxLength={25} />
+        <TextInput style={styles.input} placeholder="Telefono (10 digitos)" placeholderTextColor="#9AA4BF" value={telefono} onChangeText={(value) => setTelefono(sanitizePhone(value))} keyboardType="numeric" maxLength={10} />
         <TextInput style={styles.input} placeholder="Correo electrónico" placeholderTextColor="#9AA4BF" value={correo} onChangeText={setCorreo} autoCapitalize="none" keyboardType="email-address" />
-        <TextInput style={styles.input} placeholder="Dirección de recogida" placeholderTextColor="#9AA4BF" multiline value={direccion} onChangeText={setDireccion} />
-        <TextInput style={styles.input} placeholder="Ciudad de origen" placeholderTextColor="#9AA4BF" value={ciudad} onChangeText={setCiudad} />
+        <TextInput style={styles.input} placeholder="Direccion de recogida" placeholderTextColor="#9AA4BF" multiline value={direccion} onChangeText={setDireccion} />
+        <Text style={styles.helperText}>Formato requerido: Calle y numero, Colonia, CP 12345</Text>
+        <TextInput style={styles.input} placeholder="Ciudad de origen" placeholderTextColor="#9AA4BF" value={ciudad} onChangeText={(value) => setCiudad(sanitizeText(value))} />
       </View>
 
       <TouchableOpacity style={styles.btn} onPress={goNext}>

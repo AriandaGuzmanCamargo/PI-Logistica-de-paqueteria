@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import MainLayout from '../components/MainLayout';
 import styles from '../styles/FormPaqueteStyles';
-
-const SERVICE_TYPES = ['normal', 'express', 'economico'];
+import { sanitizeText, validatePackagePayload } from '../utils/shipmentFormValidation';
 
 export default function FormPaqueteScreen({ navigation, route }) {
   const formData = route?.params?.formData || {};
@@ -23,49 +22,27 @@ export default function FormPaqueteScreen({ navigation, route }) {
   };
 
   const goNext = () => {
-    const sanitized = {
-      tipoPaquete: tipoPaquete.trim(),
-      contenido: contenido.trim(),
-      peso: peso.trim(),
-      largo: largo.trim(),
-      ancho: ancho.trim(),
-      alto: alto.trim(),
-      valorDeclarado: valorDeclarado.trim(),
-      tipoServicio: tipoServicio.trim().toLowerCase(),
-    };
+    try {
+      const sanitized = validatePackagePayload({
+        tipoPaquete,
+        contenido,
+        peso,
+        largo,
+        ancho,
+        alto,
+        valorDeclarado,
+        tipoServicio,
+      });
 
-    if (!sanitized.tipoPaquete || !sanitized.contenido || !sanitized.peso || !sanitized.largo || !sanitized.ancho || !sanitized.alto || !sanitized.valorDeclarado || !sanitized.tipoServicio) {
-      Alert.alert('Campos obligatorios', 'Completa todos los campos del paquete.');
-      return;
+      navigation.navigate('FormResumenEnvio', {
+        formData: {
+          ...formData,
+          paquete: sanitized,
+        },
+      });
+    } catch (error) {
+      Alert.alert('Datos invalidos', error.message || 'Revisa los datos del paquete.');
     }
-
-    const numericFields = [
-      { key: 'peso', label: 'Peso' },
-      { key: 'largo', label: 'Largo' },
-      { key: 'ancho', label: 'Ancho' },
-      { key: 'alto', label: 'Alto' },
-      { key: 'valorDeclarado', label: 'Valor declarado' },
-    ];
-
-    for (const field of numericFields) {
-      const parsed = Number(sanitized[field.key]);
-      if (!Number.isFinite(parsed) || parsed <= 0) {
-        Alert.alert('Valor inválido', `${field.label} debe ser un número mayor a 0.`);
-        return;
-      }
-    }
-
-    if (!SERVICE_TYPES.includes(sanitized.tipoServicio)) {
-      Alert.alert('Tipo de servicio inválido', 'Usa: normal, express o económico.');
-      return;
-    }
-
-    navigation.navigate('FormResumenEnvio', {
-      formData: {
-        ...formData,
-        paquete: sanitized,
-      },
-    });
   };
 
   return (
@@ -73,14 +50,15 @@ export default function FormPaqueteScreen({ navigation, route }) {
       <Text style={styles.step}>Paso 3 de 4 - Información del paquete</Text>
 
       <View style={styles.card}>
-        <TextInput style={styles.input} placeholder="Tipo de paquete" placeholderTextColor="#9AA4BF" value={tipoPaquete} onChangeText={setTipoPaquete} />
-        <TextInput style={styles.input} placeholder="Contenido" placeholderTextColor="#9AA4BF" value={contenido} onChangeText={setContenido} />
+        <TextInput style={styles.input} placeholder="Tipo de paquete" placeholderTextColor="#9AA4BF" value={tipoPaquete} onChangeText={(value) => setTipoPaquete(sanitizeText(value))} />
+        <TextInput style={styles.input} placeholder="Contenido" placeholderTextColor="#9AA4BF" value={contenido} onChangeText={(value) => setContenido(sanitizeText(value))} />
         <TextInput style={styles.input} placeholder="Peso (kg)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={peso} onChangeText={setPeso} />
         <TextInput style={styles.input} placeholder="Largo (cm)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={largo} onChangeText={setLargo} />
         <TextInput style={styles.input} placeholder="Ancho (cm)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={ancho} onChangeText={setAncho} />
         <TextInput style={styles.input} placeholder="Alto (cm)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={alto} onChangeText={setAlto} />
         <TextInput style={styles.input} placeholder="Valor declarado" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={valorDeclarado} onChangeText={setValorDeclarado} />
-        <TextInput style={styles.input} placeholder="Tipo servicio (normal, express, económico)" placeholderTextColor="#9AA4BF" value={tipoServicio} onChangeText={setTipoServicio} autoCapitalize="none" />
+        <TextInput style={styles.input} placeholder="Tipo servicio (normal, express, economico)" placeholderTextColor="#9AA4BF" value={tipoServicio} onChangeText={setTipoServicio} autoCapitalize="none" />
+        <Text style={styles.helperText}>Servicio permitido: normal, express o economico</Text>
       </View>
 
       <View style={styles.actions}>

@@ -20,45 +20,6 @@ import { getEnviosByUsuario } from '../../services/enviosService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-const deliveries = [
-	{
-		id: 'PAK927365789',
-		name: 'Ana Martinez',
-		address: 'Londres 247, Col. Juarez, Ciudad de Mexico',
-		phone: '+52 55 1234 5678',
-		done: false,
-		hasIncident: false,
-		pinBlue: false,
-	},
-	{
-		id: 'PAK927365790',
-		name: 'Carlos Rivas',
-		address: 'Av. Universidad 1200, Coyoacan, Ciudad de Mexico',
-		phone: '+52 55 9876 5432',
-		done: false,
-		hasIncident: true,
-		pinBlue: false,
-	},
-	{
-		id: 'PAK967654035',
-		name: 'Laura Gomez',
-		address: 'Av. Revolucion 996, Del Valle, Ciudad de Mexico',
-		phone: '+52 55 4433 2211',
-		done: true,
-		hasIncident: false,
-		pinBlue: true,
-	},
-	{
-		id: 'PAK9676554035',
-		name: 'Monica Ruiz',
-		address: 'Calz. de Tlalpan 1480, Portales, Ciudad de Mexico',
-		phone: '+52 55 2211 8899',
-		done: false,
-		hasIncident: false,
-		pinBlue: true,
-	},
-];
-
 function toDeliveryItem(envio, index) {
 	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
 	const nombre = envio?.destinatario?.nombre || 'Destinatario';
@@ -125,9 +86,12 @@ export default function EntregasR({ navigation, route }) {
 
 	useEffect(() => {
 		let isCancelled = false;
+		let hasLoadedOnce = false;
 
 		async function loadDeliveries() {
-			setIsLoadingDeliveries(true);
+			if (!hasLoadedOnce) {
+				setIsLoadingDeliveries(true);
+			}
 			setDeliveriesError('');
 
 			try {
@@ -139,7 +103,9 @@ export default function EntregasR({ navigation, route }) {
 				}
 
 				const envios = await getEnviosByUsuario(userId);
-				const mapped = envios.map(toDeliveryItem);
+				const mapped = envios
+					.filter((envio) => Boolean(envio?.asignado_al_conductor))
+					.map(toDeliveryItem);
 
 				if (!isCancelled) {
 					setRealDeliveries(mapped);
@@ -153,29 +119,29 @@ export default function EntregasR({ navigation, route }) {
 				if (!isCancelled) {
 					setIsLoadingDeliveries(false);
 				}
+				hasLoadedOnce = true;
 			}
 		}
 
 		loadDeliveries();
+		const intervalId = setInterval(loadDeliveries, 20000);
+		const unsubscribeFocus = navigation.addListener('focus', loadDeliveries);
 
 		return () => {
 			isCancelled = true;
+			clearInterval(intervalId);
+			unsubscribeFocus();
 		};
-	}, []);
+	}, [navigation]);
 
-	const sourceDeliveries = useMemo(() => {
-		return realDeliveries.length > 0 ? realDeliveries : deliveries;
-	}, [realDeliveries]);
+	const sourceDeliveries = realDeliveries;
 
 	const assignmentSummary = useMemo(() => {
 		if (realDeliveries.length === 0) {
 			return null;
 		}
 
-		const assignedCount = realDeliveries.filter((item) => item.asignadoAlConductor).length;
-		const availableCount = realDeliveries.length - assignedCount;
-
-		return { assignedCount, availableCount };
+		return { assignedCount: realDeliveries.length };
 	}, [realDeliveries]);
 
 	const filteredDeliveries = useMemo(() => {
@@ -233,7 +199,7 @@ export default function EntregasR({ navigation, route }) {
 					) : null}
 					{assignmentSummary ? (
 						<Text style={styles.assignmentSummary}>
-							Asignadas por operador: {assignmentSummary.assignedCount} | Disponibles del sistema: {assignmentSummary.availableCount}
+							Asignadas por operador: {assignmentSummary.assignedCount}
 						</Text>
 					) : null}
 

@@ -64,17 +64,12 @@ export async function getShipmentsByUser(userId) {
 
   if (user.rol === 'conductor') {
     const assignedShipments = await listShipmentsAssignedToDriverByUserId(parsedId);
-    const allShipments = await listShipmentsForOperator();
 
-    const assignedMap = new Map(
-      assignedShipments.map((item) => [item.id_envio, item.id_asignacion || null])
-    );
-
-    return allShipments.map((item) =>
+    return assignedShipments.map((item) =>
       mapShipment({
         ...item,
-        asignado_al_conductor: assignedMap.has(item.id_envio),
-        id_asignacion_activa: assignedMap.get(item.id_envio) || null,
+        asignado_al_conductor: true,
+        id_asignacion_activa: item.id_asignacion || null,
       })
     );
   }

@@ -88,9 +88,12 @@ export default function DashboardR({ navigation }) {
 
 	useEffect(() => {
 		let isCancelled = false;
+		let hasLoadedOnce = false;
 
 		async function loadDashboard() {
-			setIsLoading(true);
+			if (!hasLoadedOnce) {
+				setIsLoading(true);
+			}
 			setLoadError('');
 
 			try {
@@ -102,7 +105,9 @@ export default function DashboardR({ navigation }) {
 				}
 
 				const envios = await getEnviosByUsuario(userId);
-				const mapped = envios.map(toDashboardDelivery);
+				const mapped = envios
+					.filter((envio) => Boolean(envio?.asignado_al_conductor))
+					.map(toDashboardDelivery);
 
 				if (!isCancelled) {
 					setDeliveries(mapped);
@@ -116,15 +121,20 @@ export default function DashboardR({ navigation }) {
 				if (!isCancelled) {
 					setIsLoading(false);
 				}
+				hasLoadedOnce = true;
 			}
 		}
 
 		loadDashboard();
+		const intervalId = setInterval(loadDashboard, 20000);
+		const unsubscribeFocus = navigation.addListener('focus', loadDashboard);
 
 		return () => {
 			isCancelled = true;
+			clearInterval(intervalId);
+			unsubscribeFocus();
 		};
-	}, []);
+	}, [navigation]);
 
 	const user = getCurrentUser();
 	const welcomeName = user?.nombre || user?.nombre_completo || 'Conductor';

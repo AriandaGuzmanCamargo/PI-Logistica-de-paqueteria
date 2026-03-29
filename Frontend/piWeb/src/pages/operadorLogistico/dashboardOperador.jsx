@@ -26,7 +26,7 @@ export default function DashboardOperador() {
         }
       } catch (loadError) {
         if (isMounted) {
-          setError(loadError.message || 'No se pudieron cargar los envios.');
+          setError(loadError.message || 'No se pudieron cargar los envíos.');
         }
       } finally {
         if (isMounted) {
@@ -146,7 +146,7 @@ export default function DashboardOperador() {
             />
             <a href="/operador/envios" className="panel-tabla__ver">Ver Todo</a>
           </div>
-          <div className="leyenda-estados leyenda-estados--compacta" aria-label="Leyenda de estados de envio">
+          <div className="leyenda-estados leyenda-estados--compacta" aria-label="Leyenda de estados de envío">
             <span className="leyenda-estados__item">
               <span className="estado estado--pendiente">●</span>
               Pendiente
@@ -184,13 +184,13 @@ export default function DashboardOperador() {
                   <tr>
                     <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
                       <span className="ui-spinner" aria-hidden="true"></span>
-                      Cargando envios...
+                      Cargando envíos...
                     </td>
                   </tr>
                 ) : enviosFiltrados.length === 0 ? (
                   <tr>
                     <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
-                      No hay resultados para la busqueda.
+                      No hay resultados para la búsqueda.
                     </td>
                   </tr>
                 ) : enviosFiltrados.slice(0, 3).map((item) => (

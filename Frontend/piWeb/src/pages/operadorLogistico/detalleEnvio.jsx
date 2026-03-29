@@ -30,7 +30,7 @@ export default function DetalleEnvio() {
 				setLoading(true);
 				setError('');
 				if (!idEnvio) {
-					throw new Error('No se envio id de envio en la URL.');
+					throw new Error('No se envió id de envío en la URL.');
 				}
 				const data = await getDetalleEnvio(idEnvio);
 				if (isMounted) {
@@ -160,7 +160,7 @@ export default function DetalleEnvio() {
 				{loading ? (
 					<div className="detalle-loading">
 						<span className="ui-spinner" aria-hidden="true"></span>
-						<p>Cargando detalle del envio...</p>
+						<p>Cargando detalle del envío...</p>
 					</div>
 				) : null}
 

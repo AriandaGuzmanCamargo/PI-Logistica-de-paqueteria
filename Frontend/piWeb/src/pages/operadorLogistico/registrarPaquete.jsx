@@ -42,13 +42,13 @@ export default function RegistrarPaquete() {
   function validateStep(index) {
     if (index === 0) {
       if (!form.remitente.nombre || !form.remitente.direccion || !form.remitente.ciudad) {
-        return 'Completa nombre, direccion y ciudad del remitente.';
+        return 'Completa nombre, dirección y ciudad del remitente.';
       }
     }
 
     if (index === 1) {
       if (!form.destinatario.nombre || !form.destinatario.direccion || !form.destinatario.ciudad) {
-        return 'Completa nombre, direccion y ciudad del destinatario.';
+        return 'Completa nombre, dirección y ciudad del destinatario.';
       }
     }
 
@@ -202,7 +202,7 @@ export default function RegistrarPaquete() {
                 >
                   <option>CDMX</option>
                   <option>Jalisco</option>
-                  <option>Nuevo Leon</option>
+                  <option>Nuevo León</option>
                 </select>
               </label>
               <label>
@@ -289,7 +289,7 @@ export default function RegistrarPaquete() {
                 >
                   <option>CDMX</option>
                   <option>Jalisco</option>
-                  <option>Nuevo Leon</option>
+                  <option>Nuevo León</option>
                 </select>
               </label>
               <label>

@@ -5,7 +5,6 @@ import { loginRequest } from '../services/authService';
 import { setCurrentUser } from '../services/sessionService';
 
 export default function LoginScreen({ navigation }) {
-  const [tipoAcceso, setTipoAcceso] = useState(null);
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -26,27 +25,24 @@ export default function LoginScreen({ navigation }) {
       const data = await loginRequest({
         correo: correoLimpio,
         contrasena,
-        tipoAcceso,
       });
 
-      const rol = data?.usuario?.rol;
+      const usuario = data?.usuario ?? null;
+      const rol = String(usuario?.rol || '').toLowerCase();
 
-      if (tipoAcceso === 'usuario' && rol !== 'cliente') {
-        throw new Error('Esta cuenta no corresponde al acceso de usuario.');
-      }
+      setCurrentUser(usuario);
 
-      if (tipoAcceso === 'chofer' && rol !== 'conductor') {
-        throw new Error('Esta cuenta no corresponde al acceso de repartidor.');
-      }
-
-      if (tipoAcceso === 'chofer') {
-        setCurrentUser(data?.usuario ?? null);
+      if (rol === 'conductor') {
         navigation.navigate('DashboardR');
         return;
       }
 
-      setCurrentUser(data?.usuario ?? null);
-      navigation.navigate('Dashboard');
+      if (rol === 'cliente') {
+        navigation.navigate('Dashboard');
+        return;
+      }
+
+      throw new Error('Esta cuenta no tiene acceso a la app movil.');
     } catch (error) {
       setErrorMessage(error.message || 'No se pudo iniciar sesion.');
     } finally {
@@ -67,66 +63,41 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.title}>Iniciar Sesion</Text>
             <Text style={styles.subtitle}>Bienvenido. Por favor inicie sesion para continuar.</Text>
 
-            <Text style={styles.roleLabel}>Entrar como</Text>
-            <View style={styles.roleRow}>
-              <TouchableOpacity
-                style={[styles.roleBtn, tipoAcceso === 'usuario' && styles.roleBtnActive]}
-                onPress={() => setTipoAcceso('usuario')}
-              >
-                <Text style={[styles.roleBtnText, tipoAcceso === 'usuario' && styles.roleBtnTextActive]}>
-                  Usuario
-                </Text>
-              </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electronico"
+              placeholderTextColor="#9AA4BF"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={correo}
+              onChangeText={setCorreo}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contrasena"
+              placeholderTextColor="#9AA4BF"
+              secureTextEntry
+              value={contrasena}
+              onChangeText={setContrasena}
+            />
 
-              <TouchableOpacity
-                style={[styles.roleBtn, tipoAcceso === 'chofer' && styles.roleBtnActive]}
-                onPress={() => setTipoAcceso('chofer')}
-              >
-                <Text style={[styles.roleBtnText, tipoAcceso === 'chofer' && styles.roleBtnTextActive]}>
-                  Repartidor
-                </Text>
-              </TouchableOpacity>
-            </View>
+            {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-            {tipoAcceso && (
-              <>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Correo electronico"
-                  placeholderTextColor="#9AA4BF"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={correo}
-                  onChangeText={setCorreo}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Contrasena"
-                  placeholderTextColor="#9AA4BF"
-                  secureTextEntry
-                  value={contrasena}
-                  onChangeText={setContrasena}
-                />
+            <TouchableOpacity
+              style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
+              )}
+            </TouchableOpacity>
 
-                {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-
-                <TouchableOpacity
-                  style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
-                  onPress={handleLogin}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color="#FFFFFF" />
-                  ) : (
-                    <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
-                  )}
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
+            <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
               <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
-              </>
-            )}
 
             <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
               <Text style={styles.note}>No tienes cuenta? <Text style={styles.linkStrong}>Registrate</Text></Text>

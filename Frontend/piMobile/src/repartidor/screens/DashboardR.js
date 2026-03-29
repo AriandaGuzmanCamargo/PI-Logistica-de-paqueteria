@@ -7,6 +7,7 @@ import colors from '../../theme/colors';
 import getDashboardRStyles from '../styles/DashboardRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
+import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
 import { getCurrentUser } from '../../services/sessionService';
 import { getEnviosByUsuario } from '../../services/enviosService';
@@ -18,18 +19,6 @@ import {
 	toKm,
 	toMinutes,
 } from '../services/rutaMapService';
-
-let MapViewComponent = null;
-let MarkerComponent = null;
-let PolylineComponent = null;
-
-if (Platform.OS !== 'web') {
-	const Maps = require('react-native-maps');
-	MapViewComponent = Maps.default || Maps;
-	MarkerComponent = Maps.Marker;
-	PolylineComponent = Maps.Polyline;
-}
-
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 const DEFAULT_ORIGIN = {

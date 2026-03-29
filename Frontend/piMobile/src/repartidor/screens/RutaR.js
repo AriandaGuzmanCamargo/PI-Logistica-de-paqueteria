@@ -16,6 +16,7 @@ import colors from '../../theme/colors';
 import getRutaRStyles from '../styles/RutaRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
+import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
 import {
 	buildGoogleMapsDirectionsUrl,
@@ -27,17 +28,6 @@ import {
 	toKm,
 	toMinutes,
 } from '../services/rutaMapService';
-
-let MapViewComponent = null;
-let MarkerComponent = null;
-let PolylineComponent = null;
-
-if (Platform.OS !== 'web') {
-	const Maps = require('react-native-maps');
-	MapViewComponent = Maps.default || Maps;
-	MarkerComponent = Maps.Marker;
-	PolylineComponent = Maps.Polyline;
-}
 
 const DELIVERY_SAMPLE = {
 	clientName: 'Ana Martinez',

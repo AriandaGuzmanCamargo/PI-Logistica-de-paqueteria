@@ -14,19 +14,9 @@ import colors from '../../theme/colors';
 import getDetalleEntregaRStyles from '../styles/DetalleEntregaRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
+import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
 import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, resolveCurrentPosition, toKm, toMinutes } from '../services/rutaMapService';
-
-let MapViewComponent = null;
-let MarkerComponent = null;
-let PolylineComponent = null;
-
-if (Platform.OS !== 'web') {
-	const Maps = require('react-native-maps');
-	MapViewComponent = Maps.default || Maps;
-	MarkerComponent = Maps.Marker;
-	PolylineComponent = Maps.Polyline;
-}
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 

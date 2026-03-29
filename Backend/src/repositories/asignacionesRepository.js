@@ -164,6 +164,31 @@ export async function markShipmentAsInRoute(idEnvio) {
   );
 }
 
+export async function markShipmentAsPending(idEnvio) {
+  await pool.query(
+    `UPDATE envios
+     SET estado_envio = 'pendiente'
+     WHERE id_envio = $1
+       AND estado_envio IN ('en_ruta', 'retrasado')`,
+    [idEnvio]
+  );
+}
+
+export async function cancelActiveAssignmentForShipment(idEnvio) {
+  const result = await pool.query(
+    `UPDATE asignaciones_ruta ar
+     SET estado_asignacion = 'finalizada'
+     FROM envio_ruta er
+     WHERE er.id_asignacion = ar.id_asignacion
+       AND er.id_envio = $1
+       AND ar.estado_asignacion IN ('programada', 'en_proceso')
+     RETURNING ar.id_asignacion, ar.id_conductor, ar.id_ruta, ar.id_vehiculo, ar.estado_asignacion`,
+    [idEnvio]
+  );
+
+  return result.rows;
+}
+
 export async function listAvailableDrivers(fechaAsignacion) {
   const result = await pool.query(
     `SELECT
@@ -211,4 +236,115 @@ export async function findAvailableDriverById(idConductor, fechaAsignacion) {
   );
 
   return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function listDriversSummary() {
+  const result = await pool.query(
+    `SELECT
+        c.id_conductor,
+        c.id_usuario,
+        u.nombre,
+        u.apellido,
+        u.correo,
+        u.estado AS estado_usuario,
+        c.estado AS estado_conductor,
+        active_assignment.id_asignacion,
+        active_assignment.estado_asignacion,
+        active_assignment.fecha_salida,
+        active_assignment.ruta_nombre,
+        active_assignment.ruta_destino,
+        active_assignment.vehiculo_placa,
+        COALESCE(active_assignment.total_envios, 0) AS total_envios
+     FROM conductores c
+     JOIN usuarios u ON u.id_usuario = c.id_usuario
+     LEFT JOIN LATERAL (
+       SELECT
+         ar.id_asignacion,
+         ar.estado_asignacion,
+         ar.fecha_salida,
+         r.nombre_ruta AS ruta_nombre,
+         r.destino AS ruta_destino,
+         v.placa AS vehiculo_placa,
+         COUNT(er.id_envio) AS total_envios
+       FROM asignaciones_ruta ar
+       LEFT JOIN rutas r ON r.id_ruta = ar.id_ruta
+       LEFT JOIN vehiculos v ON v.id_vehiculo = ar.id_vehiculo
+       LEFT JOIN envio_ruta er ON er.id_asignacion = ar.id_asignacion
+       WHERE ar.id_conductor = c.id_conductor
+         AND ar.estado_asignacion IN ('programada', 'en_proceso')
+       GROUP BY ar.id_asignacion, ar.estado_asignacion, ar.fecha_salida, r.nombre_ruta, r.destino, v.placa
+       ORDER BY
+         CASE WHEN ar.estado_asignacion = 'en_proceso' THEN 0 ELSE 1 END,
+         ar.fecha_salida DESC,
+         ar.id_asignacion DESC
+       LIMIT 1
+     ) AS active_assignment ON TRUE
+     ORDER BY u.nombre ASC, u.apellido ASC, c.id_conductor ASC`
+  );
+
+  return result.rows;
+}
+
+export async function findDriverByConductorId(idConductor) {
+  const result = await pool.query(
+    `SELECT
+        c.id_conductor,
+        c.id_usuario,
+        c.estado AS estado_conductor,
+        u.nombre,
+        u.apellido,
+        u.correo,
+        u.telefono,
+        u.estado AS estado_usuario
+     FROM conductores c
+     JOIN usuarios u ON u.id_usuario = c.id_usuario
+     WHERE c.id_conductor = $1
+     LIMIT 1`,
+    [idConductor]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function listDriverAssignedShipmentsByConductorId(idConductor) {
+  const result = await pool.query(
+    `SELECT
+        e.id_envio,
+        e.estado_envio,
+        e.direccion_origen,
+        e.direccion_destino,
+        e.ciudad_origen,
+        e.ciudad_destino,
+        e.fecha_creacion,
+        e.fecha_estimada_entrega,
+        e.costo_total,
+        p.codigo_rastreo,
+        p.tipo_servicio,
+        p.estado_actual AS estado_paquete,
+        c_des.nombre AS destinatario_nombre,
+        c_des.telefono AS destinatario_telefono,
+        ar.id_asignacion,
+        ar.estado_asignacion,
+        ar.fecha_salida,
+        ar.fecha_llegada,
+        r.nombre_ruta,
+        r.origen AS ruta_origen,
+        r.destino AS ruta_destino,
+        v.placa AS vehiculo_placa
+     FROM conductores c
+     JOIN asignaciones_ruta ar ON ar.id_conductor = c.id_conductor
+     JOIN envio_ruta er ON er.id_asignacion = ar.id_asignacion
+     JOIN envios e ON e.id_envio = er.id_envio
+     LEFT JOIN envio_paquete ep ON ep.id_envio = e.id_envio
+     LEFT JOIN paquetes p ON p.id_paquete = ep.id_paquete
+     LEFT JOIN clientes c_des ON c_des.id_cliente = e.id_cliente_destinatario
+     LEFT JOIN rutas r ON r.id_ruta = ar.id_ruta
+     LEFT JOIN vehiculos v ON v.id_vehiculo = ar.id_vehiculo
+     WHERE c.id_conductor = $1
+       AND ar.estado_asignacion IN ('programada', 'en_proceso')
+     ORDER BY ar.fecha_salida DESC, e.fecha_creacion DESC`,
+    [idConductor]
+  );
+
+  return result.rows;
 }

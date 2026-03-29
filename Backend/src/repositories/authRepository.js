@@ -1,5 +1,19 @@
 import { pool } from '../db/pool.js';
 
+async function ensureUserPhotoColumn() {
+  await pool.query(
+    `ALTER TABLE usuarios
+     ADD COLUMN IF NOT EXISTS foto_perfil_url TEXT`
+  );
+}
+
+async function ensureUserCityColumn() {
+  await pool.query(
+    `ALTER TABLE usuarios
+     ADD COLUMN IF NOT EXISTS ciudad VARCHAR(100)`
+  );
+}
+
 export async function findUserByEmail(correo) {
   const result = await pool.query(
     `SELECT id_usuario, nombre, apellido, correo, contrasena, rol, estado
@@ -13,8 +27,11 @@ export async function findUserByEmail(correo) {
 }
 
 export async function findUserById(idUsuario) {
+  await ensureUserPhotoColumn();
+  await ensureUserCityColumn();
+
   const result = await pool.query(
-    `SELECT id_usuario, nombre, apellido, correo, telefono, rol, estado, fecha_registro
+    `SELECT id_usuario, nombre, apellido, correo, telefono, rol, estado, fecha_registro, foto_perfil_url, ciudad
      FROM usuarios
      WHERE id_usuario = $1
      LIMIT 1`,
@@ -38,6 +55,8 @@ async function hasClientesUserIdColumn() {
 }
 
 export async function createUser(payload) {
+  await ensureUserCityColumn();
+
   const result = await pool.query(
     `INSERT INTO usuarios (
       nombre,
@@ -45,9 +64,10 @@ export async function createUser(payload) {
       correo,
       contrasena,
       telefono,
+      ciudad,
       rol,
       estado
-    ) VALUES ($1, $2, $3, $4, $5, 'cliente', 'activo')
+    ) VALUES ($1, $2, $3, $4, $5, $6, 'cliente', 'activo')
     RETURNING id_usuario, nombre, apellido, correo, rol`,
     [
       payload.nombre,
@@ -55,6 +75,7 @@ export async function createUser(payload) {
       payload.correo,
       payload.contrasena,
       payload.telefono || null,
+      payload.ciudad || null,
     ]
   );
 
@@ -128,9 +149,9 @@ export async function findUserProfileById(idUsuario) {
   }
 
   const hasUserColumn = await hasClientesUserIdColumn();
-  let ciudad = null;
+  let ciudad = user.ciudad || null;
 
-  if (hasUserColumn) {
+  if (!ciudad && hasUserColumn) {
     const cityByUser = await pool.query(
       `SELECT ciudad
        FROM clientes
@@ -165,15 +186,28 @@ export async function findUserProfileById(idUsuario) {
 }
 
 export async function updateUserProfileById(idUsuario, payload) {
+  await ensureUserPhotoColumn();
+  await ensureUserCityColumn();
+
   const result = await pool.query(
     `UPDATE usuarios
      SET nombre = $1,
          apellido = $2,
          correo = $3,
-         telefono = $4
-     WHERE id_usuario = $5
+         telefono = $4,
+         foto_perfil_url = $5,
+         ciudad = $6
+     WHERE id_usuario = $7
      RETURNING id_usuario`,
-    [payload.nombre, payload.apellido, payload.correo, payload.telefono, idUsuario]
+    [
+      payload.nombre,
+      payload.apellido,
+      payload.correo,
+      payload.telefono,
+      payload.foto_perfil_url || null,
+      payload.ciudad || null,
+      idUsuario,
+    ]
   );
 
   return result.rowCount > 0 ? result.rows[0] : null;
@@ -207,4 +241,86 @@ export async function updateClientCityByUser({ idUsuario, oldCorreo, newCorreo, 
   );
 
   return updateByEmail.rowCount > 0 ? updateByEmail.rows[0] : null;
+}
+
+export async function listManageableUsersByRoles(roles = []) {
+  await ensureUserPhotoColumn();
+  await ensureUserCityColumn();
+
+  const defaultRoles = ['conductor', 'operador'];
+  const safeRoles = Array.isArray(roles) && roles.length > 0 ? roles : defaultRoles;
+
+  const result = await pool.query(
+    `SELECT
+        id_usuario,
+        nombre,
+        apellido,
+        correo,
+        contrasena,
+        telefono,
+        ciudad,
+        rol,
+        estado,
+        fecha_registro,
+        foto_perfil_url
+     FROM usuarios
+        WHERE rol::text = ANY($1::text[])
+     ORDER BY rol ASC, nombre ASC, apellido ASC, id_usuario ASC`,
+    [safeRoles]
+  );
+
+  return result.rows;
+}
+
+export async function createOperationalUser(payload) {
+  await ensureUserPhotoColumn();
+  await ensureUserCityColumn();
+
+  const result = await pool.query(
+    `INSERT INTO usuarios (
+      nombre,
+      apellido,
+      correo,
+      contrasena,
+      telefono,
+      ciudad,
+      foto_perfil_url,
+      rol,
+      estado
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'activo')
+    RETURNING id_usuario, nombre, apellido, correo, telefono, ciudad, rol, estado, fecha_registro, foto_perfil_url`,
+    [
+      payload.nombre,
+      payload.apellido,
+      payload.correo,
+      payload.contrasena,
+      payload.telefono || null,
+      payload.ciudad || null,
+      payload.foto_perfil_url || null,
+      payload.rol,
+    ]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function createConductorFromUser(payload) {
+  const result = await pool.query(
+    `INSERT INTO conductores (
+      id_usuario,
+      licencia,
+      tipo_licencia,
+      fecha_contratacion,
+      estado
+    ) VALUES ($1, $2, $3, $4, 'activo')
+    RETURNING id_conductor, id_usuario, licencia, tipo_licencia, fecha_contratacion, estado`,
+    [
+      payload.id_usuario,
+      payload.licencia,
+      payload.tipo_licencia,
+      payload.fecha_contratacion,
+    ]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
 }

@@ -1,451 +1,209 @@
-import React from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import MenuSupervisor from './menuSupervisor.jsx';
+import {
+  estadoEnvioClase,
+  estadoEnvioTexto,
+  getEnviosSupervisor,
+} from '../../services/supervisorService';
 
 export default function EnviosSupervisor() {
+  const today = new Date().toISOString().slice(0, 10);
+  const [envios, setEnvios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [estado, setEstado] = useState('todos');
+  const [busquedaInput, setBusquedaInput] = useState('');
+  const [busqueda, setBusqueda] = useState('');
+  const [fechaDesde, setFechaDesde] = useState(today);
+  const [fechaHasta, setFechaHasta] = useState(today);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadEnvios() {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await getEnviosSupervisor();
+        if (isMounted) {
+          setEnvios(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message || 'No se pudieron cargar los envios.');
+          setEnvios([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadEnvios();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  function handleBuscar() {
+    setBusqueda(busquedaInput.trim());
+  }
+
+  function resetFiltros() {
+    setEstado('todos');
+    setBusquedaInput('');
+    setBusqueda('');
+    setFechaDesde('');
+    setFechaHasta('');
+  }
+
+  const enviosFiltrados = useMemo(() => {
+    return envios.filter((item) => {
+      const estadoItem = String(item.estado_envio || '').toLowerCase();
+      const coincideEstado = estado === 'todos' || estadoItem === estado;
+
+      let coincideFecha = true;
+      const fecha = item.fecha_creacion ? new Date(item.fecha_creacion) : null;
+      if (fecha && !Number.isNaN(fecha.getTime())) {
+        if (fechaDesde) {
+          const from = new Date(`${fechaDesde}T00:00:00`);
+          coincideFecha = coincideFecha && fecha >= from;
+        }
+        if (fechaHasta) {
+          const to = new Date(`${fechaHasta}T23:59:59`);
+          coincideFecha = coincideFecha && fecha <= to;
+        }
+      }
+
+      const query = busqueda.toLowerCase();
+      if (!query) {
+        return coincideEstado && coincideFecha;
+      }
+
+      const texto = [
+        item.paquete?.codigo_rastreo,
+        item.destinatario?.nombre,
+        item.remitente?.nombre,
+        item.ciudad_origen,
+        item.ciudad_destino,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return coincideEstado && coincideFecha && texto.includes(query);
+    });
+  }, [envios, estado, busqueda, fechaDesde, fechaHasta]);
+
   return (
-    <>
-      <style>{`
-    /* ── Gestión de Envíos ── */
-    .genv-header-title {
-      margin: 24px 0 18px;
-      background: #ffffff;
-      border: 1px solid #d8dff8;
-      border-radius: 12px;
-      padding: 16px 22px;
-      box-shadow: 0 4px 16px rgba(47,64,120,0.06);
-      text-align: center;
-    }
-    .genv-titulo {
-      font-size: 26px;
-      font-weight: 700;
-      color: #1a2d50;
-      margin: 0;
-    }
+    <div className="tablero-operador tablero-operador--sin-sidebar">
+      <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
+      <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    /* Barra de búsqueda y filtros */
-    .genv-barra {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    .genv-buscar {
-      flex: 1;
-      min-width: 240px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid #d0d8e8;
-      border-radius: 10px;
-      padding: 10px 14px;
-    }
-    .genv-buscar__icono {
-      color: #8899b4;
-      font-size: 18px;
-    }
-    .genv-buscar input {
-      border: none;
-      background: transparent;
-      outline: none;
-      font-size: 14px;
-      color: #2b3552;
-      width: 100%;
-    }
-    .genv-buscar input::placeholder { color: #9aa8c0; }
-
-    /* Chips de estado */
-    .genv-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      transition: opacity 0.2s;
-    }
-    .genv-chip:hover { opacity: 0.85; }
-    .genv-chip--todos {
-      background: #3b6aaa;
-    }
-    .genv-chip--pendiente {
-      background: #f5a623;
-    }
-    .genv-chip--retrasado {
-      background: #e53935;
-    }
-    .genv-chip--entregado {
-      background: #43a047;
-    }
-    .genv-chip__flecha { font-size: 11px; }
-
-    .genv-filtro-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 10px;
-      border: 1px solid #d0d8e8;
-      background: rgba(255,255,255,0.7);
-      font-size: 14px;
-      font-weight: 600;
-      color: #3b5585;
-      cursor: pointer;
-      margin-left: auto;
-    }
-    .genv-filtro-btn:hover { background: #fff; }
-
-    /* Ordenar por */
-    .genv-ordenar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      color: #5a6d8a;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .genv-ordenar span { font-weight: 600; color: #1a2d50; }
-    .genv-ordenar select {
-      border: none;
-      background: transparent;
-      font-size: 14px;
-      color: #3b5585;
-      font-weight: 600;
-      cursor: pointer;
-      outline: none;
-    }
-    .genv-ordenar__dots {
-      margin-left: auto;
-      font-size: 22px;
-      color: #8899b4;
-      cursor: pointer;
-      letter-spacing: 2px;
-    }
-
-    /* Tabla */
-    .genv-tabla-wrap {
-      background: rgba(230,237,250,0.45);
-      border-radius: 14px;
-      overflow-x: auto;
-      border: 1px solid rgba(200,215,240,0.4);
-    }
-    .genv-tabla {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 820px;
-    }
-    .genv-tabla thead th {
-      text-align: left;
-      padding: 14px 16px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #3b5585;
-      border-bottom: 2px solid rgba(180,200,230,0.4);
-    }
-    .genv-tabla tbody tr {
-      border-bottom: 1px solid rgba(200,215,240,0.35);
-      transition: background 0.15s;
-    }
-    .genv-tabla tbody tr:hover {
-      background: rgba(220,232,250,0.35);
-    }
-    .genv-tabla tbody td {
-      padding: 14px 16px;
-      font-size: 14px;
-      color: #2b3552;
-      vertical-align: top;
-    }
-    .genv-guia {
-      font-weight: 600;
-      color: #1a2d50;
-      font-size: 13px;
-      letter-spacing: 0.3px;
-    }
-    .genv-cliente {
-      font-weight: 700;
-      color: #1a2d50;
-    }
-    .genv-direccion {
-      font-size: 13px;
-      color: #5a6d8a;
-    }
-    .genv-direccion::before {
-      content: '● ';
-      color: #43a047;
-      font-size: 10px;
-    }
-    .genv-sub {
-      font-size: 12px;
-      color: #8899b4;
-    }
-    .genv-hora {
-      font-weight: 600;
-      color: #2b3552;
-    }
-    .genv-repartidor {
-      color: #2b3552;
-      font-weight: 500;
-    }
-
-    /* Badges de estado */
-    .genv-estado {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .genv-estado--pendiente {
-      background: #fff3e0;
-      color: #e68a00;
-    }
-    .genv-estado--enruta {
-      background: #e0f2f1;
-      color: #00897b;
-    }
-    .genv-estado--retrasado {
-      background: #fbe9e7;
-      color: #e53935;
-    }
-    .genv-estado--entregado {
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .genv-ver-btn {
-      padding: 5px 14px;
-      border-radius: 6px;
-      border: 1px solid #d0d8e8;
-      background: rgba(255,255,255,0.7);
-      font-size: 13px;
-      color: #3b5585;
-      cursor: pointer;
-      transition: background 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .genv-ver-btn:hover { background: #fff; }
-
-    /* Paginación */
-    .genv-paginacion {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .genv-paginacion__info {
-      font-size: 14px;
-      color: #5a6d8a;
-    }
-    .genv-paginacion__paginas {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .genv-pag-btn {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      border: 1px solid #d0d8e8;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      color: #3b5585;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .genv-pag-btn:hover { background: #e8f0fb; }
-    .genv-pag-btn--activo {
-      background: #3b6aaa;
-      color: #fff;
-      border-color: #3b6aaa;
-    }
-    .genv-pag-btn--dots {
-      border: none;
-      background: none;
-      cursor: default;
-    }
-
-    @media (max-width: 768px) {
-      .genv-barra { flex-direction: column; align-items: stretch; }
-      .genv-buscar { min-width: auto; }
-      .genv-filtro-btn { margin-left: 0; }
-      .genv-paginacion { flex-direction: column; align-items: flex-start; }
-    }
-  `}</style>
-      <div className="tablero-operador tablero-operador--sin-sidebar">
-
-    {/* Contenedor del menú hamburguesa */}
-    <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
-    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
-
-    <main className="panel-principal panel-principal--full panel-principal--supervisor">
-      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
-        <div className="barra-superior__left">
-          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <div className="header-logo">
-            <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+      <main className="panel-principal panel-principal--full panel-principal--supervisor">
+        <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
+          <div className="barra-superior__left">
+            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menï¿½">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div className="header-logo">
+              <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+            </div>
+            <h1 className="barra-superior__titulo">Supervisor</h1>
           </div>
-          <h1 className="barra-superior__titulo">Supervisor</h1>
-        </div>
-      </header>
+        </header>
 
-      {/* Contenido Gestión de Envíos */}
-      <div className="genv-header-title">
-        <h2 className="genv-titulo">Gestión de Envíos</h2>
-      </div>
+        <h2 className="titulo-pagina-operador">Gestion de Envios</h2>
 
-      {/* Barra búsqueda + filtros */}
-      <div className="genv-barra">
-        <div className="genv-buscar">
-          <input type="text" placeholder="Buscar dirección o número de guía" />
-        </div>
-        <button className="genv-chip genv-chip--todos">Todos <span className="genv-chip__flecha">&#9662;</span></button>
-        <button className="genv-chip genv-chip--pendiente">Pendiente</button>
-        <button className="genv-chip genv-chip--retrasado">Retrasado</button>
-        <button className="genv-chip genv-chip--entregado">Entregado</button>
-        <button className="genv-filtro-btn">Filtro</button>
-      </div>
+        <section className="modulo-envios">
+          <div className="filtros-envios">
+            <div className="filtros-envios__fila">
+              <div className="campo-filtro">
+                <label htmlFor="estado-supervisor">Estado</label>
+                <select id="estado-supervisor" value={estado} onChange={(e) => setEstado(e.target.value)}>
+                  <option value="todos">Todos</option>
+                  <option value="pendiente">Pendiente</option>
+                  <option value="en_ruta">En ruta</option>
+                  <option value="retrasado">Retrasado</option>
+                  <option value="entregado">Entregado</option>
+                  <option value="cancelado">Cancelado</option>
+                </select>
+              </div>
+              <div className="campo-filtro campo-filtro--fecha">
+                <label htmlFor="fecha-desde-sv">Fecha</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input id="fecha-desde-sv" type="date" value={fechaDesde} onChange={(e) => setFechaDesde(e.target.value)} />
+                  <input type="date" value={fechaHasta} onChange={(e) => setFechaHasta(e.target.value)} />
+                </div>
+              </div>
+              <div className="buscador-envios">
+                <input
+                  type="text"
+                  placeholder="Buscar guia, remitente o destinatario..."
+                  value={busquedaInput}
+                  onChange={(e) => setBusquedaInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleBuscar();
+                  }}
+                />
+                <button type="button" onClick={handleBuscar}>Buscar</button>
+                <button type="button" onClick={resetFiltros}>Limpiar</button>
+              </div>
+            </div>
 
-      {/* Ordenar por */}
-      <div className="genv-ordenar">
-        <span>Ordenar por:</span>
-        <select><option>Hora</option></select>
-        <select><option>Zona</option></select>
-        <select><option>Prioridad</option></select>
-        <span className="genv-ordenar__dots">⋯</span>
-      </div>
+            {error ? <p style={{ color: '#b71c1c', margin: '0 0 10px 0' }}>{error}</p> : null}
 
-      {/* Tabla de envíos */}
-      <div className="genv-tabla-wrap">
-        <table className="genv-tabla">
-          <thead>
-            <tr>
-              <th>Guía</th>
-              <th>Cliente</th>
-              <th>Dirección</th>
-              <th>Hora estimada</th>
-              <th>Repartidor</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span className="genv-guia">PAK123456789</span></td>
-              <td>
-                <span className="genv-cliente">Ana Martínez</span><br />
-                <span className="genv-sub">CDMX</span>
-              </td>
-              <td><span className="genv-direccion">Col. Roma Norte, CDMX</span></td>
-              <td><span className="genv-hora">10:00 – 11:00</span></td>
-              <td><span className="genv-repartidor">Luis Garcia</span></td>
-              <td><span className="genv-estado genv-estado--pendiente">Pendiente</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-            <tr>
-              <td><span className="genv-guia">MXZ67584321</span></td>
-              <td>
-                <span className="genv-cliente">Carlos Ramírez</span><br />
-                <span className="genv-sub">Querétaro, CDMX · Javier Torres</span>
-              </td>
-              <td><span className="genv-direccion">Av. Tecnológico 210, Querétaro</span></td>
-              <td><span className="genv-hora">12:00 – 1:00</span></td>
-              <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--enruta">En ruta</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-            <tr>
-              <td><span className="genv-guia">MX987654321</span></td>
-              <td>
-                <span className="genv-cliente">Laura Gómez</span>
-              </td>
-              <td><span className="genv-direccion">Av. Revolución 456, Col. Del Valle</span></td>
-              <td><span className="genv-hora">1:00 – 3:00</span></td>
-              <td><span className="genv-repartidor">Ricardo Muñoz</span></td>
-              <td><span className="genv-estado genv-estado--retrasado">Retrasado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-            <tr>
-              <td><span className="genv-guia">MXZ47630219</span></td>
-              <td>
-                <span className="genv-cliente">Pedro Sanchez</span><br />
-                <span className="genv-sub">Coyoacán, CDMX · Jorge Medina</span>
-              </td>
-              <td><span className="genv-direccion">Av. Universidad 789, Col. Coyoacán</span></td>
-              <td><span className="genv-hora">2:00 – 3:30</span></td>
-              <td><span className="genv-repartidor">Jorge Medina</span></td>
-              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-            <tr>
-              <td><span className="genv-guia">MXZ47620210</span></td>
-              <td>
-                <span className="genv-cliente">Sofia Lozano</span><br />
-                <span className="genv-sub">Javier Torres</span>
-              </td>
-              <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
-              <td><span className="genv-hora">3:00 – 4:30</span></td>
-              <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-            <tr>
-              <td><span className="genv-guia">MXZ47620210</span></td>
-              <td>
-                <span className="genv-cliente">Sofia Lozano</span><br />
-                <span className="genv-sub">Javier Torres</span>
-              </td>
-              <td><span className="genv-direccion">Campestre Oriente 230, Toluca</span></td>
-              <td><span className="genv-hora">3:00 – 4:30</span></td>
-              <td><span className="genv-repartidor">Javier Torres</span></td>
-              <td><span className="genv-estado genv-estado--entregado">Entregado</span></td>
-              <td><a href="/piWeb/src/pages/supervisor/detalleEnvioSupervisor.html" className="genv-ver-btn">ver detalle</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Paginación */}
-      <div className="genv-paginacion">
-        <div className="genv-paginacion__info">
-          Mostrando 5 de 268 envíos
-          <span className="genv-paginacion__paginas" style={{display: 'inline-flex', marginLeft: '8px'}}>
-            <button className="genv-pag-btn genv-pag-btn--activo">1</button>
-            <button className="genv-pag-btn">2</button>
-            <button className="genv-pag-btn">3</button>
-            <button className="genv-pag-btn">4</button>
-            <button className="genv-pag-btn">5</button>
-            <button className="genv-pag-btn genv-pag-btn--dots">⋯</button>
-          </span>
-        </div>
-        <div className="genv-paginacion__paginas">
-          <button className="genv-pag-btn">&lt;</button>
-          <button className="genv-pag-btn genv-pag-btn--activo">1</button>
-          <button className="genv-pag-btn">2</button>
-          <button className="genv-pag-btn">3</button>
-          <button className="genv-pag-btn">&gt;</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-    </>
+            <div className="tabla-envios">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Guia</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Ruta</th>
+                    <th>Creado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>Cargando envios...</td>
+                    </tr>
+                  ) : enviosFiltrados.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>No hay envios para mostrar.</td>
+                    </tr>
+                  ) : (
+                    enviosFiltrados.map((item) => (
+                      <tr key={item.id_envio}>
+                        <td>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</td>
+                        <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
+                        <td>
+                          <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
+                            * {estadoEnvioTexto(item.estado_envio)}
+                          </span>
+                        </td>
+                        <td>{item.ciudad_origen || '-'} - {item.ciudad_destino || '-'}</td>
+                        <td>{item.fecha_creacion ? new Date(item.fecha_creacion).toLocaleString() : '-'}</td>
+                        <td>
+                          <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>
+                            Ver detalle
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
+
+

@@ -42,7 +42,7 @@ export async function getIncidenciasByUser(userId) {
     throw error;
   }
 
-  const rows = user.rol === 'operador' || user.rol === 'admin'
+  const rows = user.rol === 'operador' || user.rol === 'admin' || user.rol === 'supervisor'
     ? await listIncidenciasForOperator()
     : await listIncidenciasByReporter(parsedId);
 

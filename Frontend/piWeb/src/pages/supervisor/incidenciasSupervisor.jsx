@@ -1,431 +1,184 @@
-import React from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import MenuSupervisor from './menuSupervisor.jsx';
+import {
+  estadoIncidenciaClase,
+  estadoIncidenciaTexto,
+  getIncidenciasSupervisor,
+} from '../../services/supervisorService';
 
 export default function IncidenciasSupervisor() {
+  const [incidencias, setIncidencias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [estado, setEstado] = useState('todas');
+  const [busqueda, setBusqueda] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadIncidencias() {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await getIncidenciasSupervisor();
+        if (isMounted) {
+          setIncidencias(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message || 'No se pudieron cargar las incidencias.');
+          setIncidencias([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadIncidencias();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const resumen = useMemo(() => {
+    return {
+      abiertas: incidencias.filter((i) => i.estado === 'abierta').length,
+      proceso: incidencias.filter((i) => i.estado === 'en_proceso').length,
+      cerradas: incidencias.filter((i) => i.estado === 'cerrada').length,
+      total: incidencias.length,
+    };
+  }, [incidencias]);
+
+  const incidenciasFiltradas = useMemo(() => {
+    return incidencias.filter((item) => {
+      const coincideEstado = estado === 'todas' || item.estado === estado;
+      const query = busqueda.trim().toLowerCase();
+
+      if (!query) {
+        return coincideEstado;
+      }
+
+      const texto = [
+        item.paquete?.codigo_rastreo,
+        item.descripcion,
+        item.tipo_incidencia,
+        item.reportado_por?.nombre,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return coincideEstado && texto.includes(query);
+    });
+  }, [incidencias, estado, busqueda]);
+
   return (
-    <>
-      <style>{`
-    /* ── Gestión de Incidencias ── */
-    .ginc-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 24px 0 18px;
-      gap: 12px;
-    }
-    .ginc-titulo {
-      font-size: 26px;
-      font-weight: 700;
-      color: #1a2d50;
-      margin: 0;
-      text-align: center;
-    }
-    .ginc-header__acciones {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-self: flex-end;
-      justify-content: flex-end;
-    }
-    .ginc-header-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: 1px solid #d0d8e8;
-      background: rgba(255,255,255,0.7);
-      font-size: 14px;
-      font-weight: 600;
-      color: #3b5585;
-      cursor: pointer;
-    }
-    .ginc-header-btn:hover { background: #fff; }
+    <div className="tablero-operador tablero-operador--sin-sidebar">
+      <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
+      <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
 
-    /* Barra búsqueda + filtros */
-    .ginc-barra {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-      background: rgba(220,230,250,0.45);
-      border: 1px solid rgba(200,215,240,0.4);
-      border-radius: 14px;
-      padding: 12px 16px;
-    }
-    .ginc-buscar {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid #d0d8e8;
-      border-radius: 10px;
-      padding: 10px 14px;
-    }
-    .ginc-buscar__icono { color: #8899b4; font-size: 18px; }
-    .ginc-buscar input {
-      border: none; background: transparent; outline: none;
-      font-size: 14px; color: #2b3552; width: 100%;
-    }
-    .ginc-buscar input::placeholder { color: #9aa8c0; }
-
-    .ginc-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      transition: opacity 0.2s;
-    }
-    .ginc-chip:hover { opacity: 0.85; }
-    .ginc-chip--pendiente { background: #3b6aaa; }
-    .ginc-chip--progreso  { background: #43a047; }
-    .ginc-chip--resuelto  { background: #43a047; }
-    .ginc-chip__count {
-      background: rgba(255,255,255,0.3);
-      border-radius: 10px;
-      padding: 1px 8px;
-      font-size: 12px;
-    }
-    .ginc-filtro-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 10px;
-      border: 1px solid #d0d8e8;
-      background: rgba(255,255,255,0.7);
-      font-size: 14px; font-weight: 600; color: #3b5585;
-      cursor: pointer;
-    }
-    .ginc-filtro-btn:hover { background: #fff; }
-
-    /* Tabla contenedor */
-    .ginc-tabla-wrap {
-      background: rgba(230,237,250,0.45);
-      border-radius: 14px;
-      overflow-x: auto;
-      border: 1px solid rgba(200,215,240,0.4);
-      padding: 4px 0;
-    }
-    .ginc-seccion-titulo {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a2d50;
-      padding: 16px 20px 6px;
-      margin: 0;
-    }
-
-    .ginc-tabla {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 780px;
-    }
-    .ginc-tabla thead th {
-      text-align: left;
-      padding: 12px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #3b5585;
-      border-bottom: 2px solid rgba(180,200,230,0.4);
-    }
-    .ginc-tabla tbody tr {
-      border-bottom: 1px solid rgba(200,215,240,0.35);
-      transition: background 0.15s;
-    }
-    .ginc-tabla tbody tr:hover { background: rgba(220,232,250,0.35); }
-    .ginc-tabla tbody td {
-      padding: 14px 18px;
-      font-size: 14px;
-      color: #2b3552;
-      vertical-align: middle;
-    }
-
-    .ginc-guia {
-      font-weight: 600;
-      color: #1a2d50;
-      font-size: 13px;
-      letter-spacing: 0.3px;
-    }
-
-    /* Repartidor cell */
-    .ginc-rep {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .ginc-rep__foto {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid rgba(200,215,240,0.5);
-    }
-    .ginc-rep__nombre {
-      font-weight: 700; color: #1a2d50; font-size: 15px;
-      margin: 0 0 1px;
-    }
-    .ginc-rep__zona {
-      font-size: 13px; color: #5a6d8a; margin: 0;
-    }
-    .ginc-rep__email {
-      font-size: 12px; color: #8899b4; margin: 0;
-      display: flex; align-items: center; gap: 4px;
-    }
-
-    /* Tipo de problema */
-    .ginc-problema {
-      font-weight: 700; color: #1a2d50; font-size: 14px;
-      margin: 0 0 2px;
-    }
-    .ginc-problema-hora {
-      font-size: 13px; color: #5a6d8a; margin: 0;
-    }
-
-    /* Badges de estado */
-    .ginc-estado {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .ginc-estado--pendiente {
-      background: #fff3e0; color: #e68a00;
-    }
-    .ginc-estado--progreso {
-      background: #e8f5e9; color: #2e7d32;
-    }
-    .ginc-estado--resuelto {
-      background: #e0f7fa; color: #00838f;
-    }
-
-    .ginc-ver-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 14px;
-      border-radius: 6px;
-      border: 1px solid #d0d8e8;
-      background: rgba(255,255,255,0.7);
-      font-size: 13px; color: #3b5585;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .ginc-ver-btn:hover { background: #fff; }
-
-    /* Paginación */
-    .ginc-paginacion {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 0 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .ginc-paginacion__info { font-size: 14px; color: #5a6d8a; }
-    .ginc-paginacion__paginas {
-      display: flex; align-items: center; gap: 4px;
-    }
-    .ginc-pag-btn {
-      width: 34px; height: 34px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 6px;
-      border: 1px solid #d0d8e8;
-      background: #fff;
-      font-size: 14px; font-weight: 600; color: #3b5585;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .ginc-pag-btn:hover { background: #e8f0fb; }
-    .ginc-pag-btn--activo {
-      background: #3b6aaa; color: #fff; border-color: #3b6aaa;
-    }
-
-    @media (max-width: 768px) {
-      .ginc-barra { flex-direction: column; align-items: stretch; }
-      .ginc-buscar { min-width: auto; }
-      .ginc-paginacion { flex-direction: column; align-items: flex-start; }
-    }
-  `}</style>
-      <div className="tablero-operador tablero-operador--sin-sidebar">
-
-    {/* Contenedor del menú hamburguesa */}
-    <div id="menuContainer" className="menu-overlay"><MenuSupervisor /></div>
-    <div id="menuBackdrop" className="menu-overlay__backdrop"></div>
-
-    <main className="panel-principal panel-principal--full panel-principal--supervisor">
-      <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
-        <div className="barra-superior__left">
-          <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <div className="header-logo">
-            <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+      <main className="panel-principal panel-principal--full panel-principal--supervisor">
+        <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
+          <div className="barra-superior__left">
+            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div className="header-logo">
+              <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
+            </div>
+            <h1 className="barra-superior__titulo">Supervisor</h1>
           </div>
-          <h1 className="barra-superior__titulo">Supervisor</h1>
-        </div>
-      </header>
+        </header>
 
-      {/* Contenido Gestión de Incidencias */}
-      <div className="ginc-header">
-        <h2 className="ginc-titulo">Gestión de Incidencias</h2>
-        <div className="ginc-header__acciones">
-          <button className="ginc-header-btn">Filtro &#9662;</button>
-          <button className="ginc-header-btn">Opciones &#9662;</button>
-        </div>
-      </div>
+        <h2 className="titulo-pagina-operador">Gestion de Incidencias</h2>
 
-      {/* Barra búsqueda + filtros */}
-      <div className="ginc-barra">
-        <div className="ginc-buscar">
-          <input type="text" placeholder="Buscar incidencia..." />
-        </div>
-        <button className="ginc-chip ginc-chip--pendiente">Pendiente <span className="ginc-chip__count">5</span></button>
-        <button className="ginc-chip ginc-chip--progreso">En progreso <span className="ginc-chip__count">3</span></button>
-        <button className="ginc-chip ginc-chip--resuelto">Resuelto <span className="ginc-chip__count">14</span></button>
-        <button className="ginc-filtro-btn">Filtro &#9662;</button>
-      </div>
+        <section className="modulo-incidencias">
+          <div className="incidencias-resumen">
+            <div className="incidencias-resumen__item"><strong>Total:</strong> {loading ? '...' : resumen.total}</div>
+            <div className="incidencias-resumen__item"><strong>Abiertas:</strong> {loading ? '...' : resumen.abiertas}</div>
+            <div className="incidencias-resumen__item"><strong>En proceso:</strong> {loading ? '...' : resumen.proceso}</div>
+            <div className="incidencias-resumen__item"><strong>Cerradas:</strong> {loading ? '...' : resumen.cerradas}</div>
+          </div>
 
-      {/* Tabla de incidencias */}
-      <div className="ginc-tabla-wrap">
-        <h3 className="ginc-seccion-titulo">Información del Envio</h3>
-        <table className="ginc-tabla">
-          <thead>
-            <tr>
-              <th>Guía</th>
-              <th>Repartidor</th>
-              <th>Tipo de problema</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span className="ginc-guia">PAK123456789</span></td>
-              <td>
-                <div className="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Luis García" className="ginc-rep__foto" />
-                  <div>
-                    <p className="ginc-rep__nombre">Luis García</p>
-                    <p className="ginc-rep__zona">Centro</p>
-                    <p className="ginc-rep__email">Minar Inn</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p className="ginc-problema">Cliente ausente</p>
-                <p className="ginc-problema-hora">10:30 AM</p>
-              </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
-              <td><button className="ginc-ver-btn">Ver detalle</button></td>
-            </tr>
-            <tr>
-              <td><span className="ginc-guia">MXZ4567320</span></td>
-              <td>
-                <div className="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Jorge Sánchez" className="ginc-rep__foto" />
-                  <div>
-                    <p className="ginc-rep__nombre">Jorge Sánchez</p>
-                    <p className="ginc-rep__zona">Coyoacán</p>
-                    <p className="ginc-rep__email">Minar Inn</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p className="ginc-problema">Dirección incorrecta</p>
-                <p className="ginc-problema-hora">3:15 PM</p>
-              </td>
-              <td><span className="ginc-estado ginc-estado--progreso">En progreso</span></td>
-              <td><button className="ginc-ver-btn">Ver detalle</button></td>
-            </tr>
-            <tr>
-              <td><span className="ginc-guia">MXZ67584321</span></td>
-              <td>
-                <div className="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Carlos Ramirez" className="ginc-rep__foto" />
-                  <div>
-                    <p className="ginc-rep__nombre">Carlos Ramirez</p>
-                    <p className="ginc-rep__zona">Norte</p>
-                    <p className="ginc-rep__email">Minar Inn</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p className="ginc-problema">Retraso logístico</p>
-                <p className="ginc-problema-hora">12:45 PM</p>
-              </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
-              <td><button className="ginc-ver-btn">Ver detalle</button></td>
-            </tr>
-            <tr>
-              <td><span className="ginc-guia">MX274760219</span></td>
-              <td>
-                <div className="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Pilar Suarez" className="ginc-rep__foto" />
-                  <div>
-                    <p className="ginc-rep__nombre">Pilar Suarez</p>
-                    <p className="ginc-rep__zona">Toluca</p>
-                    <p className="ginc-rep__email">Minar Inn</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p className="ginc-problema">Paquete dañado</p>
-                <p className="ginc-problema-hora">4:45 PM</p>
-              </td>
-              <td><span className="ginc-estado ginc-estado--resuelto">Resuelto</span></td>
-              <td><button className="ginc-ver-btn">Ver detalle</button></td>
-            </tr>
-            <tr>
-              <td><span className="ginc-guia">MX967654321</span></td>
-              <td>
-                <div className="ginc-rep">
-                  <img src="/piWeb/images/usuario.png" alt="Laura Gómez" className="ginc-rep__foto" />
-                  <div>
-                    <p className="ginc-rep__nombre">Laura Gómez</p>
-                    <p className="ginc-rep__zona">Del Valle</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p className="ginc-problema">Retraso logístico</p>
-                <p className="ginc-problema-hora">1:10 PM</p>
-              </td>
-              <td><span className="ginc-estado ginc-estado--pendiente">Pendiente</span></td>
-              <td><button className="ginc-ver-btn">Ver detalle</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <div className="filtros-envios" style={{ marginTop: '10px' }}>
+            <div className="filtros-envios__fila">
+              <div className="campo-filtro">
+                <label htmlFor="estado-incidencia-sv">Estado</label>
+                <select id="estado-incidencia-sv" value={estado} onChange={(e) => setEstado(e.target.value)}>
+                  <option value="todas">Todas</option>
+                  <option value="abierta">Abierta</option>
+                  <option value="en_proceso">En proceso</option>
+                  <option value="cerrada">Cerrada</option>
+                </select>
+              </div>
+              <div className="buscador-envios">
+                <input
+                  type="text"
+                  placeholder="Buscar por guia, tipo o descripcion..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
 
-      {/* Paginación */}
-      <div className="ginc-paginacion">
-        <span className="ginc-paginacion__info">Mostrando 5 de 122 incidencias</span>
-        <div className="ginc-paginacion__paginas">
-          <button className="ginc-pag-btn">&lt;</button>
-          <button className="ginc-pag-btn ginc-pag-btn--activo">1</button>
-          <button className="ginc-pag-btn">2</button>
-          <button className="ginc-pag-btn">3</button>
-          <button className="ginc-pag-btn">4</button>
-          <button className="ginc-pag-btn">5</button>
-          <button className="ginc-pag-btn">&gt;</button>
-          <button className="ginc-pag-btn">&gt;</button>
-          <button className="ginc-pag-btn">&gt;</button>
-        </div>
-      </div>
+          {error ? <p style={{ color: '#b71c1c', margin: '0 14px 10px' }}>{error}</p> : null}
 
-    </main>
-  </div>
-    </>
+          <div className="tabla-incidencias">
+            <table>
+              <thead>
+                <tr>
+                  <th>Guia</th>
+                  <th>Estado</th>
+                  <th>Reportado por</th>
+                  <th>Motivo</th>
+                  <th>Reportado el</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                      Cargando incidencias...
+                    </td>
+                  </tr>
+                ) : incidenciasFiltradas.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                      No hay incidencias para mostrar.
+                    </td>
+                  </tr>
+                ) : (
+                  incidenciasFiltradas.map((item) => (
+                    <tr key={item.id_incidencia}>
+                      <td><strong>{item.paquete?.codigo_rastreo || `ENV-${item.envio?.id_envio}`}</strong></td>
+                      <td>
+                        <span className={`estado-incidencia ${estadoIncidenciaClase(item.estado)}`}>
+                          {estadoIncidenciaTexto(item.estado)}
+                        </span>
+                      </td>
+                      <td>{item.reportado_por?.nombre || 'Sin nombre'}</td>
+                      <td>{item.descripcion || '-'}</td>
+                      <td>{item.fecha_reporte ? new Date(item.fecha_reporte).toLocaleString() : '-'}</td>
+                      <td>
+                        <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.envio?.id_envio}`}>
+                          Ver envio
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
+
+

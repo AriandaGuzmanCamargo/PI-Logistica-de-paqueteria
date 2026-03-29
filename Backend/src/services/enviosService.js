@@ -74,7 +74,7 @@ export async function getShipmentsByUser(userId) {
     );
   }
 
-  if (user.rol === 'operador' || user.rol === 'admin') {
+  if (user.rol === 'operador' || user.rol === 'admin' || user.rol === 'supervisor') {
     const shipments = await listShipmentsForOperator();
     return shipments.map(mapShipment);
   }
@@ -107,6 +107,10 @@ export async function getShipmentDetailById(idEnvio) {
     throw error;
   }
 
+  const estadoAsignacion = String(item.estado_asignacion || '').toLowerCase();
+  const hasActiveAssignment =
+    Boolean(item.id_conductor_asignado) && ['programada', 'en_proceso'].includes(estadoAsignacion);
+
   return {
     id_envio: item.id_envio,
     estado_envio: item.estado_envio,
@@ -117,6 +121,7 @@ export async function getShipmentDetailById(idEnvio) {
     fecha_creacion: item.fecha_creacion,
     fecha_estimada_entrega: item.fecha_estimada_entrega,
     fecha_entrega_real: item.fecha_entrega_real,
+    fecha_asignacion_sugerida: item.fecha_salida_asignacion || item.fecha_estimada_entrega || item.fecha_creacion,
     costo_total: item.costo_total,
     remitente: {
       id_cliente: item.remitente_id,
@@ -130,10 +135,11 @@ export async function getShipmentDetailById(idEnvio) {
       telefono: item.destinatario_telefono,
       correo: item.destinatario_correo,
     },
-    asignacion: item.id_conductor_asignado
+    asignacion: hasActiveAssignment
       ? {
           id_asignacion: item.id_asignacion,
           estado_asignacion: item.estado_asignacion,
+          fecha_salida: item.fecha_salida_asignacion,
           id_conductor: item.id_conductor_asignado,
           conductor_nombre: item.conductor_nombre,
           conductor_correo: item.conductor_correo,

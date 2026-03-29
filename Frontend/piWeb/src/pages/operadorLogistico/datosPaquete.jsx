@@ -128,7 +128,7 @@ export default function DatosPaquete() {
             fechaAsignacion: form.fecha_asignacion,
           });
         } catch (assignError) {
-          setWarning(assignError.message || 'El envio se creo, pero no se pudo asignar al conductor seleccionado.');
+          setWarning(assignError.message || 'El envío se creó, pero no se pudo asignar al conductor seleccionado.');
         }
       }
 
@@ -204,10 +204,10 @@ export default function DatosPaquete() {
                 />
               </label>
               <label>
-                Descripcion (opcional)
+                Descripción (opcional)
                 <input
                   type="text"
-                  placeholder="Ingresar descripcion..."
+                  placeholder="Ingresar descripción..."
                   value={form.descripcion}
                   onChange={(e) => updateField('descripcion', e.target.value)}
                 />
@@ -242,7 +242,7 @@ export default function DatosPaquete() {
                     checked={form.tipo_servicio === 'express'}
                     onChange={() => updateField('tipo_servicio', 'express')}
                   />
-                  Expres
+                  Exprés
                 </label>
                 <label className="radio-item">
                   <input
@@ -251,7 +251,7 @@ export default function DatosPaquete() {
                     checked={form.tipo_servicio === 'economico'}
                     onChange={() => updateField('tipo_servicio', 'economico')}
                   />
-                  Economico
+                  Económico
                 </label>
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function DatosPaquete() {
       <div className="modal-exito__check">✓</div>
       <h2 id="titulo-exito">¡Paquete Registrado!</h2>
       <p>
-        El paquete se ha registrado exitosamente con el numero de guia <strong id="guia-generada">{guia}</strong>.
+        El paquete se ha registrado exitosamente con el número de guía <strong id="guia-generada">{guia}</strong>.
       </p>
       <div className="modal-exito__acciones">
         <button

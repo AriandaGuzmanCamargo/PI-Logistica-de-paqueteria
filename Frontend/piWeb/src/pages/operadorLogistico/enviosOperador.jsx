@@ -62,7 +62,7 @@ export default function EnviosOperador() {
         }
       } catch (loadError) {
         if (isMounted) {
-          setError(loadError.message || 'No se pudieron cargar los envios.');
+          setError(loadError.message || 'No se pudieron cargar los envíos.');
         }
       }
     }
@@ -177,7 +177,7 @@ export default function EnviosOperador() {
             <div className="buscador-envios">
               <input
                 type="text"
-                placeholder="Buscar guia, remitente o destinatario..."
+                placeholder="Buscar guía, remitente o destinatario..."
                 value={busquedaInput}
                 onChange={(e) => setBusquedaInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -193,7 +193,7 @@ export default function EnviosOperador() {
 
           {error ? <p style={{ color: '#b71c1c', margin: '0 0 10px 0' }}>{error}</p> : null}
 
-          <div className="leyenda-estados" aria-label="Leyenda de estados de envio">
+          <div className="leyenda-estados" aria-label="Leyenda de estados de envío">
             <span className="leyenda-estados__item">
               <span className="estado estado--pendiente">●</span>
               Pendiente
@@ -233,7 +233,7 @@ export default function EnviosOperador() {
                 {enviosFiltrados.length === 0 ? (
                   <tr>
                     <td colSpan="7" style={{ textAlign: 'center', padding: '14px' }}>
-                      No hay envios para mostrar.
+                      No hay envíos para mostrar.
                     </td>
                   </tr>
                 ) : (

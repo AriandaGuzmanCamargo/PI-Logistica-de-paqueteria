@@ -1,8 +1,12 @@
 import {
+  createConductorFromUser,
   createClientFromUser,
+  createOperationalUser,
   createUser,
   findUserByEmail,
+  findUserById,
   findUserProfileById,
+  listManageableUsersByRoles,
   updateUserPasswordById,
   updateClientCityByUser,
   updateUserProfileById,
@@ -99,6 +103,7 @@ export async function getUserProfile(idUsuario) {
     fecha_registro: profile.fecha_registro,
     ciudad: profile.ciudad,
     rol: profile.rol,
+    foto_perfil_url: profile.foto_perfil_url || null,
   };
 }
 
@@ -124,6 +129,9 @@ export async function updateUserProfile({ idUsuario, payload }) {
   const correo = String(payload?.correo || '').trim().toLowerCase();
   const telefono = String(payload?.telefono || '').trim();
   const ciudad = String(payload?.ciudad || '').trim();
+  const fotoPerfilUrl = payload?.foto_perfil_url
+    ? String(payload.foto_perfil_url).trim()
+    : null;
 
   if (!nombre || !apellido || !correo || !telefono || !ciudad) {
     const error = new Error('Nombre, apellido, correo, telefono y ciudad son obligatorios.');
@@ -149,6 +157,8 @@ export async function updateUserProfile({ idUsuario, payload }) {
     apellido,
     correo,
     telefono,
+    ciudad,
+    foto_perfil_url: fotoPerfilUrl,
   });
 
   await updateClientCityByUser({
@@ -299,4 +309,255 @@ export async function changePassword({ idUsuario, payload }) {
   await updateUserPasswordById(parsedId, nueva);
 
   return { id_usuario: parsedId };
+}
+
+export async function listManageableUsersForAdmin({ idAdmin, rol }) {
+  const parsedAdminId = Number(idAdmin);
+
+  if (!Number.isInteger(parsedAdminId) || parsedAdminId <= 0) {
+    const error = new Error('El id del admin no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const admin = await findUserById(parsedAdminId);
+
+  if (!admin) {
+    const error = new Error('Admin no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (admin.rol !== 'admin') {
+    const error = new Error('Solo un admin puede consultar perfiles de operadores y conductores.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const parsedRol = String(rol || '').trim().toLowerCase();
+  const roles = parsedRol === 'operador' || parsedRol === 'conductor'
+    ? [parsedRol]
+    : ['operador', 'conductor'];
+
+  const users = await listManageableUsersByRoles(roles);
+
+  return users.map((user) => ({
+    id_usuario: user.id_usuario,
+    nombre: user.nombre,
+    apellido: user.apellido,
+    correo: user.correo,
+    contrasena: user.contrasena,
+    telefono: user.telefono,
+    ciudad: user.ciudad || null,
+    rol: user.rol,
+    estado: user.estado,
+    fecha_registro: user.fecha_registro,
+    foto_perfil_url: user.foto_perfil_url || null,
+  }));
+}
+
+export async function changePasswordByAdmin({ idAdmin, idUsuarioObjetivo, payload }) {
+  const parsedAdminId = Number(idAdmin);
+  const parsedTargetId = Number(idUsuarioObjetivo);
+
+  if (!Number.isInteger(parsedAdminId) || parsedAdminId <= 0) {
+    const error = new Error('El id del admin no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!Number.isInteger(parsedTargetId) || parsedTargetId <= 0) {
+    const error = new Error('El id del usuario objetivo no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const nueva = String(payload?.nuevaContrasena || '').trim();
+  const confirmar = String(payload?.confirmarContrasena || '').trim();
+
+  if (!nueva || !confirmar) {
+    const error = new Error('Completa la nueva contrasena y la confirmacion.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva.length < 6) {
+    const error = new Error('La nueva contrasena debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva !== confirmar) {
+    const error = new Error('Las contrasenas no coinciden.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const admin = await findUserById(parsedAdminId);
+
+  if (!admin) {
+    const error = new Error('Admin no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (admin.rol !== 'admin') {
+    const error = new Error('Solo un admin puede cambiar contrasenas de otros usuarios.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const target = await findUserById(parsedTargetId);
+
+  if (!target) {
+    const error = new Error('Usuario objetivo no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!['operador', 'conductor'].includes(target.rol)) {
+    const error = new Error('El admin solo puede cambiar contrasenas de operadores y conductores.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  await updateUserPasswordById(parsedTargetId, nueva);
+
+  return {
+    id_usuario: parsedTargetId,
+    rol: target.rol,
+  };
+}
+
+export async function createManagedUserByAdmin({ idAdmin, payload }) {
+  const parsedAdminId = Number(idAdmin);
+
+  if (!Number.isInteger(parsedAdminId) || parsedAdminId <= 0) {
+    const error = new Error('El id del admin no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const admin = await findUserById(parsedAdminId);
+
+  if (!admin) {
+    const error = new Error('Admin no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (admin.rol !== 'admin') {
+    const error = new Error('Solo un admin puede crear operadores y conductores.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const nombre = String(payload?.nombre || '').trim();
+  const apellido = String(payload?.apellido || '').trim();
+  const correo = String(payload?.correo || '').trim().toLowerCase();
+  const telefono = String(payload?.telefono || '').trim();
+  const ciudad = String(payload?.ciudad || '').trim();
+  const contrasena = String(payload?.contrasena || '').trim();
+  const confirmarContrasena = String(payload?.confirmarContrasena || '').trim();
+  const rol = String(payload?.rol || '').trim().toLowerCase();
+  const licencia = String(payload?.licencia || '').trim();
+  const tipoLicencia = String(payload?.tipo_licencia || '').trim().toUpperCase();
+  const fechaContratacion = String(payload?.fecha_contratacion || '').trim();
+
+  if (!['operador', 'conductor'].includes(rol)) {
+    const error = new Error('El rol debe ser operador o conductor.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!nombre || !apellido || !correo || !telefono || !ciudad || !contrasena || !confirmarContrasena) {
+    const error = new Error('Nombre, apellido, correo, telefono, ciudad y contrasena son obligatorios.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(correo)) {
+    const error = new Error('Correo invalido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!/^\d{8,15}$/.test(telefono)) {
+    const error = new Error('Telefono invalido. Usa solo digitos de 8 a 15 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (contrasena.length < 6) {
+    const error = new Error('La contrasena debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (contrasena !== confirmarContrasena) {
+    const error = new Error('Las contrasenas no coinciden.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const existing = await findUserByEmail(correo);
+  if (existing) {
+    const error = new Error('Ya existe un usuario con ese correo.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  if (rol === 'conductor') {
+    if (!licencia || !tipoLicencia || !fechaContratacion) {
+      const error = new Error('Para conductor debes capturar licencia, tipo de licencia y fecha de contratacion.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const parsedFecha = new Date(fechaContratacion);
+    if (Number.isNaN(parsedFecha.getTime())) {
+      const error = new Error('La fecha de contratacion no es valida.');
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+
+  const created = await createOperationalUser({
+    nombre,
+    apellido,
+    correo,
+    contrasena,
+    telefono,
+    ciudad,
+    rol,
+  });
+
+  if (!created) {
+    const error = new Error('No se pudo crear el usuario.');
+    error.statusCode = 500;
+    throw error;
+  }
+
+  let conductor = null;
+  if (rol === 'conductor') {
+    conductor = await createConductorFromUser({
+      id_usuario: created.id_usuario,
+      licencia,
+      tipo_licencia: tipoLicencia,
+      fecha_contratacion: fechaContratacion,
+    });
+  }
+
+  return {
+    id_usuario: created.id_usuario,
+    nombre: created.nombre,
+    apellido: created.apellido,
+    correo: created.correo,
+    telefono: created.telefono,
+    ciudad: created.ciudad,
+    rol: created.rol,
+    estado: created.estado,
+    id_conductor: conductor?.id_conductor || null,
+  };
 }

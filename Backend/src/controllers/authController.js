@@ -1,6 +1,9 @@
 import {
+  createManagedUserByAdmin,
   changePassword,
+  changePasswordByAdmin,
   getUserProfile,
+  listManageableUsersForAdmin,
   loginUser,
   registerUser,
   requestPasswordRecovery,
@@ -99,6 +102,63 @@ export async function updatePassword(req, res, next) {
     res.json({
       ok: true,
       message: 'Contrasena actualizada correctamente.',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUsuariosGestionAdmin(req, res, next) {
+  try {
+    const { idAdmin, rol } = req.query;
+    const data = await listManageableUsersForAdmin({
+      idAdmin,
+      rol,
+    });
+
+    res.json({
+      ok: true,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updatePasswordByAdmin(req, res, next) {
+  try {
+    const { idUsuario } = req.params;
+    const { idAdmin, ...payload } = req.body ?? {};
+
+    const data = await changePasswordByAdmin({
+      idAdmin,
+      idUsuarioObjetivo: idUsuario,
+      payload,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Contrasena del usuario actualizada por admin.',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createUsuarioByAdmin(req, res, next) {
+  try {
+    const { idAdmin, ...payload } = req.body ?? {};
+
+    const data = await createManagedUserByAdmin({
+      idAdmin,
+      payload,
+    });
+
+    res.status(201).json({
+      ok: true,
+      message: 'Usuario creado correctamente por admin.',
       data,
     });
   } catch (error) {

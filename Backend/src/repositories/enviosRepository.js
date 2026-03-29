@@ -193,12 +193,35 @@ export async function findShipmentById(idEnvio) {
         p.alto,
         p.valor_declarado,
         p.tipo_servicio,
-        p.estado_actual AS estado_paquete
+        p.estado_actual AS estado_paquete,
+        asignacion.id_asignacion,
+        asignacion.estado_asignacion,
+        asignacion.id_conductor AS id_conductor_asignado,
+        asignacion.conductor_nombre,
+        asignacion.conductor_correo
      FROM envios e
      JOIN clientes c_rem ON c_rem.id_cliente = e.id_cliente_remitente
      JOIN clientes c_des ON c_des.id_cliente = e.id_cliente_destinatario
      LEFT JOIN envio_paquete ep ON ep.id_envio = e.id_envio
      LEFT JOIN paquetes p ON p.id_paquete = ep.id_paquete
+     LEFT JOIN LATERAL (
+       SELECT
+         ar.id_asignacion,
+         ar.estado_asignacion,
+         c.id_conductor,
+         CONCAT(u.nombre, ' ', u.apellido) AS conductor_nombre,
+         u.correo AS conductor_correo
+       FROM envio_ruta er
+       JOIN asignaciones_ruta ar ON ar.id_asignacion = er.id_asignacion
+       JOIN conductores c ON c.id_conductor = ar.id_conductor
+       JOIN usuarios u ON u.id_usuario = c.id_usuario
+       WHERE er.id_envio = e.id_envio
+       ORDER BY
+         CASE WHEN ar.estado_asignacion IN ('programada', 'en_proceso') THEN 0 ELSE 1 END,
+         ar.fecha_salida DESC,
+         ar.id_asignacion DESC
+       LIMIT 1
+     ) AS asignacion ON TRUE
      WHERE e.id_envio = $1
      LIMIT 1`,
     [idEnvio]
@@ -302,6 +325,50 @@ export async function createShipmentWithPackageByClient(payload) {
   try {
     await client.query('BEGIN');
 
+    let senderId = payload.id_cliente_remitente || null;
+
+    if (!senderId) {
+      if (payload.remitente.correo) {
+        const senderByEmail = await client.query(
+          `SELECT id_cliente
+           FROM clientes
+           WHERE LOWER(correo) = LOWER($1)
+           LIMIT 1`,
+          [payload.remitente.correo]
+        );
+
+        if (senderByEmail.rowCount > 0) {
+          senderId = senderByEmail.rows[0].id_cliente;
+        }
+      }
+
+      if (!senderId) {
+        const senderInsert = await client.query(
+          `INSERT INTO clientes (
+            nombre,
+            telefono,
+            correo,
+            direccion_principal,
+            ciudad,
+            estado,
+            codigo_postal
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+          RETURNING id_cliente`,
+          [
+            payload.remitente.nombre,
+            payload.remitente.telefono || null,
+            payload.remitente.correo || null,
+            payload.remitente.direccion,
+            payload.remitente.ciudad,
+            payload.remitente.estado || payload.remitente.ciudad,
+            payload.remitente.codigo_postal || '00000',
+          ]
+        );
+
+        senderId = senderInsert.rows[0].id_cliente;
+      }
+    }
+
     let recipientId = null;
 
     if (payload.destinatario.correo) {
@@ -358,7 +425,7 @@ export async function createShipmentWithPackageByClient(payload) {
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pendiente')
       RETURNING id_envio`,
       [
-        payload.id_cliente_remitente,
+        senderId,
         recipientId,
         payload.remitente.direccion,
         payload.destinatario.direccion,

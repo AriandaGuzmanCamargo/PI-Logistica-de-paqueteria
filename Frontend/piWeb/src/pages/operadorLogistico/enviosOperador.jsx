@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import MenuOperador from './menuOperador.jsx';
 import {
-  autoAsignarEnvio,
   estadoEnvioClase,
   estadoEnvioTexto,
   getEnviosOperador,
-  getWebUser,
 } from '../../services/operadorService';
 
 export default function EnviosOperador() {
+  const today = new Date().toISOString().slice(0, 10);
   const [envios, setEnvios] = useState([]);
   const [filtro, setFiltro] = useState('todos');
+  const [busquedaInput, setBusquedaInput] = useState('');
   const [busqueda, setBusqueda] = useState('');
+  const [fechaDesde, setFechaDesde] = useState(today);
+  const [fechaHasta, setFechaHasta] = useState(today);
   const [error, setError] = useState('');
-  const [assigningId, setAssigningId] = useState(null);
 
   useEffect(() => {
     const parametros = new URLSearchParams(window.location.search);
@@ -36,43 +37,18 @@ export default function EnviosOperador() {
         }
   }, []);
 
-  async function reloadEnvios() {
-    const data = await getEnviosOperador();
-    setEnvios(data);
+  function handleBuscar() {
+    setBusqueda(busquedaInput.trim());
   }
 
-  async function handleAutoAssign(item) {
-    const currentState = String(item.estado_envio || '').toLowerCase();
-
-    if (!['pendiente', 'retrasado'].includes(currentState)) {
-      window.alert('Solo se pueden autoasignar envios pendientes o retrasados.');
-      return;
-    }
-
-    const webUser = getWebUser();
-    const idUsuario = Number(webUser?.id_usuario);
-
-    if (!Number.isInteger(idUsuario) || idUsuario <= 0) {
-      window.alert('No hay sesion valida de operador. Vuelve a iniciar sesion.');
-      return;
-    }
-
-    try {
-      setAssigningId(item.id_envio);
-      setError('');
-      await autoAsignarEnvio({
-        idEnvio: item.id_envio,
-        idUsuario,
-      });
-
-      await reloadEnvios();
-      window.alert(`Envio ${item.paquete?.codigo_rastreo || item.id_envio} autoasignado.`);
-    } catch (assignError) {
-      setError(assignError.message || 'No se pudo autoasignar el envio.');
-    } finally {
-      setAssigningId(null);
-    }
+  function resetFiltros() {
+    setFiltro('todos');
+    setBusquedaInput('');
+    setBusqueda('');
+    setFechaDesde('');
+    setFechaHasta('');
   }
+
 
   useEffect(() => {
     let isMounted = true;
@@ -103,9 +79,24 @@ export default function EnviosOperador() {
       const coincideEstado =
         filtro === 'todos' || String(item.estado_envio || '').toLowerCase() === filtro;
 
+      let coincideFecha = true;
+      const createdAt = item?.fecha_creacion ? new Date(item.fecha_creacion) : null;
+
+      if (createdAt && !Number.isNaN(createdAt.getTime())) {
+        if (fechaDesde) {
+          const from = new Date(`${fechaDesde}T00:00:00`);
+          coincideFecha = coincideFecha && createdAt >= from;
+        }
+
+        if (fechaHasta) {
+          const to = new Date(`${fechaHasta}T23:59:59`);
+          coincideFecha = coincideFecha && createdAt <= to;
+        }
+      }
+
       const query = busqueda.trim().toLowerCase();
       if (!query) {
-        return coincideEstado;
+        return coincideEstado && coincideFecha;
       }
 
       const texto = [
@@ -119,9 +110,9 @@ export default function EnviosOperador() {
         .join(' ')
         .toLowerCase();
 
-      return coincideEstado && texto.includes(query);
+      return coincideEstado && coincideFecha && texto.includes(query);
     });
-  }, [envios, filtro, busqueda]);
+  }, [envios, filtro, busqueda, fechaDesde, fechaHasta]);
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
 
@@ -165,17 +156,38 @@ export default function EnviosOperador() {
               </select>
             </div>
             <div className="campo-filtro campo-filtro--fecha">
-              <label htmlFor="filtro-fecha">Fecha:</label>
-              <input id="filtro-fecha" type="text" defaultValue="24/04/2024 - 24/04/2024" />
+              <label htmlFor="filtro-fecha-desde">Fecha:</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  id="filtro-fecha-desde"
+                  type="date"
+                  value={fechaDesde}
+                  onChange={(e) => setFechaDesde(e.target.value)}
+                  aria-label="Fecha desde"
+                />
+                <input
+                  id="filtro-fecha-hasta"
+                  type="date"
+                  value={fechaHasta}
+                  onChange={(e) => setFechaHasta(e.target.value)}
+                  aria-label="Fecha hasta"
+                />
+              </div>
             </div>
             <div className="buscador-envios">
               <input
                 type="text"
                 placeholder="Buscar guia, remitente o destinatario..."
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
+                value={busquedaInput}
+                onChange={(e) => setBusquedaInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleBuscar();
+                  }
+                }}
               />
-              <button type="button">Buscar</button>
+              <button type="button" onClick={handleBuscar}>Buscar</button>
+              <button type="button" onClick={resetFiltros}>Limpiar</button>
             </div>
           </div>
 
@@ -241,15 +253,6 @@ export default function EnviosOperador() {
                         <a className="boton-detalles" href={`/operador/detalle-envio?id=${item.id_envio}`}>
                           Ver Detalles
                         </a>
-                        <button
-                          type="button"
-                          className="boton-detalles"
-                          style={{ marginLeft: '8px' }}
-                          disabled={assigningId === item.id_envio}
-                          onClick={() => handleAutoAssign(item)}
-                        >
-                          {assigningId === item.id_envio ? 'Asignando...' : 'Autoasignar'}
-                        </button>
                       </td>
                     </tr>
                   ))

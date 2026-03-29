@@ -56,6 +56,34 @@ export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
   return payload.data;
 }
 
+export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsignacion }) {
+  const user = getWebUser();
+
+  if (!user?.id_usuario) {
+    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+  }
+
+  const response = await fetch(`/api/asignaciones/manual/${idEnvio}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idUsuario: user.id_usuario,
+      idConductor,
+      fechaAsignacion,
+    }),
+  });
+
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudo asignar el envio al conductor seleccionado.');
+  }
+
+  return payload.data;
+}
+
 export async function getIncidenciasOperador() {
   const user = getWebUser();
 
@@ -71,6 +99,45 @@ export async function getIncidenciasOperador() {
   }
 
   return payload.data || [];
+}
+
+export async function createEnvioWeb(payload) {
+  const user = getWebUser();
+
+  if (!user?.id_usuario) {
+    throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+  }
+
+  const response = await fetch('/api/envios', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idUsuario: user.id_usuario,
+      ...payload,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.message || 'No se pudo registrar el paquete.');
+  }
+
+  return data.data;
+}
+
+export async function getConductoresDisponibles(fechaAsignacion) {
+  const query = fechaAsignacion ? `?fecha=${encodeURIComponent(fechaAsignacion)}` : '';
+  const response = await fetch(`/api/asignaciones/conductores-disponibles${query}`);
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.message || 'No se pudieron cargar los conductores disponibles.');
+  }
+
+  return data.data || [];
 }
 
 function normalizeEstado(estado) {

@@ -19,7 +19,11 @@
   background: none;
 }
 
-.registro-encabezado__icono {\n  display: none;\n}\n\n.registro-encabezado h2 {
+.registro-encabezado__icono {
+  display: none;
+}
+
+.registro-encabezado h2 {
   margin: 0;
   font-size: 26px;
   font-weight: 700;

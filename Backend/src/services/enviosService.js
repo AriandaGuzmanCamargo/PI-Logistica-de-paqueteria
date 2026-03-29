@@ -135,6 +135,15 @@ export async function getShipmentDetailById(idEnvio) {
       telefono: item.destinatario_telefono,
       correo: item.destinatario_correo,
     },
+    asignacion: item.id_conductor_asignado
+      ? {
+          id_asignacion: item.id_asignacion,
+          estado_asignacion: item.estado_asignacion,
+          id_conductor: item.id_conductor_asignado,
+          conductor_nombre: item.conductor_nombre,
+          conductor_correo: item.conductor_correo,
+        }
+      : null,
     paquete: item.id_paquete
       ? {
           id_paquete: item.id_paquete,
@@ -302,17 +311,9 @@ export async function createShipmentByClient({ userId, payload }) {
     throw error;
   }
 
-  if (user.rol !== 'cliente') {
-    const error = new Error('Solo un cliente puede crear envios desde esta app.');
+  if (!['cliente', 'operador', 'admin'].includes(user.rol)) {
+    const error = new Error('Tu rol no tiene permisos para crear envios.');
     error.statusCode = 403;
-    throw error;
-  }
-
-  const senderClientId = await findClientIdByUserId(parsedUserId);
-
-  if (!senderClientId) {
-    const error = new Error('No se encontro el cliente asociado a este usuario.');
-    error.statusCode = 404;
     throw error;
   }
 
@@ -351,11 +352,23 @@ export async function createShipmentByClient({ userId, payload }) {
     throw error;
   }
 
-  await updateClientProfileById(senderClientId, {
-    ...(remitente.nombre ? { nombre: remitente.nombre } : {}),
-    ...(remitente.telefono ? { telefono: remitente.telefono } : {}),
-    ...(remitente.correo ? { correo: remitente.correo.toLowerCase() } : {}),
-  });
+  let senderClientId = null;
+
+  if (user.rol === 'cliente') {
+    senderClientId = await findClientIdByUserId(parsedUserId);
+
+    if (!senderClientId) {
+      const error = new Error('No se encontro el cliente asociado a este usuario.');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    await updateClientProfileById(senderClientId, {
+      ...(remitente.nombre ? { nombre: remitente.nombre } : {}),
+      ...(remitente.telefono ? { telefono: remitente.telefono } : {}),
+      ...(remitente.correo ? { correo: remitente.correo.toLowerCase() } : {}),
+    });
+  }
 
   if (!destinatario.nombre || !destinatario.direccion || !destinatario.ciudad) {
     const error = new Error('Nombre, direccion y ciudad del destinatario son obligatorios.');

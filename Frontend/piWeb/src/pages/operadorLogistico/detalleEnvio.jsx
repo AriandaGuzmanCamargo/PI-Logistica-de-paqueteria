@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import MenuOperador from './menuOperador.jsx';
 import {
+	asignarEnvioConConductor,
 	estadoEnvioClase,
 	estadoEnvioTexto,
+	getConductoresDisponibles,
 	getDetalleEnvio,
 } from '../../services/operadorService';
 
@@ -10,6 +12,10 @@ export default function DetalleEnvio() {
 	const [envio, setEnvio] = useState(null);
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(true);
+	const [availableDrivers, setAvailableDrivers] = useState([]);
+	const [selectedDriverId, setSelectedDriverId] = useState('');
+	const [isLoadingDrivers, setIsLoadingDrivers] = useState(false);
+	const [isAssigning, setIsAssigning] = useState(false);
 
 	const idEnvio = useMemo(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -49,6 +55,80 @@ export default function DetalleEnvio() {
 	}, [idEnvio]);
 
 	const guia = envio?.paquete?.codigo_rastreo || (envio ? `ENV-${envio.id_envio}` : '---');
+	const conductorAsignado = envio?.asignacion?.conductor_nombre || 'Sin asignar';
+	const fechaAsignacion = useMemo(() => {
+		if (!envio) {
+			return null;
+		}
+
+		const sourceDate = envio.fecha_estimada_entrega || envio.fecha_creacion;
+		if (!sourceDate) {
+			return null;
+		}
+
+		return new Date(sourceDate).toISOString().slice(0, 10);
+	}, [envio]);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		async function loadAvailableDrivers() {
+			if (!envio || envio.asignacion || !fechaAsignacion) {
+				setAvailableDrivers([]);
+				setSelectedDriverId('');
+				return;
+			}
+
+			try {
+				setIsLoadingDrivers(true);
+				const drivers = await getConductoresDisponibles(fechaAsignacion);
+				if (isMounted) {
+					setAvailableDrivers(drivers);
+					if (drivers.length > 0) {
+						setSelectedDriverId(String(drivers[0].id_conductor));
+					}
+				}
+			} catch (_error) {
+				if (isMounted) {
+					setAvailableDrivers([]);
+				}
+			} finally {
+				if (isMounted) {
+					setIsLoadingDrivers(false);
+				}
+			}
+		}
+
+		loadAvailableDrivers();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [envio, fechaAsignacion]);
+
+	async function handleAssignDriver() {
+		if (!envio?.id_envio || !selectedDriverId || !fechaAsignacion) {
+			return;
+		}
+
+		try {
+			setIsAssigning(true);
+			setError('');
+
+			await asignarEnvioConConductor({
+				idEnvio: envio.id_envio,
+				idConductor: Number(selectedDriverId),
+				fechaAsignacion,
+			});
+
+			const refreshed = await getDetalleEnvio(envio.id_envio);
+			setEnvio(refreshed);
+		} catch (assignError) {
+			setError(assignError.message || 'No se pudo asignar el conductor.');
+		} finally {
+			setIsAssigning(false);
+		}
+	}
 
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
@@ -127,6 +207,33 @@ export default function DetalleEnvio() {
 							<h3>Información de Envío</h3>
 							<div className="info-lista">
 								<p><span>Estado:</span> <span className={`estado ${estadoEnvioClase(envio?.estado_envio)}`}>● {estadoEnvioTexto(envio?.estado_envio)}</span> <strong className="hora">{envio?.fecha_creacion ? new Date(envio.fecha_creacion).toLocaleString() : '-'}</strong></p>
+								<p><span>Conductor:</span> {conductorAsignado}</p>
+								{!envio?.asignacion ? (
+									<p>
+										<span>Asignar:</span>{' '}
+										<select
+											value={selectedDriverId}
+											onChange={(e) => setSelectedDriverId(e.target.value)}
+											disabled={isLoadingDrivers || isAssigning}
+										>
+											<option value="">{isLoadingDrivers ? 'Cargando...' : 'Seleccionar conductor'}</option>
+											{availableDrivers.map((driver) => (
+												<option key={driver.id_conductor} value={String(driver.id_conductor)}>
+													{driver.nombre}
+												</option>
+											))}
+										</select>
+										<button
+											type="button"
+											className="boton-detalles"
+											style={{ marginLeft: '8px' }}
+											onClick={handleAssignDriver}
+											disabled={!selectedDriverId || isAssigning || availableDrivers.length === 0}
+										>
+											{isAssigning ? 'Asignando...' : 'Asignar'}
+										</button>
+									</p>
+								) : null}
 								<p><span>Costo total:</span> ${envio?.costo_total ?? '-'}</p>
 								<p><span>Origen:</span> {envio?.direccion_origen || '-'} ({envio?.ciudad_origen || '-'})</p>
 								<p><span>Destino:</span> {envio?.direccion_destino || '-'} ({envio?.ciudad_destino || '-'})</p>

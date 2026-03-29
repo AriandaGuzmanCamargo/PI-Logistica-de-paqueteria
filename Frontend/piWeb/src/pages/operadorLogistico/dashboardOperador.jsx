@@ -175,7 +175,7 @@ export default function DashboardOperador() {
                   <th>ID</th>
                   <th>Destinatario</th>
                   <th>Estado</th>
-                  <th>Repartidor</th>
+                  <th>Remitente</th>
                   <th>Acciones</th>
                 </tr>
               </thead>

@@ -1,4 +1,8 @@
-import { autoAssignShipment } from '../services/asignacionesService.js';
+import {
+  assignShipmentToSelectedDriver,
+  autoAssignShipment,
+  getAvailableDrivers,
+} from '../services/asignacionesService.js';
 
 export async function autoAssignEnvio(req, res, next) {
   try {
@@ -16,6 +20,45 @@ export async function autoAssignEnvio(req, res, next) {
         result.action === 'already_assigned'
           ? 'El envio ya tenia una asignacion activa.'
           : 'Envio autoasignado correctamente.',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getConductoresDisponibles(req, res, next) {
+  try {
+    const { fecha } = req.query;
+    const conductores = await getAvailableDrivers({ fechaAsignacion: fecha });
+
+    res.json({
+      ok: true,
+      data: conductores,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function assignEnvioConConductor(req, res, next) {
+  try {
+    const { idEnvio } = req.params;
+    const { idUsuario, idConductor, fechaAsignacion } = req.body ?? {};
+
+    const result = await assignShipmentToSelectedDriver({
+      idEnvio,
+      idUsuario,
+      idConductor,
+      fechaAsignacion,
+    });
+
+    res.json({
+      ok: true,
+      message:
+        result.action === 'already_assigned'
+          ? 'El envio ya tenia una asignacion activa.'
+          : 'Envio asignado al conductor seleccionado.',
       data: result,
     });
   } catch (error) {

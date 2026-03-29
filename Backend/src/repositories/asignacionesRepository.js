@@ -118,7 +118,7 @@ export async function findBestRouteId() {
   return fallback.rowCount > 0 ? fallback.rows[0].id_ruta : null;
 }
 
-export async function createActiveAssignment({ idConductor, idVehiculo, idRuta }) {
+export async function createActiveAssignment({ idConductor, idVehiculo, idRuta, fechaProgramada }) {
   const result = await pool.query(
     `INSERT INTO asignaciones_ruta (
       id_ruta,
@@ -127,9 +127,16 @@ export async function createActiveAssignment({ idConductor, idVehiculo, idRuta }
       fecha_salida,
       fecha_llegada,
       estado_asignacion
-    ) VALUES ($1, $2, $3, NOW(), NOW() + INTERVAL '8 hour', 'programada')
+    ) VALUES (
+      $1,
+      $2,
+      $3,
+      CASE WHEN $4::date IS NULL THEN NOW() ELSE ($4::date + TIME '08:00') END,
+      CASE WHEN $4::date IS NULL THEN NOW() + INTERVAL '8 hour' ELSE ($4::date + TIME '16:00') END,
+      'programada'
+    )
     RETURNING id_asignacion, id_ruta, id_vehiculo, id_conductor, estado_asignacion`,
-    [idRuta, idVehiculo, idConductor]
+    [idRuta, idVehiculo, idConductor, fechaProgramada || null]
   );
 
   return result.rows[0];
@@ -155,4 +162,53 @@ export async function markShipmentAsInRoute(idEnvio) {
        AND estado_envio = 'pendiente'`,
     [idEnvio]
   );
+}
+
+export async function listAvailableDrivers(fechaAsignacion) {
+  const result = await pool.query(
+    `SELECT
+        c.id_conductor,
+        c.id_usuario,
+        u.nombre,
+        u.apellido,
+        u.correo
+     FROM conductores c
+     JOIN usuarios u ON u.id_usuario = c.id_usuario
+     LEFT JOIN asignaciones_ruta ar
+       ON ar.id_conductor = c.id_conductor
+      AND ar.estado_asignacion IN ('programada', 'en_proceso')
+      AND DATE(ar.fecha_salida) = COALESCE($1::date, CURRENT_DATE)
+     WHERE u.estado = 'activo'
+       AND c.estado = 'activo'
+       AND ar.id_asignacion IS NULL
+     ORDER BY u.nombre ASC, u.apellido ASC, c.id_conductor ASC`,
+    [fechaAsignacion || null]
+  );
+
+  return result.rows;
+}
+
+export async function findAvailableDriverById(idConductor, fechaAsignacion) {
+  const result = await pool.query(
+    `SELECT
+        c.id_conductor,
+        c.id_usuario,
+        u.nombre,
+        u.apellido,
+        u.correo
+     FROM conductores c
+     JOIN usuarios u ON u.id_usuario = c.id_usuario
+     LEFT JOIN asignaciones_ruta ar
+       ON ar.id_conductor = c.id_conductor
+      AND ar.estado_asignacion IN ('programada', 'en_proceso')
+      AND DATE(ar.fecha_salida) = COALESCE($2::date, CURRENT_DATE)
+     WHERE c.id_conductor = $1
+       AND u.estado = 'activo'
+       AND c.estado = 'activo'
+       AND ar.id_asignacion IS NULL
+     LIMIT 1`,
+    [idConductor, fechaAsignacion || null]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
 }

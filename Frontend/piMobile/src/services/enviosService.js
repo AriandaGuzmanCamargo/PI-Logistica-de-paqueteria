@@ -62,6 +62,42 @@ export async function cancelEnvioByCliente({ idEnvio, idUsuario }) {
   return data.data;
 }
 
+export async function marcarEnvioComoEntregado({ idEnvio, idUsuario }) {
+  const response = await fetch(`${API_BASE_URL}/api/envios/${idEnvio}/entregar`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUsuario }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'No se pudo marcar el envio como entregado');
+  }
+
+  return data.data;
+}
+
+export async function cancelarEnvioComoConductor({ idEnvio, idUsuario }) {
+  const response = await fetch(`${API_BASE_URL}/api/envios/${idEnvio}/cancelar`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUsuario }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'No se pudo cancelar el envio');
+  }
+
+  return data.data;
+}
+
 export async function createEnvioByCliente({
   idUsuario,
   remitente,

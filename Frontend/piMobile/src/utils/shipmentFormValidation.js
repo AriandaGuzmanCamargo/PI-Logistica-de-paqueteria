@@ -97,6 +97,20 @@ export function validateCity(value, label = 'Ciudad') {
 	return normalized;
 }
 
+export function validateReference(value, label = 'Referencia') {
+	const normalized = sanitizeText(value);
+
+	if (!normalized) {
+		throw new Error(`${label} es obligatoria.`);
+	}
+
+	if (normalized.length < 5) {
+		throw new Error(`${label} debe tener al menos 5 caracteres.`);
+	}
+
+	return normalized;
+}
+
 export function validateAddress(value, label = 'Direccion') {
 	const normalized = sanitizeAddress(value);
 
@@ -183,5 +197,6 @@ export function buildPersonPayload(rawPayload, labels) {
 		correo: validateEmail(rawPayload?.correo),
 		direccion: validateAddress(rawPayload?.direccion, labels.addressLabel),
 		ciudad: validateCity(rawPayload?.ciudad, labels.cityLabel),
+		referencia: validateReference(rawPayload?.referencia, labels.referenceLabel || 'Referencia'),
 	};
 }

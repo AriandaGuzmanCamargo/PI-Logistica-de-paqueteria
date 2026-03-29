@@ -26,6 +26,7 @@ function toDeliveryItem(envio, index) {
 	const addressParts = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean);
 	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
 	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
+	const canceled = estadoEnvio === 'cancelado';
 	const done = estadoEnvio === 'entregado' || estadoPaquete === 'entregado';
 
 	return {
@@ -34,6 +35,8 @@ function toDeliveryItem(envio, index) {
 		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
 		phone: envio?.destinatario?.telefono || '',
 		done,
+		canceled,
+		estado_envio: estadoEnvio,
 		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
 		pinBlue: done,
 		id_envio: envio?.id_envio,
@@ -155,7 +158,7 @@ export default function EntregasR({ navigation, route }) {
 
 		switch (activeFilter) {
 			case 'Pendientes':
-				return searched.filter((item) => !item.done && !item.hasIncident);
+				return searched.filter((item) => !item.done && !item.canceled && !item.hasIncident);
 			case 'Entregadas':
 				return searched.filter((item) => item.done);
 			case 'Incidencias':
@@ -244,10 +247,10 @@ export default function EntregasR({ navigation, route }) {
 											</View>
 
 											<TouchableOpacity
-												style={[styles.actionBtn, item.done && styles.actionBtnDone]}
-												onPress={() => !item.done && navigation.navigate('DetalleEntregaR', { delivery: item, idEnvio: item.id_envio })}
+												style={[styles.actionBtn, (item.done || item.canceled) && styles.actionBtnDone]}
+												onPress={() => !item.done && !item.canceled && navigation.navigate('DetalleEntregaR', { delivery: item, idEnvio: item.id_envio })}
 											>
-												<Text style={styles.actionText}>{item.done ? 'Entregado' : 'Ver Detalle'}</Text>
+												<Text style={styles.actionText}>{item.done ? 'Entregado' : item.canceled ? 'Cancelado' : 'Ver Detalle'}</Text>
 											</TouchableOpacity>
 										</View>
 

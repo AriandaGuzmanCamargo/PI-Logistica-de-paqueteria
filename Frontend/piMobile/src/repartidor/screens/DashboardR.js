@@ -51,6 +51,7 @@ function toDashboardDelivery(envio, index) {
 	const addressParts = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean);
 	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
 	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
+	const canceled = estadoEnvio === 'cancelado';
 	const done = estadoEnvio === 'entregado' || estadoPaquete === 'entregado';
 
 	return {
@@ -58,6 +59,8 @@ function toDashboardDelivery(envio, index) {
 		name: nombre,
 		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
 		done,
+		canceled,
+		estado_envio: estadoEnvio,
 		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
 		id_envio: envio?.id_envio,
 	};
@@ -152,23 +155,23 @@ export default function DashboardR({ navigation }) {
 		});
 	}, [deliveries, searchText]);
 
-	const pendingCount = useMemo(() => deliveries.filter((item) => !item.done).length, [deliveries]);
+	const pendingCount = useMemo(() => deliveries.filter((item) => !item.done && !item.canceled).length, [deliveries]);
 
 	const nextRouteDelivery = useMemo(() => {
-		const firstPending = deliveries.find((item) => !item.done && !item.hasIncident);
+		const firstPending = deliveries.find((item) => !item.done && !item.canceled && !item.hasIncident);
 		if (firstPending) return firstPending;
 
-		const secondPending = deliveries.find((item) => !item.done);
+		const secondPending = deliveries.find((item) => !item.done && !item.canceled);
 		if (secondPending) return secondPending;
 
 		return deliveries[0] || null;
 	}, [deliveries]);
 
 	const nextDelivery = useMemo(() => {
-		const firstPending = filteredDeliveries.find((item) => !item.done && !item.hasIncident);
+		const firstPending = filteredDeliveries.find((item) => !item.done && !item.canceled && !item.hasIncident);
 		if (firstPending) return firstPending;
 
-		const secondPending = filteredDeliveries.find((item) => !item.done);
+		const secondPending = filteredDeliveries.find((item) => !item.done && !item.canceled);
 		if (secondPending) return secondPending;
 
 		return filteredDeliveries[0] || null;
@@ -382,7 +385,7 @@ export default function DashboardR({ navigation }) {
 									<View style={styles.recordDot} />
 									<Text style={styles.recordId}>{nextDelivery.id}</Text>
 								</View>
-								<Text style={styles.recordTime}>{nextDelivery.done ? 'Entregado' : 'Pendiente'}</Text>
+								<Text style={styles.recordTime}>{nextDelivery.done ? 'Entregado' : nextDelivery.canceled ? 'Cancelado' : 'Pendiente'}</Text>
 							</View>
 
 							<View style={styles.recordBottomRow}>
@@ -393,7 +396,7 @@ export default function DashboardR({ navigation }) {
 								<TouchableOpacity
 									style={styles.recordActionBtn}
 									onPress={() => {
-										if (!nextDelivery.done) {
+										if (!nextDelivery.done && !nextDelivery.canceled) {
 											navigation.navigate('DetalleEntregaR', {
 												delivery: nextDelivery,
 												idEnvio: nextDelivery.id_envio,
@@ -404,7 +407,7 @@ export default function DashboardR({ navigation }) {
 										navigation.navigate('EntregasR', { initialFilter: 'Entregadas' });
 									}}
 								>
-									<Text style={styles.recordActionText}>{nextDelivery.done ? 'Ver entregadas' : 'Ver detalle'}</Text>
+										<Text style={styles.recordActionText}>{nextDelivery.done ? 'Ver entregadas' : nextDelivery.canceled ? 'Cancelado' : 'Ver detalle'}</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -417,9 +420,6 @@ export default function DashboardR({ navigation }) {
 					<View style={styles.tipTextWrap}>
 						<Text style={styles.tipTitle}>Consejo del día</Text>
 						<Text style={styles.tipBody}>Asegura y etiqueta los paquetes antes de salir para evitar retrasos.</Text>
-						<TouchableOpacity>
-							<Text style={styles.tipLink}>Leer más &gt;</Text>
-						</TouchableOpacity>
 					</View>
 
 					<View style={styles.tipAvatar}>

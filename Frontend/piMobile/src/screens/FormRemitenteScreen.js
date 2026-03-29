@@ -18,6 +18,7 @@ export default function FormRemitenteScreen({ navigation, route }) {
   const [telefono, setTelefono] = useState(remitenteData.telefono || '');
   const [correo, setCorreo] = useState(remitenteData.correo || '');
   const [direccion, setDireccion] = useState(remitenteData.direccion || '');
+  const [referencia, setReferencia] = useState(remitenteData.referencia || '');
   const [ciudad, setCiudad] = useState(remitenteData.ciudad || '');
 
   const goNext = () => {
@@ -29,12 +30,14 @@ export default function FormRemitenteScreen({ navigation, route }) {
           telefono,
           correo,
           direccion,
+          referencia,
           ciudad,
         },
         {
           nameLabel: 'Nombre del remitente',
           identityLabel: 'CURP o ID alterno del remitente',
           addressLabel: 'Direccion de recogida',
+          referenceLabel: 'Referencia de recogida',
           cityLabel: 'Ciudad de origen',
         }
       );
@@ -60,6 +63,7 @@ export default function FormRemitenteScreen({ navigation, route }) {
         <TextInput style={styles.input} placeholder="Telefono (10 digitos)" placeholderTextColor="#9AA4BF" value={telefono} onChangeText={(value) => setTelefono(sanitizePhone(value))} keyboardType="numeric" maxLength={10} />
         <TextInput style={styles.input} placeholder="Correo electrónico" placeholderTextColor="#9AA4BF" value={correo} onChangeText={setCorreo} autoCapitalize="none" keyboardType="email-address" />
         <TextInput style={styles.input} placeholder="Direccion de recogida" placeholderTextColor="#9AA4BF" multiline value={direccion} onChangeText={setDireccion} />
+        <TextInput style={styles.input} placeholder="Referencia de recogida (portón, color de casa, etc.)" placeholderTextColor="#9AA4BF" multiline value={referencia} onChangeText={(value) => setReferencia(sanitizeText(value))} />
         <Text style={styles.helperText}>Formato requerido: Calle y numero, Colonia, CP 12345</Text>
         <TextInput style={styles.input} placeholder="Ciudad de origen" placeholderTextColor="#9AA4BF" value={ciudad} onChangeText={(value) => setCiudad(sanitizeText(value))} />
       </View>

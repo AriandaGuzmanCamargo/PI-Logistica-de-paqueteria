@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
 	ActivityIndicator,
+	Alert,
 	Platform,
 	SafeAreaView,
 	ScrollView,
@@ -17,6 +18,8 @@ import TopHeaderR from '../components/TopHeaderR';
 import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
 import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, resolveCurrentPosition, toKm, toMinutes } from '../services/rutaMapService';
+import { cancelarEnvioComoConductor, marcarEnvioComoEntregado } from '../../services/enviosService';
+import { getCurrentUser } from '../../services/sessionService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -51,6 +54,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 		distanceMeters: null,
 		durationSeconds: null,
 	});
+	const [isSubmittingDelivery, setIsSubmittingDelivery] = useState(false);
 
 	const resolveMapPreview = async () => {
 		setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
@@ -138,6 +142,74 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
 	const s = (size) => Math.round(size * scale);
 	const styles = getDetalleEntregaRStyles(s, isDarkMode);
+	const shipmentId = route?.params?.idEnvio || delivery?.id_envio;
+	const shipmentStatus = String(delivery?.estado_envio || '').toLowerCase();
+	const isDelivered = shipmentStatus === 'entregado';
+	const isCancelled = shipmentStatus === 'cancelado';
+
+	const handleMarkAsDelivered = async () => {
+		try {
+			const user = getCurrentUser();
+			const idUsuario = Number(user?.id_usuario);
+
+			if (!Number.isInteger(idUsuario) || idUsuario <= 0) {
+				throw new Error('No hay sesion activa de conductor.');
+			}
+
+			if (!shipmentId) {
+				throw new Error('No se encontro el id del envio para marcar entrega.');
+			}
+
+			setIsSubmittingDelivery(true);
+			await marcarEnvioComoEntregado({
+				idEnvio: shipmentId,
+				idUsuario,
+			});
+
+			Alert.alert('Entrega confirmada', 'El envio se marco como entregado.', [
+				{
+					text: 'OK',
+					onPress: () => navigation.navigate('EntregasR', { refresh: Date.now() }),
+				},
+			]);
+		} catch (error) {
+			Alert.alert('No se pudo marcar entrega', error.message || 'Intenta nuevamente.');
+		} finally {
+			setIsSubmittingDelivery(false);
+		}
+	};
+
+	const handleCancelShipment = async () => {
+		try {
+			const user = getCurrentUser();
+			const idUsuario = Number(user?.id_usuario);
+
+			if (!Number.isInteger(idUsuario) || idUsuario <= 0) {
+				throw new Error('No hay sesion activa de conductor.');
+			}
+
+			if (!shipmentId) {
+				throw new Error('No se encontro el id del envio para cancelar.');
+			}
+
+			setIsSubmittingDelivery(true);
+			await cancelarEnvioComoConductor({
+				idEnvio: shipmentId,
+				idUsuario,
+			});
+
+			Alert.alert('Envio cancelado', 'El envio fue marcado como cancelado.', [
+				{
+					text: 'OK',
+					onPress: () => navigation.navigate('EntregasR', { refresh: Date.now() }),
+				},
+			]);
+		} catch (error) {
+			Alert.alert('No se pudo cancelar', error.message || 'Intenta nuevamente.');
+		} finally {
+			setIsSubmittingDelivery(false);
+		}
+	};
 
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
@@ -174,9 +246,6 @@ export default function DetalleEntregaR({ navigation, route }) {
 								<Text style={styles.phoneText}>{delivery.phone || FALLBACK_DELIVERY.phone}</Text>
 							</View>
 						</View>
-
-						<Text style={styles.infoLine}>Departamento 5-D, Entrada por la calle Almadén. El edificio tiene un portón negro.</Text>
-						<Text style={styles.infoLine}>Horario de entrega: <Text style={styles.infoStrong}>10:00 - 11:00 AM</Text></Text>
 
 						<View style={styles.mapArea}>
 							{isWeb ? (
@@ -235,11 +304,21 @@ export default function DetalleEntregaR({ navigation, route }) {
 						</TouchableOpacity>
 
 						<View style={styles.actionRow}>
-							<TouchableOpacity style={[styles.actionButton, styles.successBtn]}>
-								<Text style={styles.actionText}>Marcar como Entregado</Text>
+							<TouchableOpacity
+								style={[styles.actionButton, styles.successBtn]}
+								onPress={handleMarkAsDelivered}
+								disabled={isSubmittingDelivery || isDelivered || isCancelled}
+							>
+								<Text style={styles.actionText}>
+									{isDelivered ? 'Entregado' : isCancelled ? 'Cancelado' : isSubmittingDelivery ? 'Guardando...' : 'Marcar como Entregado'}
+								</Text>
 							</TouchableOpacity>
-							<TouchableOpacity style={[styles.actionButton, styles.failBtn]}>
-								<Text style={styles.actionText}>Intento Fallido</Text>
+							<TouchableOpacity
+								style={[styles.actionButton, styles.failBtn]}
+								onPress={handleCancelShipment}
+								disabled={isSubmittingDelivery || isDelivered || isCancelled}
+							>
+								<Text style={styles.actionText}>{isCancelled ? 'Cancelado' : isSubmittingDelivery ? 'Guardando...' : 'Cancelar'}</Text>
 							</TouchableOpacity>
 						</View>
 

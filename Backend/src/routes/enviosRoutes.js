@@ -4,6 +4,7 @@ import {
 	createEnvioByCliente,
 	getDetalleEnvio,
 	getEnviosByUsuario,
+	marcarEnvioComoEntregado,
 	updateEnvioByCliente,
 } from '../controllers/enviosController.js';
 
@@ -14,5 +15,6 @@ enviosRouter.get('/usuario/:idUsuario', getEnviosByUsuario);
 enviosRouter.get('/detalle/:idEnvio', getDetalleEnvio);
 enviosRouter.patch('/:idEnvio', updateEnvioByCliente);
 enviosRouter.patch('/:idEnvio/cancelar', cancelEnvioByCliente);
+enviosRouter.patch('/:idEnvio/entregar', marcarEnvioComoEntregado);
 
 export default enviosRouter;

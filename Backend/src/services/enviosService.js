@@ -5,6 +5,7 @@ import {
   findUserById,
   findClientIdByUserId,
   listShipmentsAssignedToDriverByUserId,
+  markShipmentAsDeliveredByDriver,
   listShipmentsForOperator,
   listShipmentsByClientId,
   updateClientProfileById,
@@ -275,11 +276,125 @@ export async function updateShipmentByClient({ userId, idEnvio, changes }) {
 }
 
 export async function cancelShipmentByClient({ userId, idEnvio }) {
-  const shipmentId = await ensureClientOwnsShipment(userId, idEnvio);
+  const parsedUserId = Number(userId);
+  const parsedShipmentId = Number(idEnvio);
 
-  await cancelShipmentById(shipmentId);
+  if (!Number.isInteger(parsedUserId) || parsedUserId <= 0) {
+    const error = new Error('El id de usuario no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
 
-  return getShipmentDetailById(shipmentId);
+  if (!Number.isInteger(parsedShipmentId) || parsedShipmentId <= 0) {
+    const error = new Error('El id de envio no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await findUserById(parsedUserId);
+
+  if (!user) {
+    const error = new Error('Usuario no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (user.rol === 'cliente') {
+    const shipmentId = await ensureClientOwnsShipment(parsedUserId, parsedShipmentId);
+    await cancelShipmentById(shipmentId);
+    return getShipmentDetailById(shipmentId);
+  }
+
+  if (!['conductor', 'operador', 'admin', 'supervisor'].includes(user.rol)) {
+    const error = new Error('Tu rol no tiene permisos para cancelar envios.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const shipment = await findShipmentById(parsedShipmentId);
+
+  if (!shipment) {
+    const error = new Error('Envio no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const currentStatus = String(shipment.estado_envio || '').toLowerCase();
+  if (currentStatus === 'entregado') {
+    const error = new Error('No se puede cancelar un envio entregado.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  if (currentStatus === 'cancelado') {
+    const error = new Error('El envio ya esta cancelado.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  await cancelShipmentById(parsedShipmentId);
+
+  return getShipmentDetailById(parsedShipmentId);
+}
+
+export async function markShipmentDeliveredByDriver({ userId, idEnvio }) {
+  const parsedUserId = Number(userId);
+  const parsedShipmentId = Number(idEnvio);
+
+  if (!Number.isInteger(parsedUserId) || parsedUserId <= 0) {
+    const error = new Error('El id de usuario no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!Number.isInteger(parsedShipmentId) || parsedShipmentId <= 0) {
+    const error = new Error('El id de envio no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await findUserById(parsedUserId);
+
+  if (!user) {
+    const error = new Error('Usuario no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!['conductor', 'operador', 'admin', 'supervisor'].includes(user.rol)) {
+    const error = new Error('Tu rol no tiene permisos para marcar envios como entregados.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const shipment = await findShipmentById(parsedShipmentId);
+
+  if (!shipment) {
+    const error = new Error('Envio no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const currentStatus = String(shipment.estado_envio || '').toLowerCase();
+  if (currentStatus === 'entregado') {
+    const error = new Error('El envio ya fue marcado como entregado.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  if (currentStatus === 'cancelado') {
+    const error = new Error('No se puede marcar como entregado un envio cancelado.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  await markShipmentAsDeliveredByDriver({
+    idEnvio: parsedShipmentId,
+    ubicacionActual: shipment.ciudad_destino,
+    observaciones: `Entrega confirmada por ${user.nombre || 'conductor'}`,
+  });
+
+  return getShipmentDetailById(parsedShipmentId);
 }
 
 function roundTo2(value) {

@@ -3,6 +3,7 @@ import {
   createShipmentByClient,
   getShipmentDetailById,
   getShipmentsByUser,
+  markShipmentDeliveredByDriver,
   updateShipmentByClient,
 } from '../services/enviosService.js';
 
@@ -87,6 +88,26 @@ export async function cancelEnvioByCliente(req, res, next) {
     res.json({
       ok: true,
       message: 'Envio cancelado correctamente.',
+      data: envio,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function marcarEnvioComoEntregado(req, res, next) {
+  try {
+    const { idEnvio } = req.params;
+    const { idUsuario } = req.body ?? {};
+
+    const envio = await markShipmentDeliveredByDriver({
+      userId: idUsuario,
+      idEnvio,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Envio marcado como entregado correctamente.',
       data: envio,
     });
   } catch (error) {

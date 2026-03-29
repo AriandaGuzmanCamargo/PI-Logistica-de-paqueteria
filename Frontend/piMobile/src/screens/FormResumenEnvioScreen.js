@@ -21,11 +21,13 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
         remitente.telefono,
         remitente.correo,
         remitente.direccion,
+        remitente.referencia,
         remitente.ciudad,
         destinatario.nombre,
         destinatario.telefono,
         destinatario.correo,
         destinatario.direccion,
+        destinatario.referencia,
         destinatario.ciudad,
         paquete.tipoPaquete,
         paquete.contenido,
@@ -71,14 +73,18 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
           nombre: remitente.nombre,
           telefono: remitente.telefono,
           correo: remitente.correo,
-          direccion: remitente.direccion,
+          direccion: remitente.referencia
+            ? `${remitente.direccion} (Ref: ${remitente.referencia})`
+            : remitente.direccion,
           ciudad: remitente.ciudad,
         },
         destinatario: {
           nombre: destinatario.nombre,
           telefono: destinatario.telefono,
           correo: destinatario.correo,
-          direccion: destinatario.direccion,
+          direccion: destinatario.referencia
+            ? `${destinatario.direccion} (Ref: ${destinatario.referencia})`
+            : destinatario.direccion,
           ciudad: destinatario.ciudad,
           estado: destinatario.ciudad,
           codigo_postal: '00000',
@@ -116,12 +122,14 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
         <Text style={styles.title}>Remitente</Text>
         <Text style={styles.row}>{remitente.nombre || 'Sin nombre'} - {remitente.telefono || 'Sin teléfono'}</Text>
         <Text style={styles.row}>{remitente.direccion || 'Sin dirección'}, {remitente.ciudad || 'Sin ciudad'}</Text>
+        <Text style={styles.row}>Referencia: {remitente.referencia || 'Sin referencia'}</Text>
       </View>
 
       <View style={styles.card}>
         <Text style={styles.title}>Destinatario</Text>
         <Text style={styles.row}>{destinatario.nombre || 'Sin nombre'} - {destinatario.telefono || 'Sin teléfono'}</Text>
         <Text style={styles.row}>{destinatario.direccion || 'Sin dirección'}, {destinatario.ciudad || 'Sin ciudad'}</Text>
+        <Text style={styles.row}>Referencia: {destinatario.referencia || 'Sin referencia'}</Text>
       </View>
 
       <View style={styles.card}>

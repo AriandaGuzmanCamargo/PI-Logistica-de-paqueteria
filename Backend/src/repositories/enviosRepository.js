@@ -285,6 +285,71 @@ export async function cancelShipmentById(idEnvio) {
   return result.rowCount > 0 ? result.rows[0] : null;
 }
 
+export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual, observaciones }) {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const shipmentResult = await client.query(
+      `UPDATE envios
+       SET estado_envio = 'entregado',
+           fecha_entrega_real = NOW()
+       WHERE id_envio = $1
+       RETURNING id_envio, ciudad_destino`,
+      [idEnvio]
+    );
+
+    if (shipmentResult.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+
+    const shipmentRow = shipmentResult.rows[0];
+
+    const packageResult = await client.query(
+      `UPDATE paquetes p
+       SET estado_actual = 'entregado'
+       FROM envio_paquete ep
+       WHERE ep.id_envio = $1
+         AND ep.id_paquete = p.id_paquete
+       RETURNING p.id_paquete`,
+      [idEnvio]
+    );
+
+    if (packageResult.rowCount > 0) {
+      const idPaquete = packageResult.rows[0].id_paquete;
+
+      await client.query(
+        `INSERT INTO tracking (
+          id_paquete,
+          id_envio,
+          ubicacion_actual,
+          estado_paquete,
+          observaciones
+        ) VALUES ($1, $2, $3, 'entregado', $4)`,
+        [
+          idPaquete,
+          idEnvio,
+          ubicacionActual || shipmentRow.ciudad_destino || 'Destino',
+          observaciones || 'Entrega confirmada por conductor',
+        ]
+      );
+    }
+
+    await client.query('COMMIT');
+
+    return {
+      id_envio: shipmentRow.id_envio,
+    };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 export async function updateClientProfileById(clientId, payload) {
   const fields = [];
   const values = [];

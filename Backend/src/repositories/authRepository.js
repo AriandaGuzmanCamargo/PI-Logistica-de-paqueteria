@@ -213,6 +213,20 @@ export async function updateUserProfileById(idUsuario, payload) {
   return result.rowCount > 0 ? result.rows[0] : null;
 }
 
+export async function updateUserPhotoById(idUsuario, fotoPerfilUrl) {
+  await ensureUserPhotoColumn();
+
+  const result = await pool.query(
+    `UPDATE usuarios
+     SET foto_perfil_url = $1
+     WHERE id_usuario = $2
+     RETURNING id_usuario`,
+    [fotoPerfilUrl || null, idUsuario]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
 export async function updateClientCityByUser({ idUsuario, oldCorreo, newCorreo, ciudad }) {
   const hasUserColumn = await hasClientesUserIdColumn();
 

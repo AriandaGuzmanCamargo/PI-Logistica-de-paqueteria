@@ -4,11 +4,13 @@ import {
   estadoEnvioClase,
   estadoEnvioTexto,
   getEnviosOperador,
+  getPerfilOperador,
   getWebUser,
 } from '../../services/operadorService';
 
 export default function DashboardOperador() {
   const [envios, setEnvios] = useState([]);
+  const [perfil, setPerfil] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState('');
@@ -20,9 +22,13 @@ export default function DashboardOperador() {
       try {
         setLoading(true);
         setError('');
-        const data = await getEnviosOperador();
+        const [data, perfilData] = await Promise.all([
+          getEnviosOperador(),
+          getPerfilOperador().catch(() => null),
+        ]);
         if (isMounted) {
           setEnvios(data);
+          setPerfil(perfilData);
         }
       } catch (loadError) {
         if (isMounted) {
@@ -52,7 +58,12 @@ export default function DashboardOperador() {
   }, [envios]);
 
   const user = getWebUser();
-  const nombreMostrado = user ? `${user.nombre || ''} ${user.apellido || ''}`.trim() : 'Operador';
+  const nombreMostrado = perfil
+    ? `${perfil.nombre || ''} ${perfil.apellido || ''}`.trim()
+    : user
+      ? `${user.nombre || ''} ${user.apellido || ''}`.trim()
+      : 'Operador';
+  const avatarUrl = perfil?.foto_perfil_url || '/piWeb/images/usuario.png';
 
   const enviosFiltrados = useMemo(() => {
     const query = busqueda.trim().toLowerCase();
@@ -97,7 +108,7 @@ export default function DashboardOperador() {
       </header>
 
       <section className="bienvenida">
-        <img src="/piWeb/images/usuario.png" alt="" className="bienvenida__avatar" />
+        <img src={avatarUrl} alt="Foto de perfil" className="bienvenida__avatar" />
         <p>Bienvenido de vuelta, <strong>{nombreMostrado}</strong></p>
       </section>
 

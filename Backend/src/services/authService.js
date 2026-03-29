@@ -9,6 +9,7 @@ import {
   listManageableUsersByRoles,
   updateUserPasswordById,
   updateClientCityByUser,
+  updateUserPhotoById,
   updateUserProfileById,
 } from '../repositories/authRepository.js';
 
@@ -122,6 +123,18 @@ export async function updateUserProfile({ idUsuario, payload }) {
     const error = new Error('Usuario no encontrado.');
     error.statusCode = 404;
     throw error;
+  }
+
+  const payloadKeys = Object.keys(payload || {}).filter((key) => payload[key] !== undefined);
+  const isPhotoOnlyUpdate = payloadKeys.length > 0 && payloadKeys.every((key) => key === 'foto_perfil_url');
+
+  if (isPhotoOnlyUpdate) {
+    const fotoPerfilUrlOnly = payload?.foto_perfil_url
+      ? String(payload.foto_perfil_url).trim()
+      : null;
+
+    await updateUserPhotoById(parsedId, fotoPerfilUrlOnly);
+    return getUserProfile(parsedId);
   }
 
   const nombre = String(payload?.nombre || '').trim();

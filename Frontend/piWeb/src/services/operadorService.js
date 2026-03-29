@@ -10,12 +10,66 @@ export function getWebUser() {
   }
 }
 
-export async function getEnviosOperador() {
+function ensureSession() {
   const user = getWebUser();
 
   if (!user?.id_usuario) {
     throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
   }
+
+  return user;
+}
+
+export async function getPerfilOperador() {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`);
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudo cargar el perfil del operador.');
+  }
+
+  return payload.data;
+}
+
+export async function actualizarFotoPerfilOperador(fotoPerfilUrl) {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      foto_perfil_url: fotoPerfilUrl || '',
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.message || 'No se pudo actualizar la foto de perfil.');
+  }
+
+  localStorage.setItem(
+    'piWebUser',
+    JSON.stringify({
+      ...(getWebUser() || {}),
+      id_usuario: data.data.id_usuario,
+      nombre: data.data.nombre,
+      apellido: data.data.apellido,
+      correo: data.data.correo,
+      rol: data.data.rol,
+      foto_perfil_url: data.data.foto_perfil_url || null,
+    })
+  );
+
+  return data.data;
+}
+
+export async function getEnviosOperador() {
+  const user = ensureSession();
 
   const response = await fetch(`/api/envios/usuario/${user.id_usuario}`);
   const payload = await response.json();
@@ -57,11 +111,7 @@ export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
 }
 
 export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsignacion }) {
-  const user = getWebUser();
-
-  if (!user?.id_usuario) {
-    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
-  }
+  const user = ensureSession();
 
   const response = await fetch(`/api/asignaciones/manual/${idEnvio}`, {
     method: 'POST',
@@ -85,11 +135,7 @@ export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsig
 }
 
 export async function getIncidenciasOperador() {
-  const user = getWebUser();
-
-  if (!user?.id_usuario) {
-    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
-  }
+  const user = ensureSession();
 
   const response = await fetch(`/api/incidencias/usuario/${user.id_usuario}`);
   const payload = await response.json();
@@ -102,11 +148,7 @@ export async function getIncidenciasOperador() {
 }
 
 export async function createEnvioWeb(payload) {
-  const user = getWebUser();
-
-  if (!user?.id_usuario) {
-    throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
-  }
+  const user = ensureSession();
 
   const response = await fetch('/api/envios', {
     method: 'POST',

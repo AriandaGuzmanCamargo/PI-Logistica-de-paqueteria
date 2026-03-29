@@ -31,7 +31,7 @@ function toDeliveryItem(envio, index) {
 	return {
 		id: codigo,
 		name: nombre,
-		address: addressParts.length > 0 ? addressParts.join(', ') : 'Direccion pendiente',
+		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
 		phone: envio?.destinatario?.telefono || '',
 		done,
 		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
@@ -99,7 +99,7 @@ export default function EntregasR({ navigation, route }) {
 				const userId = Number(user?.id_usuario);
 
 				if (!Number.isInteger(userId) || userId <= 0) {
-					throw new Error('No hay sesion activa de chofer para cargar entregas.');
+					throw new Error('No hay sesión activa de chofer para cargar entregas.');
 				}
 
 				const envios = await getEnviosByUsuario(userId);
@@ -185,7 +185,7 @@ export default function EntregasR({ navigation, route }) {
 					<View style={styles.searchWrap}>
 						<TextInput
 							style={styles.searchInput}
-							placeholder="Buscar direccion o rastreo"
+							placeholder="Buscar dirección o rastreo"
 							placeholderTextColor="#7D8EB1"
 							value={searchText}
 							onChangeText={setSearchText}
@@ -256,7 +256,7 @@ export default function EntregasR({ navigation, route }) {
 										{item.asignadoAlConductor ? (
 											<Text style={styles.assignedBadge}>Asignado por operador</Text>
 										) : (
-											<Text style={styles.availableBadge}>Pendiente de asignacion operativa</Text>
+											<Text style={styles.availableBadge}>Pendiente de asignación operativa</Text>
 										)}
 									</View>
 								))}

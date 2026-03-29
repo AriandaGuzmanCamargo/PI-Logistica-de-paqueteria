@@ -19,7 +19,7 @@ export default function NuevoEnvioScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const data = await getDireccionesByUsuario(user.id_usuario);
@@ -40,7 +40,7 @@ export default function NuevoEnvioScreen({ navigation }) {
   const origenes = direcciones.slice(0, 2);
 
   return (
-    <MainLayout title="Nuevo Envio" navigation={navigation} backTo="Dashboard" activeTab="RastrearEnvio">
+    <MainLayout title="Nuevo Envío" navigation={navigation} backTo="Dashboard" activeTab="RastrearEnvio">
       <View style={styles.tabsRow}>
         <Text style={styles.tabActive}>Registro cliente</Text>
         <Text style={styles.tab}>Paso 1: Remitente</Text>
@@ -49,7 +49,7 @@ export default function NuevoEnvioScreen({ navigation }) {
 
       <View style={styles.vehicleRow}>
         <Image source={require('../../images/suv_10105478.png')} style={styles.vehicleImage} resizeMode="contain" />
-        <Text style={styles.vehicleText}>Tu envio se transportara en unidad SUV</Text>
+        <Text style={styles.vehicleText}>Tu envío se transportará en unidad SUV</Text>
       </View>
 
       <View style={styles.card}>
@@ -67,7 +67,7 @@ export default function NuevoEnvioScreen({ navigation }) {
         ) : null}
 
         {!isLoading && !errorMessage && origenes.length === 0 ? (
-          <Text style={styles.row}>Aun no tienes direcciones guardadas. Puedes crearlas en Direcciones Guardadas.</Text>
+          <Text style={styles.row}>Aún no tienes direcciones guardadas. Puedes crearlas en Direcciones Guardadas.</Text>
         ) : null}
 
         {!isLoading && !errorMessage
@@ -83,11 +83,11 @@ export default function NuevoEnvioScreen({ navigation }) {
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Destino</Text>
         <Text style={styles.row}>El destino se define en el formulario del destinatario.</Text>
-        <Text style={styles.row}>No se usa informacion estatica en esta vista.</Text>
+        <Text style={styles.row}>No se usa información estática en esta vista.</Text>
       </View>
 
       <TouchableOpacity style={styles.btnPrimary} onPress={() => navigation.navigate('FormRemitente')}>
-        <Text style={styles.btnPrimaryText}>Completar formulario de envio</Text>
+        <Text style={styles.btnPrimaryText}>Completar formulario de envío</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('DireccionesGuardadas')}>

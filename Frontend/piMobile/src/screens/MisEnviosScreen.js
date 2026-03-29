@@ -41,13 +41,13 @@ export default function MisEnviosScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const data = await getEnviosByUsuario(user.id_usuario);
       setEnvios(data);
     } catch (error) {
-      setErrorMessage(error.message || 'No se pudieron cargar tus envios.');
+      setErrorMessage(error.message || 'No se pudieron cargar tus envíos.');
     } finally {
       setIsLoading(false);
     }
@@ -60,7 +60,7 @@ export default function MisEnviosScreen({ navigation }) {
   );
 
   return (
-    <MainLayout title="Mis Envios" navigation={navigation} backTo="MenuUsuario" activeTab="RastrearEnvio">
+    <MainLayout title="Mis Envíos" navigation={navigation} backTo="MenuUsuario" activeTab="RastrearEnvio">
       <View style={styles.tabsRow}>
         <Text style={styles.tabActive}>Todos</Text>
         <Text style={styles.tab}>Activos</Text>
@@ -70,7 +70,7 @@ export default function MisEnviosScreen({ navigation }) {
       {isLoading ? (
         <View style={styles.stateWrap}>
           <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.stateText}>Cargando envios...</Text>
+          <Text style={styles.stateText}>Cargando envíos...</Text>
         </View>
       ) : null}
 
@@ -82,7 +82,7 @@ export default function MisEnviosScreen({ navigation }) {
 
       {!isLoading && !errorMessage && envios.length === 0 ? (
         <View style={styles.stateWrap}>
-          <Text style={styles.stateText}>Aun no tienes envios registrados.</Text>
+          <Text style={styles.stateText}>Aún no tienes envíos registrados.</Text>
         </View>
       ) : null}
 

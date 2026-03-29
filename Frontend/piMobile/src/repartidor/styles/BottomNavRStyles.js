@@ -4,7 +4,7 @@ import colors from '../../theme/colors';
 export default function getBottomNavRStyles(s, isDarkMode = false) {
   return StyleSheet.create({
     bottomNav: {
-      height: s(58),
+      height: s(64),
       borderTopWidth: 1,
       borderTopColor: isDarkMode ? '#344766' : '#D5DDEF',
       backgroundColor: isDarkMode ? '#10192B' : '#ECF1FB',
@@ -16,29 +16,24 @@ export default function getBottomNavRStyles(s, isDarkMode = false) {
       alignItems: 'center',
       justifyContent: 'center',
       gap: s(2),
-      minWidth: s(54),
+      minWidth: s(66),
+      borderRadius: s(12),
+      paddingVertical: s(5),
+      paddingHorizontal: s(6),
+    },
+    navItemActive: {
+      backgroundColor: isDarkMode ? '#1D2D49' : '#E2EAF8',
     },
     navDotWrap: {
       position: 'relative',
-      width: s(14),
-      height: s(14),
+      width: s(18),
+      height: s(18),
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    navDot: {
-      width: s(12),
-      height: s(12),
-      borderRadius: s(7),
-      borderWidth: 2,
-      borderColor: isDarkMode ? '#B8C8E8' : '#8D9DC1',
     },
     navIcon: {
       width: s(18),
       height: s(18),
-    },
-    navDotActive: {
-      backgroundColor: isDarkMode ? '#74A2EA' : '#3D64A7',
-      borderColor: isDarkMode ? '#74A2EA' : '#3D64A7',
     },
     navBadge: {
       position: 'absolute',
@@ -65,6 +60,7 @@ export default function getBottomNavRStyles(s, isDarkMode = false) {
     },
     navLabelActive: {
       color: isDarkMode ? '#EEF4FF' : '#355A9C',
+      fontWeight: '700',
     },
   });
 }

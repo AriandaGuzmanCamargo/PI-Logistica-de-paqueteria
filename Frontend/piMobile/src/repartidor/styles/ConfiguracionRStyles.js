@@ -83,6 +83,22 @@ export default function getConfiguracionRStyles(s, isDarkMode = false) {
       justifyContent: 'space-between',
       gap: s(8),
     },
+    optionLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: s(8),
+      flexShrink: 1,
+    },
+    optionIconWrap: {
+      width: s(25),
+      height: s(25),
+      borderRadius: s(13),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: isDarkMode ? '#263958' : '#E4ECFA',
+      borderWidth: 1,
+      borderColor: isDarkMode ? '#395278' : '#D4DFF2',
+    },
     optionText: {
       color: isDarkMode ? '#D8E4FA' : '#4E679D',
       fontSize: s(14),

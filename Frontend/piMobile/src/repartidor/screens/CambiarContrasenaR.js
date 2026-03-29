@@ -44,7 +44,7 @@ export default function CambiarContrasenaR({ navigation }) {
       return;
     }
 
-    showMessage('Exito', 'Contrasena cambiada exitosamente.');
+    showMessage('Éxito', 'Contraseña cambiada exitosamente.');
   };
 
   const { width } = useWindowDimensions();

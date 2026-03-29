@@ -14,12 +14,12 @@ export default function PagoConfirmacionScreen({ navigation, route }) {
     contraentrega: 'Contraentrega',
   };
 
-  const methodLabel = methodLabelMap[paymentResult?.method] || 'Metodo no definido';
+  const methodLabel = methodLabelMap[paymentResult?.method] || 'Método no definido';
 
   const statusText = paymentResult?.status === 'approved'
     ? 'Pago aprobado'
     : paymentResult?.status === 'pending_verification'
-      ? 'Pago pendiente de verificacion'
+      ? 'Pago pendiente de verificación'
       : paymentResult?.status === 'pay_on_delivery'
         ? 'Pago contraentrega confirmado'
         : 'Pago confirmado';
@@ -40,9 +40,9 @@ export default function PagoConfirmacionScreen({ navigation, route }) {
     <MainLayout title="Pago" navigation={navigation} backTo="PagoOpciones" activeTab="RastrearEnvio">
       <View style={styles.notice}>
         <Text style={styles.code}>{statusText}</Text>
-        <Text style={styles.title}>Metodo: {methodLabel}</Text>
+        <Text style={styles.title}>Método: {methodLabel}</Text>
         <Text style={styles.title}>Referencia: {paymentResult?.reference || 'N/A'}</Text>
-        {paymentResult?.authCode ? <Text style={styles.title}>Autorizacion: {paymentResult.authCode}</Text> : null}
+        {paymentResult?.authCode ? <Text style={styles.title}>Autorización: {paymentResult.authCode}</Text> : null}
       </View>
 
       <TouchableOpacity style={styles.btn} onPress={handleContinue}>

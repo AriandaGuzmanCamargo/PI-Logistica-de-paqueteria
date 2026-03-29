@@ -22,8 +22,8 @@ const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 const FALLBACK_DELIVERY = {
 	id: 'PAK123456789',
-	name: 'Ana Martinez',
-	address: 'Londres 247, Col. Juarez, Ciudad de Mexico',
+	name: 'Ana Martínez',
+	address: 'Londres 247, Col. Juárez, Ciudad de México',
 	phone: '+52 55 1234 5678',
 };
 
@@ -83,7 +83,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 					destination = await geocodeAddress(delivery.address);
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
-					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
+					warning = warning || 'Usando ubicación aproximada: no se pudo geocodificar la dirección exacta.';
 				}
 			}
 
@@ -175,7 +175,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 							</View>
 						</View>
 
-						<Text style={styles.infoLine}>Departamento 5-D, Entrada por la calle Almaden. El edificio tiene un porton negro.</Text>
+						<Text style={styles.infoLine}>Departamento 5-D, Entrada por la calle Almadén. El edificio tiene un portón negro.</Text>
 						<Text style={styles.infoLine}>Horario de entrega: <Text style={styles.infoStrong}>10:00 - 11:00 AM</Text></Text>
 
 						<View style={styles.mapArea}>
@@ -231,7 +231,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
 
 						<TouchableOpacity style={styles.refreshBtn} onPress={resolveMapPreview}>
-							<Text style={styles.actionText}>Actualizar ubicacion real</Text>
+							<Text style={styles.actionText}>Actualizar ubicación real</Text>
 						</TouchableOpacity>
 
 						<View style={styles.actionRow}>

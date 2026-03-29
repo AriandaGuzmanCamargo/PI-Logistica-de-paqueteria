@@ -21,7 +21,7 @@ function formatRelativeDate(isoString) {
 
   const diffDays = Math.floor(diffHours / 24);
   if (diffDays === 1) return 'Ayer';
-  return `Hace ${diffDays} dias`;
+  return `Hace ${diffDays} días`;
 }
 
 export default function NotificacionesScreen({ navigation }) {
@@ -37,7 +37,7 @@ export default function NotificacionesScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const data = await getNotificacionesByUsuario(user.id_usuario);
@@ -80,7 +80,7 @@ export default function NotificacionesScreen({ navigation }) {
         ? notificaciones.map((item) => (
             <View style={styles.card} key={item.id_notificacion}>
               <View style={styles.row}>
-                <Text style={styles.title}>{item.titulo || 'Notificacion'}</Text>
+                <Text style={styles.title}>{item.titulo || 'Notificación'}</Text>
                 <Text style={styles.time}>{formatRelativeDate(item.fecha)}</Text>
               </View>
               <Text style={styles.message}>{item.mensaje || 'Sin contenido'}</Text>

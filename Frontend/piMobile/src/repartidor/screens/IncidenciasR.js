@@ -11,8 +11,8 @@ import { useDarkMode } from '../context/DarkModeContext';
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 const INCIDENT_OPTIONS = [
-	'Cliente no estaba en la direccion','Cliente rechazo el paquete','Direccion incorrecta',
-	'Direccion incompleta','Acceso restringido','Paquete danado','Paquete extraviado',
+	'Cliente no estaba en la dirección','Cliente rechazó el paquete','Dirección incorrecta',
+	'Dirección incompleta','Acceso restringido','Paquete dañado','Paquete extraviado',
 	'Etiqueta ilegible','Retraso en la ruta','Otro',
 ];
 
@@ -46,7 +46,7 @@ export default function IncidenciasR({ navigation }) {
 			photo: require('../../../images/suv_10105478.png'),
 		};
 
-		showMessage('Reporte exitoso', 'La incidencia se registro correctamente.', () => {
+		showMessage('Reporte exitoso', 'La incidencia se registró correctamente.', () => {
 			navigation.navigate('EntregasR', { newIncidentReport, initialFilter: 'Incidencias' });
 		});
 	};
@@ -88,7 +88,7 @@ export default function IncidenciasR({ navigation }) {
 							</View>
 
 							<View style={styles.receiverInfo}>
-								<Text style={styles.receiverName}>Ana Martinez</Text>
+							<Text style={styles.receiverName}>Ana Martínez</Text>
 								<Text style={styles.addressText}>L 103 Amalianense, Sulf, 123, Col. Roma Norte, CDMX</Text>
 								<Text style={styles.phoneText}>+52 55 1234 5678</Text>
 							</View>
@@ -138,7 +138,7 @@ export default function IncidenciasR({ navigation }) {
 							value={comment}
 							onChangeText={setComment}
 							multiline
-							placeholder="Escribe que ocurrio con detalle..."
+							placeholder="Escribe qué ocurrió con detalle..."
 							placeholderTextColor="#8A9ABB"
 						/>
 
@@ -152,7 +152,7 @@ export default function IncidenciasR({ navigation }) {
 
 							<TouchableOpacity style={styles.uploadBtn}>
 								<Text style={styles.uploadPlus}>+</Text>
-								<Text style={styles.uploadText}>Subir Foto</Text>
+								<Text style={styles.uploadText}>Subir foto</Text>
 							</TouchableOpacity>
 						</View>
 

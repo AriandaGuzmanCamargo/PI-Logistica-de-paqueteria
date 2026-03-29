@@ -45,7 +45,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
         setErrorMessage('');
 
         if (!idEnvio) {
-          throw new Error('No se recibio el identificador del envio.');
+          throw new Error('No se recibió el identificador del envío.');
         }
 
         const data = await getDetalleEnvio(idEnvio);
@@ -53,7 +53,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
         setDireccionDestino(data?.direccion_destino || '');
         setCiudadDestino(data?.ciudad_destino || '');
       } catch (error) {
-        setErrorMessage(error.message || 'No se pudo cargar el detalle del envio.');
+        setErrorMessage(error.message || 'No se pudo cargar el detalle del envío.');
       } finally {
         setIsLoading(false);
       }
@@ -64,7 +64,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
 
   if (isLoading) {
     return (
-      <MainLayout title="Detalle del Envio" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
+      <MainLayout title="Detalle del Envío" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
         <View style={styles.stateWrap}>
           <ActivityIndicator size="large" color="#007AFF" />
           <Text style={styles.stateText}>Cargando detalle...</Text>
@@ -75,9 +75,9 @@ export default function DetalleEnvioScreen({ navigation, route }) {
 
   if (errorMessage || !detalle) {
     return (
-      <MainLayout title="Detalle del Envio" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
+      <MainLayout title="Detalle del Envío" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
         <View style={styles.stateWrap}>
-          <Text style={[styles.stateText, styles.stateError]}>{errorMessage || 'No se encontro informacion del envio.'}</Text>
+          <Text style={[styles.stateText, styles.stateError]}>{errorMessage || 'No se encontró información del envío.'}</Text>
         </View>
       </MainLayout>
     );
@@ -90,11 +90,11 @@ export default function DetalleEnvioScreen({ navigation, route }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       if (!direccionDestino.trim() || !ciudadDestino.trim()) {
-        throw new Error('Direccion y ciudad destino son obligatorias.');
+        throw new Error('Dirección y ciudad destino son obligatorias.');
       }
 
       setIsSaving(true);
@@ -107,7 +107,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
 
       setDetalle(updated);
       setIsEditMode(false);
-      Alert.alert('Listo', 'Envio actualizado correctamente.');
+      Alert.alert('Listo', 'Envío actualizado correctamente.');
     } catch (error) {
       Alert.alert('No se pudo actualizar', error.message || 'Intenta nuevamente.');
     } finally {
@@ -116,17 +116,17 @@ export default function DetalleEnvioScreen({ navigation, route }) {
   };
 
   const handleCancelShipment = () => {
-    Alert.alert('Cancelar envio', 'Esta accion no se puede deshacer. ¿Deseas continuar?', [
+    Alert.alert('Cancelar envío', 'Esta acción no se puede deshacer. ¿Deseas continuar?', [
       { text: 'No', style: 'cancel' },
       {
-        text: 'Si, cancelar',
+        text: 'Sí, cancelar',
         style: 'destructive',
         onPress: async () => {
           try {
             const user = getCurrentUser();
 
             if (!user?.id_usuario) {
-              throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+              throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
             }
 
             setIsSaving(true);
@@ -137,7 +137,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
 
             setDetalle(updated);
             setIsEditMode(false);
-            Alert.alert('Listo', 'El envio fue cancelado.');
+            Alert.alert('Listo', 'El envío fue cancelado.');
           } catch (error) {
             Alert.alert('No se pudo cancelar', error.message || 'Intenta nuevamente.');
           } finally {
@@ -149,9 +149,9 @@ export default function DetalleEnvioScreen({ navigation, route }) {
   };
 
   return (
-    <MainLayout title="Detalle del Envio" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
+    <MainLayout title="Detalle del Envío" navigation={navigation} backTo="RastrearEnvio" activeTab="RastrearEnvio">
       <View style={styles.card}>
-        <Text style={styles.title}>Informacion General</Text>
+        <Text style={styles.title}>Información General</Text>
         <View style={styles.rowBetween}>
           <Text style={styles.row}>Referencia {detalle.paquete?.codigo_rastreo || `ENV-${detalle.id_envio}`}</Text>
           <Text style={styles.status}>{formatStatus(detalle.estado_envio)}</Text>
@@ -168,7 +168,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
               style={styles.input}
               value={direccionDestino}
               onChangeText={setDireccionDestino}
-              placeholder="Direccion destino"
+              placeholder="Dirección destino"
               placeholderTextColor="#9AA4BF"
             />
             <TextInput
@@ -180,9 +180,9 @@ export default function DetalleEnvioScreen({ navigation, route }) {
             />
           </>
         ) : (
-          <Text style={styles.row}>{detalle.direccion_destino || 'Sin direccion de destino'}</Text>
+          <Text style={styles.row}>{detalle.direccion_destino || 'Sin dirección de destino'}</Text>
         )}
-        <Text style={styles.row}>Origen: {detalle.direccion_origen || 'Sin direccion de origen'}</Text>
+        <Text style={styles.row}>Origen: {detalle.direccion_origen || 'Sin dirección de origen'}</Text>
         <Text style={styles.row}>Remitente: {detalle.remitente?.nombre || 'Sin remitente'}</Text>
       </View>
 
@@ -194,7 +194,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.actionBtn} onPress={() => setIsEditMode(true)}>
-              <Text style={styles.actionBtnText}>Editar envio</Text>
+              <Text style={styles.actionBtnText}>Editar envío</Text>
             </TouchableOpacity>
           )}
 
@@ -209,7 +209,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('MisEnvios')}>
-        <Text style={styles.btnText}>Volver a mis envios</Text>
+        <Text style={styles.btnText}>Volver a mis envíos</Text>
       </TouchableOpacity>
     </MainLayout>
   );

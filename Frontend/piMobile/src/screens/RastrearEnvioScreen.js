@@ -18,7 +18,7 @@ function formatDateTime(isoString) {
 
 const STATE_LABELS = {
   registrado: 'Pedido creado',
-  en_transito: 'En transito',
+  en_transito: 'En tránsito',
   entregado: 'Entregado',
   retrasado: 'Retrasado',
   perdido: 'Perdido',
@@ -32,7 +32,7 @@ export default function RastrearEnvioScreen({ navigation }) {
 
   const handleRastrear = async () => {
     if (!codigo.trim()) {
-      setErrorMessage('Ingresa un codigo de rastreo');
+      setErrorMessage('Ingresa un código de rastreo');
       return;
     }
 
@@ -44,19 +44,22 @@ export default function RastrearEnvioScreen({ navigation }) {
       const data = await getTrackingByCodigo(codigo);
       setTrackingData(data);
     } catch (error) {
-      setErrorMessage(error.message || 'No se encontro el envio');
+      setErrorMessage(error.message || 'No se encontró el envío');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <MainLayout title="Rastrear Envio" navigation={navigation} backTo="Dashboard" activeTab="RastrearEnvio">
+    <MainLayout title="Rastrear Envío" navigation={navigation} backTo="Dashboard" activeTab="RastrearEnvio">
       <ScrollView style={{ flex: 1 }}>
+        <View style={styles.descriptionWrap}>
+          <Text style={styles.descriptionText}>Ingresa el código de rastreo que se encuentra en tu paquete para consultar su estado actual y conocer el progreso de tu envío</Text>
+        </View>
         <View style={styles.searchWrap}>
           <TextInput
             style={styles.input}
-            placeholder="Ingresar codigo de rastreo"
+            placeholder="Ingresar código de rastreo"
             placeholderTextColor="#9AA4BF"
             value={codigo}
             onChangeText={setCodigo}
@@ -99,7 +102,7 @@ export default function RastrearEnvioScreen({ navigation }) {
                 </View>
               ))
             ) : (
-              <Text style={styles.timelineText}>Sin eventos de rastreo aun</Text>
+              <Text style={styles.timelineText}>Sin eventos de rastreo aún</Text>
             )}
 
             <TouchableOpacity onPress={() => navigation.navigate('DetalleEnvio', { idEnvio: trackingData.envio?.id_envio })}>

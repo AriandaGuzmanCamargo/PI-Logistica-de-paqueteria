@@ -45,22 +45,22 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
       ];
 
       if (numericFields.some((value) => !Number.isFinite(value) || value <= 0)) {
-        throw new Error('Peso, dimensiones y valor declarado deben ser numeros mayores a 0.');
+        throw new Error('Peso, dimensiones y valor declarado deben ser números mayores a 0.');
       }
 
       const serviceType = String(paquete.tipoServicio || '').trim().toLowerCase();
       if (!['normal', 'express', 'economico'].includes(serviceType)) {
-        throw new Error('Tipo de servicio invalido. Usa: normal, express o economico.');
+        throw new Error('Tipo de servicio inválido. Usa: normal, express o económico.');
       }
 
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       if (!paymentResult?.method || !paymentResult?.reference) {
-        throw new Error('Debes confirmar el pago antes de crear el envio.');
+        throw new Error('Debes confirmar el pago antes de crear el envío.');
       }
 
       setIsSubmitting(true);
@@ -95,33 +95,33 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
         },
       });
 
-      Alert.alert('Envio creado', 'Tu envio fue registrado correctamente.', [
+      Alert.alert('Envío creado', 'Tu envío fue registrado correctamente.', [
         {
-          text: 'Ver mis envios',
+          text: 'Ver mis envíos',
           onPress: () => navigation.navigate('MisEnvios'),
         },
       ]);
     } catch (error) {
-      Alert.alert('No se pudo crear el envio', error.message || 'Revisa los datos e intenta nuevamente.');
+      Alert.alert('No se pudo crear el envío', error.message || 'Revisa los datos e intenta nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <MainLayout title="Registro de Envio" navigation={navigation} backTo="FormPaquete" activeTab="RastrearEnvio">
-      <Text style={styles.step}>Paso 4 de 4 - Revision y confirmacion</Text>
+    <MainLayout title="Registro de Envío" navigation={navigation} backTo="FormPaquete" activeTab="RastrearEnvio">
+      <Text style={styles.step}>Paso 4 de 4 - Revisión y confirmación</Text>
 
       <View style={styles.card}>
         <Text style={styles.title}>Remitente</Text>
-        <Text style={styles.row}>{remitente.nombre || 'Sin nombre'} - {remitente.telefono || 'Sin telefono'}</Text>
-        <Text style={styles.row}>{remitente.direccion || 'Sin direccion'}, {remitente.ciudad || 'Sin ciudad'}</Text>
+        <Text style={styles.row}>{remitente.nombre || 'Sin nombre'} - {remitente.telefono || 'Sin teléfono'}</Text>
+        <Text style={styles.row}>{remitente.direccion || 'Sin dirección'}, {remitente.ciudad || 'Sin ciudad'}</Text>
       </View>
 
       <View style={styles.card}>
         <Text style={styles.title}>Destinatario</Text>
-        <Text style={styles.row}>{destinatario.nombre || 'Sin nombre'} - {destinatario.telefono || 'Sin telefono'}</Text>
-        <Text style={styles.row}>{destinatario.direccion || 'Sin direccion'}, {destinatario.ciudad || 'Sin ciudad'}</Text>
+        <Text style={styles.row}>{destinatario.nombre || 'Sin nombre'} - {destinatario.telefono || 'Sin teléfono'}</Text>
+        <Text style={styles.row}>{destinatario.direccion || 'Sin dirección'}, {destinatario.ciudad || 'Sin ciudad'}</Text>
       </View>
 
       <View style={styles.card}>
@@ -135,12 +135,12 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
         <Text style={styles.title}>Pago</Text>
         {paymentResult?.method ? (
           <>
-            <Text style={styles.row}>Metodo: {paymentResult.method}</Text>
+            <Text style={styles.row}>Método: {paymentResult.method}</Text>
             <Text style={styles.row}>Referencia: {paymentResult.reference}</Text>
             <Text style={styles.row}>Estado: {paymentResult.status || 'confirmado'}</Text>
           </>
         ) : (
-          <Text style={styles.row}>Aun no has confirmado un metodo de pago.</Text>
+          <Text style={styles.row}>Aún no has confirmado un método de pago.</Text>
         )}
       </View>
 
@@ -160,7 +160,7 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
           <Text style={styles.btnSecondaryText}>{paymentResult?.reference ? 'Cambiar pago' : 'Ir a pago'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={handleCreateShipment} disabled={isSubmitting}>
-          {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.btnText}>Crear envio</Text>}
+          {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.btnText}>Crear envío</Text>}
         </TouchableOpacity>
       </View>
     </MainLayout>

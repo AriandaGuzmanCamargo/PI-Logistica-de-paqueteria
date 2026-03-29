@@ -99,13 +99,13 @@ export default function PerfilR({ navigation }) {
               <Text style={styles.infoValue}>{usuario?.correo || 'No registrado'}</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Telefono:</Text>
+              <Text style={styles.infoLabel}>Teléfono:</Text>
               <Text style={styles.infoValue}>{usuario?.telefono || 'No registrado'}</Text>
             </View>
           </View>
 
           <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('ConfiguracionR')}>
-            <Text style={styles.settingsText}>Configuracion</Text>
+            <Text style={styles.settingsText}>Configuración</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, SafeAreaView, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/LoginStyles';
 import { loginRequest } from '../services/authService';
 import { setCurrentUser } from '../services/sessionService';
@@ -14,7 +15,7 @@ export default function LoginScreen({ navigation }) {
     const correoLimpio = correo.trim().toLowerCase();
 
     if (!correoLimpio || !contrasena.trim()) {
-      setErrorMessage('Ingresa correo y contrasena.');
+      setErrorMessage('Ingresa correo y contraseña.');
       return;
     }
 
@@ -42,9 +43,9 @@ export default function LoginScreen({ navigation }) {
         return;
       }
 
-      throw new Error('Esta cuenta no tiene acceso a la app movil.');
+      throw new Error('Esta cuenta no tiene acceso a la app móvil.');
     } catch (error) {
-      setErrorMessage(error.message || 'No se pudo iniciar sesion.');
+      setErrorMessage(error.message || 'No se pudo iniciar sesión.');
     } finally {
       setIsLoading(false);
     }
@@ -52,59 +53,78 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.hero}>
-            <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.heroText}>Metzvia</Text>
+      <LinearGradient
+        colors={['#1A2D50', '#2A4A7A', '#3B6AAA', '#4A7EC0', '#5A90D0']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBackground}
+      >
+        <View style={styles.waveOne} />
+        <View style={styles.waveTwo} />
+        <View style={styles.waveThree} />
+        <View style={styles.waveFour} />
+
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.hero}>
+              <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
+              <Text style={styles.heroText}>Metzvia</Text>
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.title}>Iniciar Sesión</Text>
+              <Text style={styles.subtitle}>Bienvenido. Por favor inicie sesión para continuar.</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Correo electrónico"
+                placeholderTextColor="#9AA4BF"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={correo}
+                onChangeText={setCorreo}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                placeholderTextColor="#9AA4BF"
+                secureTextEntry
+                value={contrasena}
+                onChangeText={setContrasena}
+              />
+
+              {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+
+              <TouchableOpacity
+                style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
+                onPress={handleLogin}
+                disabled={isLoading}
+              >
+                <LinearGradient
+                  colors={['#E9CD7A', '#DBAC35', '#E9CD7A']}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                  style={styles.primaryBtnGradient}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                  ) : (
+                    <Text style={styles.primaryBtnText}>Iniciar Sesión</Text>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
+                <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
+                <Text style={styles.note}>¿No tienes cuenta? <Text style={styles.linkStrong}>Regístrate</Text></Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View style={styles.card}>
-            <Text style={styles.title}>Iniciar Sesion</Text>
-            <Text style={styles.subtitle}>Bienvenido. Por favor inicie sesion para continuar.</Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Correo electronico"
-              placeholderTextColor="#9AA4BF"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={correo}
-              onChangeText={setCorreo}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Contrasena"
-              placeholderTextColor="#9AA4BF"
-              secureTextEntry
-              value={contrasena}
-              onChangeText={setContrasena}
-            />
-
-            {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-
-            <TouchableOpacity
-              style={[styles.primaryBtn, isLoading && styles.primaryBtnDisabled]}
-              onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.primaryBtnText}>Iniciar Sesion</Text>
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('RecuperacionContrasena')}>
-              <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
-              <Text style={styles.note}>No tienes cuenta? <Text style={styles.linkStrong}>Registrate</Text></Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 }

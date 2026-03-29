@@ -149,6 +149,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
+  descriptionWrap: {
+    backgroundColor: '#EBF4FF',
+    borderWidth: 1,
+    borderColor: '#E1E4F199',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 2,
+    marginBottom: 25,
+  },
+  descriptionText: {
+    color: '#6B7393',
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'left',
+  },
 });
 
 export default styles;

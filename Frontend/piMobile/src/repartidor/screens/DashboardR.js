@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
 	ActivityIndicator,Platform,SafeAreaView,ScrollView,StatusBar,Text,TextInput,
-	TouchableOpacity,View,useWindowDimensions,
+	TouchableOpacity,View,useWindowDimensions,Image,
 } from 'react-native';
 import colors from '../../theme/colors';
 import getDashboardRStyles from '../styles/DashboardRStyles';
@@ -56,7 +56,7 @@ function toDashboardDelivery(envio, index) {
 	return {
 		id: codigo,
 		name: nombre,
-		address: addressParts.length > 0 ? addressParts.join(', ') : 'Direccion pendiente',
+		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
 		done,
 		hasIncident: estadoEnvio === 'incidencia' || estadoPaquete === 'retrasado',
 		id_envio: envio?.id_envio,
@@ -101,7 +101,7 @@ export default function DashboardR({ navigation }) {
 				const userId = Number(user?.id_usuario);
 
 				if (!Number.isInteger(userId) || userId <= 0) {
-					throw new Error('No hay sesion activa de conductor.');
+					throw new Error('No hay sesión activa de conductor.');
 				}
 
 				const envios = await getEnviosByUsuario(userId);
@@ -193,7 +193,7 @@ export default function DashboardR({ navigation }) {
 					...prev,
 					loading: false,
 					error: '',
-					warning: 'Aun no hay una entrega para mostrar en mapa.',
+					warning: 'Aún no hay una entrega para mostrar en mapa.',
 					routeCoordinates: [],
 					distanceMeters: null,
 					durationSeconds: null,
@@ -213,7 +213,7 @@ export default function DashboardR({ navigation }) {
 					destination = await geocodeAddress(normalizeAddressQuery(nextRouteDelivery.address));
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
-					warning = warning || 'No se pudo geocodificar el destino exacto. Mostrando aproximacion.';
+					warning = warning || 'No se pudo geocodificar el destino exacto. Mostrando aproximación.';
 				}
 
 				const routeData = await getDrivingRoute(origin, destination);
@@ -241,7 +241,7 @@ export default function DashboardR({ navigation }) {
 					...prev,
 					loading: false,
 					error: '',
-					warning: error.message || 'No se pudo preparar la vista de ruta del dia.',
+					warning: error.message || 'No se pudo preparar la vista de ruta del día.',
 				}));
 			}
 		}
@@ -285,7 +285,9 @@ export default function DashboardR({ navigation }) {
 
 				<View style={styles.statsRow}>
 					<TouchableOpacity style={styles.statCard} onPress={() => navigation.navigate('EntregasR')}>
-						<View style={styles.statIconBlue}><Text style={styles.statIconText}>OK</Text></View>
+						<View style={styles.statIconBlue}>
+							<Image source={require('../../../images/proceso.png')} style={styles.statIconImage} resizeMode="contain" />
+						</View>
 						<View>
 							<Text style={styles.statTitle}>Entregas</Text>
 							<Text style={styles.statValue}>{deliveries.length}</Text>
@@ -296,7 +298,9 @@ export default function DashboardR({ navigation }) {
 						style={styles.statCard}
 						onPress={() => navigation.navigate('EntregasR', { initialFilter: 'Pendientes' })}
 					>
-						<View style={styles.statIconGold}><Text style={styles.statIconText}>..</Text></View>
+						<View style={styles.statIconGold}>
+							<Image source={require('../../../images/pendiente.png')} style={styles.statIconImage} resizeMode="contain" />
+						</View>
 						<View>
 							<Text style={styles.statTitle}>Pendientes</Text>
 							<Text style={styles.statValue}>{pendingCount}</Text>
@@ -305,7 +309,7 @@ export default function DashboardR({ navigation }) {
 				</View>
 
 				<View style={styles.singleBox}>
-					<Text style={styles.mapBlockTitle}>Ruta del dia</Text>
+					<Text style={styles.mapBlockTitle}>Ruta del día</Text>
 					{Platform.OS === 'web' || !MapViewComponent ? (
 						<View style={styles.mapFallbackWrap}>
 							<Text style={styles.mapFallbackText}>Ejecuta en Android/iOS para ver el mini mapa en vivo.</Text>
@@ -321,7 +325,7 @@ export default function DashboardR({ navigation }) {
 								scrollEnabled={false}
 								zoomEnabled={false}
 							>
-								{MarkerComponent ? <MarkerComponent coordinate={miniMapState.origin} title="Tu ubicacion" /> : null}
+								{MarkerComponent ? <MarkerComponent coordinate={miniMapState.origin} title="Tu ubicación" /> : null}
 								{MarkerComponent && nextRouteDelivery ? (
 									<MarkerComponent
 										coordinate={miniMapState.destination}
@@ -348,7 +352,7 @@ export default function DashboardR({ navigation }) {
 					{miniMapState.warning ? <Text style={styles.mapWarningText}>{miniMapState.warning}</Text> : null}
 					{nextRouteDelivery ? (
 						<Text style={styles.mapMetricsText}>
-							Proxima: {nextRouteDelivery.name} | {toKm(miniMapState.distanceMeters)} km | {toMinutes(miniMapState.durationSeconds)} min
+							Próxima: {nextRouteDelivery.name} | {toKm(miniMapState.distanceMeters)} km | {toMinutes(miniMapState.durationSeconds)} min
 						</Text>
 					) : null}
 				</View>
@@ -359,7 +363,7 @@ export default function DashboardR({ navigation }) {
 							<Text style={styles.searchPrefix}>Q</Text>
 							<TextInput
 								style={styles.searchInput}
-								placeholder="Buscar direccion o rastreo"
+								placeholder="Buscar dirección o rastreo"
 								placeholderTextColor="#7D89AD"
 								value={searchText}
 								onChangeText={setSearchText}
@@ -411,10 +415,10 @@ export default function DashboardR({ navigation }) {
 
 				<View style={[styles.card, styles.tipCard]}>
 					<View style={styles.tipTextWrap}>
-						<Text style={styles.tipTitle}>Consejo del dia</Text>
+						<Text style={styles.tipTitle}>Consejo del día</Text>
 						<Text style={styles.tipBody}>Asegura y etiqueta los paquetes antes de salir para evitar retrasos.</Text>
 						<TouchableOpacity>
-							<Text style={styles.tipLink}>Leer mas &gt;</Text>
+							<Text style={styles.tipLink}>Leer más &gt;</Text>
 						</TouchableOpacity>
 					</View>
 

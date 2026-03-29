@@ -16,7 +16,7 @@ export default function CambiarContrasenaScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const payload = {
@@ -30,17 +30,17 @@ export default function CambiarContrasenaScreen({ navigation }) {
       }
 
       if (payload.nuevaContrasena.length < 6) {
-        throw new Error('La nueva contrasena debe tener al menos 6 caracteres.');
+        throw new Error('La nueva contraseña debe tener al menos 6 caracteres.');
       }
 
       if (payload.nuevaContrasena !== payload.confirmarContrasena) {
-        throw new Error('Las contrasenas no coinciden.');
+        throw new Error('Las contraseñas no coinciden.');
       }
 
       setIsSubmitting(true);
       await changePasswordRequest(user.id_usuario, payload);
 
-      Alert.alert('Contrasena actualizada', 'Tu contrasena se guardo correctamente.', [
+      Alert.alert('Contraseña actualizada', 'Tu contraseña se guardó correctamente.', [
         {
           text: 'Aceptar',
           onPress: () => navigation.navigate('ConfiguracionUsuario'),
@@ -54,15 +54,15 @@ export default function CambiarContrasenaScreen({ navigation }) {
   };
 
   return (
-    <MainLayout title="Cambiar Contrasena" navigation={navigation} backTo="ConfiguracionUsuario" activeTab="ConfiguracionUsuario">
+    <MainLayout title="Cambiar Contraseña" navigation={navigation} backTo="ConfiguracionUsuario" activeTab="ConfiguracionUsuario">
       <View style={styles.card}>
-        <Text style={styles.helpText}>Ingresa tu contrasena actual y luego crea una nueva contrasena segura.</Text>
-        <TextInput style={styles.input} placeholder="Contrasena actual" placeholderTextColor="#9AA4BF" secureTextEntry value={contrasenaActual} onChangeText={setContrasenaActual} />
-        <TextInput style={styles.input} placeholder="Nueva contrasena" placeholderTextColor="#9AA4BF" secureTextEntry value={nuevaContrasena} onChangeText={setNuevaContrasena} />
-        <TextInput style={styles.input} placeholder="Confirmar contrasena" placeholderTextColor="#9AA4BF" secureTextEntry value={confirmarContrasena} onChangeText={setConfirmarContrasena} />
+        <Text style={styles.helpText}>Ingresa tu contraseña actual y luego crea una nueva contraseña segura.</Text>
+        <TextInput style={styles.input} placeholder="Contraseña actual" placeholderTextColor="#9AA4BF" secureTextEntry value={contrasenaActual} onChangeText={setContrasenaActual} />
+        <TextInput style={styles.input} placeholder="Nueva contraseña" placeholderTextColor="#9AA4BF" secureTextEntry value={nuevaContrasena} onChangeText={setNuevaContrasena} />
+        <TextInput style={styles.input} placeholder="Confirmar contraseña" placeholderTextColor="#9AA4BF" secureTextEntry value={confirmarContrasena} onChangeText={setConfirmarContrasena} />
       </View>
       <TouchableOpacity style={styles.btn} onPress={handleChangePassword} disabled={isSubmitting}>
-        {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.btnText}>Guardar nueva contrasena</Text>}
+        {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.btnText}>Guardar nueva contraseña</Text>}
       </TouchableOpacity>
     </MainLayout>
   );

@@ -54,7 +54,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
   const [form, setForm] = useState(EMPTY_FORM);
 
   const modalTitle = useMemo(
-    () => (editingDireccion ? 'Editar Direccion' : 'Nueva Direccion'),
+    () => (editingDireccion ? 'Editar Dirección' : 'Nueva Dirección'),
     [editingDireccion]
   );
 
@@ -66,7 +66,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const data = await getDireccionesByUsuario(user.id_usuario);
@@ -112,11 +112,11 @@ export default function DireccionesGuardadasScreen({ navigation }) {
 
   const validateForm = (currentForm) => {
     if (!currentForm.alias || !currentForm.direccion || !currentForm.ciudad) {
-      throw new Error('Alias, direccion y ciudad son obligatorios.');
+      throw new Error('Alias, dirección y ciudad son obligatorios.');
     }
 
     if (currentForm.codigo_postal && !/^\d{4,10}$/.test(currentForm.codigo_postal)) {
-      throw new Error('Codigo postal invalido. Usa solo digitos.');
+      throw new Error('Código postal inválido. Usa solo dígitos.');
     }
   };
 
@@ -127,7 +127,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
       const user = getCurrentUser();
 
       if (!user?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const payload = normalizeDireccionForm(form);
@@ -148,7 +148,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
       closeModal();
       await loadDirecciones();
     } catch (error) {
-      Alert.alert('Error', error.message || 'No se pudo guardar la direccion.');
+      Alert.alert('Error', error.message || 'No se pudo guardar la dirección.');
     } finally {
       setIsSubmitting(false);
     }
@@ -156,8 +156,8 @@ export default function DireccionesGuardadasScreen({ navigation }) {
 
   const handleDeleteDireccion = (item) => {
     Alert.alert(
-      'Eliminar direccion',
-      `Se eliminara la direccion "${item.alias || 'Sin alias'}".`,
+      'Eliminar dirección',
+      `Se eliminará la dirección "${item.alias || 'Sin alias'}".`,
       [
         { text: 'Cancelar', style: 'cancel' },
         {
@@ -170,7 +170,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
               const user = getCurrentUser();
 
               if (!user?.id_usuario) {
-                throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+                throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
               }
 
               await deleteDireccionRequest(item.id_direccion, {
@@ -179,7 +179,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
 
               await loadDirecciones();
             } catch (error) {
-              Alert.alert('Error', error.message || 'No se pudo eliminar la direccion.');
+              Alert.alert('Error', error.message || 'No se pudo eliminar la dirección.');
             } finally {
               setIsSubmitting(false);
             }
@@ -239,7 +239,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
 
       {!isLoading && !errorMessage && direcciones.length === 0 ? (
         <View style={styles.stateWrap}>
-          <Text style={styles.stateText}>Aun no tienes direcciones guardadas.</Text>
+          <Text style={styles.stateText}>Aún no tienes direcciones guardadas.</Text>
         </View>
       ) : null}
 
@@ -265,7 +265,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
                 style={styles.input}
                 value={form.direccion}
                 onChangeText={(value) => setForm((prev) => ({ ...prev, direccion: value }))}
-                placeholder="Direccion completa"
+                placeholder="Dirección completa"
                 placeholderTextColor="#8C93AD"
               />
 

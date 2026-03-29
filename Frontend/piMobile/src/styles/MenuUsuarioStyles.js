@@ -18,6 +18,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  itemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexShrink: 1,
+  },
+  iconPill: {
+    width: 31,
+    height: 31,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#EAF0FA',
+    borderWidth: 1,
+    borderColor: '#D8E0F1',
+  },
   itemText: {
     color: colors.text,
     fontWeight: '600',
@@ -37,6 +53,12 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontWeight: '600',
+  },
+  logoutInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
 });
 

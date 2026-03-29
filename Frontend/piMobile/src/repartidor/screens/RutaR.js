@@ -30,8 +30,8 @@ import {
 } from '../services/rutaMapService';
 
 const DELIVERY_SAMPLE = {
-	clientName: 'Ana Martinez',
-	address: 'Londres 247, Col. Juarez, Ciudad de Mexico',
+	clientName: 'Ana Martínez',
+	address: 'Londres 247, Col. Juárez, Ciudad de México',
 	phone: '+52 55 1234 5678',
 };
 
@@ -109,7 +109,7 @@ export default function RutaR({ navigation, route }) {
 					destination = await geocodeAddress(deliveryData.address);
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
-					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
+					warning = warning || 'Usando ubicación aproximada: no se pudo geocodificar la dirección exacta.';
 				}
 			}
 
@@ -150,7 +150,7 @@ export default function RutaR({ navigation, route }) {
 
 	const startLiveTracking = async () => {
 		if (Platform.OS === 'web') {
-			Alert.alert('No disponible', 'El seguimiento en vivo esta disponible solo en Android/iOS.');
+			Alert.alert('No disponible', 'El seguimiento en vivo está disponible solo en Android/iOS.');
 			return;
 		}
 
@@ -163,14 +163,14 @@ export default function RutaR({ navigation, route }) {
 			const requestPermission = Location.requestForegroundPermissionsAsync;
 
 			if (typeof requestPermission !== 'function') {
-				Alert.alert('No disponible', 'Este dispositivo no permite solicitar permisos de ubicacion.');
+				Alert.alert('No disponible', 'Este dispositivo no permite solicitar permisos de ubicación.');
 				return;
 			}
 
 			const permission = await requestPermission();
 
 			if (permission.status !== 'granted') {
-				Alert.alert('Permiso requerido', 'Debes habilitar ubicacion para seguimiento en vivo.');
+				Alert.alert('Permiso requerido', 'Debes habilitar ubicación para seguimiento en vivo.');
 				return;
 			}
 
@@ -259,7 +259,7 @@ export default function RutaR({ navigation, route }) {
 
 	const openExternalNavigation = async () => {
 		if (!mapState.origin || !mapState.destination) {
-			Alert.alert('Ruta no disponible', 'Todavia no se cargaron los puntos para navegar.');
+			Alert.alert('Ruta no disponible', 'Todavía no se cargaron los puntos para navegar.');
 			return;
 		}
 
@@ -294,7 +294,7 @@ export default function RutaR({ navigation, route }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<TopHeaderR s={s} navigation={navigation} title="Ruta del Dia" />
+				<TopHeaderR s={s} navigation={navigation} title="Ruta del Día" />
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
 					<View style={styles.mapCard}>
@@ -313,7 +313,7 @@ export default function RutaR({ navigation, route }) {
 									region={mapRegion}
 								>
 									{mapState.origin ? (
-										<MarkerComponent coordinate={mapState.origin} title="Tu ubicacion" pinColor="#2563EB" />
+										<MarkerComponent coordinate={mapState.origin} title="Tu ubicación" pinColor="#2563EB" />
 									) : null}
 									{mapState.destination ? (
 										<MarkerComponent
@@ -371,7 +371,7 @@ export default function RutaR({ navigation, route }) {
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
 
 						<TouchableOpacity style={styles.refreshBtn} onPress={resolveRoute}>
-							<Text style={styles.refreshBtnText}>Actualizar ubicacion real</Text>
+							<Text style={styles.refreshBtnText}>Actualizar ubicación real</Text>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -384,7 +384,7 @@ export default function RutaR({ navigation, route }) {
 						{isLiveTracking ? <Text style={styles.liveStatus}>Seguimiento en vivo activo</Text> : null}
 
 						<TouchableOpacity style={styles.startBtn} onPress={openExternalNavigation}>
-							<Text style={styles.startBtnText}>Iniciar navegacion</Text>
+							<Text style={styles.startBtnText}>Iniciar navegación</Text>
 						</TouchableOpacity>
 					</View>
 

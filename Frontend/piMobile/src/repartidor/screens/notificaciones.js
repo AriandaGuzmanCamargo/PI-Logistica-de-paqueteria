@@ -23,8 +23,8 @@ const newAssignedOrders = [
 ];
 
 const confirmedDeliveries = [
-	{ id: 'PAK927365789', text: 'Entrega confirmada por Ana Martinez.' },
-	{ id: 'PAK967654035', text: 'Entrega confirmada por Laura Gomez.' },
+	{ id: 'PAK927365789', text: 'Entrega confirmada por Ana Martínez.' },
+	{ id: 'PAK967654035', text: 'Entrega confirmada por Laura Gómez.' },
 	{ id: 'PAK987654320', text: 'Entrega confirmada en Benito Juarez.' },
 ];
 

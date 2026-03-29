@@ -1,12 +1,57 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/MainLayoutStyles';
 
 const tabs = [
-  { label: 'Inicio', route: 'Dashboard' },
-  { label: 'Envios', route: 'RastrearEnvio' },
-  { label: 'Menu', route: 'MenuUsuario' },
+  { label: 'Inicio', route: 'Dashboard', iconSet: 'ionicons', iconName: 'home-outline', activeIconName: 'home' },
+  { label: 'Envíos', route: 'RastrearEnvio', iconSet: 'material', iconName: 'package-variant-closed', activeIconName: 'package-variant' },
+  { label: 'Menú', route: 'MenuUsuario', iconSet: 'feather', iconName: 'menu', activeIconName: 'menu' },
 ];
+
+function TabIcon({ tab, active }) {
+  const color = active ? '#2A4E90' : '#8A96B7';
+  const size = 18;
+
+  if (tab.iconSet === 'material') {
+    return <MaterialCommunityIcons name={active ? tab.activeIconName : tab.iconName} size={size} color={color} />;
+  }
+
+  if (tab.iconSet === 'feather') {
+    return <Feather name={active ? tab.activeIconName : tab.iconName} size={size} color={color} />;
+  }
+
+  return <Ionicons name={active ? tab.activeIconName : tab.iconName} size={size} color={color} />;
+}
+
+function prettifyRouteName(routeName = '') {
+  const routeMap = {
+    Dashboard: 'Inicio',
+    DashboardR: 'Repartidor',
+    MenuUsuario: 'Menú Usuario',
+    RastrearEnvio: 'Rastrear Envío',
+    MisEnvios: 'Mis Envíos',
+    Notificaciones: 'Notificaciones',
+    NotificacionesR: 'Notificaciones',
+    ConfiguracionUsuario: 'Configuración',
+    ConfiguracionR: 'Configuración',
+    DireccionesGuardadas: 'Direcciones Guardadas',
+    NuevoEnvio: 'Nuevo Envío',
+    PerfilR: 'Perfil',
+    EntregasR: 'Entregas',
+    RutaR: 'Ruta',
+  };
+
+  if (routeMap[routeName]) {
+    return routeMap[routeName];
+  }
+
+  return String(routeName)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 export default function MainLayout({
   title,
@@ -16,25 +61,12 @@ export default function MainLayout({
   activeTab,
   subtitle,
 }) {
-  const handleAvatarPress = () => {
-    const state = navigation.getState();
-    const currentRoute = state?.routes?.[state.index];
-
-    if (currentRoute?.name === 'DatosPersonales') {
-      if (currentRoute?.params?.fromRoute) {
-        navigation.navigate(currentRoute.params.fromRoute);
-        return;
-      }
-
-      if (navigation.canGoBack()) {
-        navigation.goBack();
-      }
-
-      return;
-    }
-
-    navigation.navigate('DatosPersonales', { fromRoute: currentRoute?.name });
-  };
+  const state = navigation.getState();
+  const currentRouteName = state?.routes?.[state.index]?.name || '';
+  const centeredSubtitle = String(subtitle || '').trim()
+    || String(title || '').trim()
+    || prettifyRouteName(currentRouteName)
+    || prettifyRouteName(activeTab || '');
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -43,7 +75,12 @@ export default function MainLayout({
         <View style={styles.bgBubbleBottom} />
 
         <View style={styles.shell}>
-          <View style={styles.header}>
+          <LinearGradient
+            colors={['#1A2D50', '#2F66B0', '#7399CC']}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={styles.header}
+          >
             <View style={styles.headerRow}>
               <View style={styles.brandWrap}>
                 <Image
@@ -62,21 +99,13 @@ export default function MainLayout({
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.avatar} onPress={handleAvatarPress}>
-                  <Image
-                    source={require('../../images/usuario.png')}
-                    style={styles.avatarImage}
-                    resizeMode="cover"
-                  />
-                </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </LinearGradient>
 
-          {(title || subtitle) ? (
+          {centeredSubtitle ? (
             <View style={styles.pageHeading}>
-              {title ? <Text style={styles.title}>{title}</Text> : null}
-              {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+              <Text style={styles.centeredSubtitle}>{centeredSubtitle}</Text>
             </View>
           ) : null}
 
@@ -86,10 +115,15 @@ export default function MainLayout({
 
           <View style={styles.bottomNav}>
             {tabs.map((tab) => (
-              <TouchableOpacity key={tab.route} onPress={() => navigation.navigate(tab.route)}>
-                <Text style={[styles.navLink, activeTab === tab.route && styles.navLinkActive]}>
-                  {tab.label}
-                </Text>
+              <TouchableOpacity
+                key={tab.route}
+                style={[styles.navBtn, activeTab === tab.route && styles.navBtnActive]}
+                onPress={() => navigation.navigate(tab.route)}
+              >
+                <View style={styles.navIconWrap}>
+                  <TabIcon tab={tab} active={activeTab === tab.route} />
+                </View>
+                <Text style={[styles.navLink, activeTab === tab.route && styles.navLinkActive]}>{tab.label}</Text>
               </TouchableOpacity>
             ))}
           </View>

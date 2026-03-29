@@ -46,8 +46,8 @@ export default function DetalleIncidenciaR({ navigation, route }) {
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <View style={styles.card}>
-            <Text style={styles.label}>Codigo del paquete</Text>
-            <Text style={styles.value}>{report?.trackingId || 'Sin codigo'}</Text>
+            <Text style={styles.label}>Código del paquete</Text>
+            <Text style={styles.value}>{report?.trackingId || 'Sin código'}</Text>
 
             <Text style={styles.label}>Tipo de incidencia</Text>
             <Text style={styles.value}>{report?.type || 'Sin tipo de incidencia'}</Text>
@@ -55,11 +55,11 @@ export default function DetalleIncidenciaR({ navigation, route }) {
             <Text style={styles.label}>Comentario</Text>
             <Text style={styles.value}>{report?.comment || 'Sin comentario'}</Text>
 
-            <Text style={styles.label}>Fotografia</Text>
+            <Text style={styles.label}>Fotografía</Text>
             {report?.photo ? (
               <Image source={report.photo} style={styles.photo} resizeMode="cover" />
             ) : (
-              <Text style={styles.value}>Sin fotografia</Text>
+              <Text style={styles.value}>Sin fotografía</Text>
             )}
           </View>
         </ScrollView>

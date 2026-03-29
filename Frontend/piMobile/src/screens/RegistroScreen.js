@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { registerRequest } from '../services/authService';
 import styles from '../styles/RegistroStyles';
 
@@ -26,21 +27,21 @@ export default function RegistroScreen({ navigation }) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailRegex.test(payload.correo)) {
-        throw new Error('Correo invalido.');
+        throw new Error('Correo inválido.');
       }
 
       if (payload.contrasena.length < 6) {
-        throw new Error('La contrasena debe tener al menos 6 caracteres.');
+        throw new Error('La contraseña debe tener al menos 6 caracteres.');
       }
 
       if (payload.contrasena !== payload.confirmarContrasena) {
-        throw new Error('Las contrasenas no coinciden.');
+        throw new Error('Las contraseñas no coinciden.');
       }
 
       setIsSubmitting(true);
       await registerRequest(payload);
 
-      Alert.alert('Cuenta creada', 'Tu cuenta fue registrada correctamente. Ahora inicia sesion.', [
+      Alert.alert('Cuenta creada', 'Tu cuenta fue registrada correctamente. Ahora inicia sesión.', [
         {
           text: 'Ir a login',
           onPress: () => navigation.navigate('Login'),
@@ -55,33 +56,48 @@ export default function RegistroScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.heroRow}>
-            <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
+      <LinearGradient
+        colors={['#1A2D50', '#2A4A7A', '#3B6AAA', '#4A7EC0', '#5A90D0']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBackground}
+      >
+        <View style={styles.waveOne} />
+        <View style={styles.waveTwo} />
+        <View style={styles.waveThree} />
+        <View style={styles.waveFour} />
+
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.heroRow}>
+              <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.title}>Registrarse</Text>
+              <Text style={styles.subtitle}>Crea tu cuenta para continuar.</Text>
+
+              <TextInput style={styles.input} placeholder="Nombre completo" placeholderTextColor="#9AA4BF" value={nombreCompleto} onChangeText={setNombreCompleto} />
+              <TextInput style={styles.input} placeholder="Correo electrónico" placeholderTextColor="#9AA4BF" value={correo} onChangeText={setCorreo} autoCapitalize="none" keyboardType="email-address" />
+              <TextInput style={styles.input} placeholder="Contraseña" placeholderTextColor="#9AA4BF" secureTextEntry value={contrasena} onChangeText={setContrasena} />
+              <TextInput style={styles.input} placeholder="Confirmar contraseña" placeholderTextColor="#9AA4BF" secureTextEntry value={confirmarContrasena} onChangeText={setConfirmarContrasena} />
+
+              <TouchableOpacity style={styles.primaryBtn} onPress={handleRegister} disabled={isSubmitting}>
+                <LinearGradient
+                  colors={['#E9CD7A', '#DBAC35', '#E9CD7A']}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                  style={styles.primaryBtnGradient}
+                >
+                  {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryBtnText}>Registrarse</Text>}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <Text style={styles.note}>¿Ya tienes cuenta? <Text style={styles.linkStrong} onPress={() => navigation.navigate('Login')}>Inicia sesión</Text></Text>
+            </View>
           </View>
-
-          <View style={styles.card}>
-            <Text style={styles.title}>Registrarse</Text>
-            <Text style={styles.subtitle}>Crea tu cuenta para continuar.</Text>
-
-            <TextInput style={styles.input} placeholder="Nombre completo" placeholderTextColor="#9AA4BF" value={nombreCompleto} onChangeText={setNombreCompleto} />
-            <TextInput style={styles.input} placeholder="Correo electronico" placeholderTextColor="#9AA4BF" value={correo} onChangeText={setCorreo} autoCapitalize="none" keyboardType="email-address" />
-            <TextInput style={styles.input} placeholder="Contrasena" placeholderTextColor="#9AA4BF" secureTextEntry value={contrasena} onChangeText={setContrasena} />
-            <TextInput style={styles.input} placeholder="Confirmar contrasena" placeholderTextColor="#9AA4BF" secureTextEntry value={confirmarContrasena} onChangeText={setConfirmarContrasena} />
-
-            <TouchableOpacity style={styles.primaryBtn} onPress={handleRegister} disabled={isSubmitting}>
-              {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryBtnText}>Registrarse</Text>}
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.secondaryBtn} onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.secondaryBtnText}>Ya tengo cuenta</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.note}>Ya tienes cuenta? <Text style={styles.linkStrong} onPress={() => navigation.navigate('Login')}>Inicia sesion</Text></Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 }

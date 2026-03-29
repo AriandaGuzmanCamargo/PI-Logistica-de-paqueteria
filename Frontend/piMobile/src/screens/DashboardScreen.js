@@ -6,7 +6,7 @@ import styles from '../styles/DashboardStyles';
 
 const STATE_LABELS = {
   registrado: 'Pedido creado',
-  en_transito: 'En transito',
+  en_transito: 'En tránsito',
   entregado: 'Entregado',
   retrasado: 'Retrasado',
   perdido: 'Perdido',
@@ -30,7 +30,7 @@ export default function DashboardScreen({ navigation }) {
 
   const handleRastrear = async () => {
     if (!codigo.trim()) {
-      setErrorMessage('Ingresa un codigo de rastreo.');
+      setErrorMessage('Ingresa un código de rastreo.');
       return;
     }
 
@@ -42,7 +42,7 @@ export default function DashboardScreen({ navigation }) {
       const data = await getTrackingByCodigo(codigo);
       setTrackingData(data);
     } catch (error) {
-      setErrorMessage(error.message || 'No se encontro informacion de rastreo.');
+      setErrorMessage(error.message || 'No se encontró información de rastreo.');
     } finally {
       setIsLoading(false);
     }
@@ -52,13 +52,13 @@ export default function DashboardScreen({ navigation }) {
     <MainLayout title="" navigation={navigation} activeTab="Dashboard">
       <View style={styles.welcomeWrap}>
         <Text style={styles.welcomeTitle}>Bienvenid@</Text>
-        <Text style={styles.welcomeText}>Ahora puedes rastrear tus pedidos de forma rapida y sencilla.</Text>
+        <Text style={styles.welcomeText}>Ahora puedes rastrear tus pedidos de forma rápida y sencilla.</Text>
       </View>
 
       <View style={styles.searchWrap}>
         <TextInput
           style={styles.input}
-          placeholder="Ingresar el numero de rastreo"
+          placeholder="Ingresar el número de rastreo"
           placeholderTextColor="#9AA4BF"
           value={codigo}
           onChangeText={setCodigo}
@@ -83,8 +83,8 @@ export default function DashboardScreen({ navigation }) {
 
       <View style={styles.grid}>
         <TouchableOpacity style={styles.quickCard} onPress={() => navigation.navigate('NuevoEnvio')}>
-          <Text style={styles.cardTitle}>Nuevo Envio</Text>
-          <Text style={styles.cardDesc}>Calcula costos y crea tu envio.</Text>
+          <Text style={styles.cardTitle}>Nuevo Envío</Text>
+          <Text style={styles.cardDesc}>Calcula costos y crea tu envío.</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.quickCard} onPress={() => navigation.navigate('DireccionesGuardadas')}>
@@ -108,7 +108,7 @@ export default function DashboardScreen({ navigation }) {
               </View>
             ))
           ) : (
-            <Text style={styles.timelineText}>Sin eventos de rastreo aun.</Text>
+            <Text style={styles.timelineText}>Sin eventos de rastreo aún.</Text>
           )}
 
           <TouchableOpacity onPress={() => navigation.navigate('DetalleEnvio', { idEnvio: trackingData.envio?.id_envio })}>

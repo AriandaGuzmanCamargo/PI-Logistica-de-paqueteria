@@ -56,7 +56,7 @@ export default function PagoTarjetaScreen({ navigation, route }) {
     }
   };
 
-  const title = returnTo ? 'Pago del envio' : 'Pago';
+  const title = returnTo ? 'Pago del envío' : 'Pago';
 
   return (
     <MainLayout title={title} navigation={navigation} backTo="PagoOpciones" activeTab="RastrearEnvio">
@@ -72,7 +72,7 @@ export default function PagoTarjetaScreen({ navigation, route }) {
       <View style={styles.card}>
         <TextInput
           style={styles.input}
-          placeholder="Numero de tarjeta"
+          placeholder="Número de tarjeta"
           placeholderTextColor="#9AA4BF"
           value={cardNumber}
           onChangeText={(text) => setCardNumber(normalizeCardInput(text))}

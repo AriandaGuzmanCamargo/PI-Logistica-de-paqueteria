@@ -50,13 +50,13 @@ export default function FormPaqueteScreen({ navigation, route }) {
     for (const field of numericFields) {
       const parsed = Number(sanitized[field.key]);
       if (!Number.isFinite(parsed) || parsed <= 0) {
-        Alert.alert('Valor invalido', `${field.label} debe ser un numero mayor a 0.`);
+        Alert.alert('Valor inválido', `${field.label} debe ser un número mayor a 0.`);
         return;
       }
     }
 
     if (!SERVICE_TYPES.includes(sanitized.tipoServicio)) {
-      Alert.alert('Tipo de servicio invalido', 'Usa: normal, express o economico.');
+      Alert.alert('Tipo de servicio inválido', 'Usa: normal, express o económico.');
       return;
     }
 
@@ -69,8 +69,8 @@ export default function FormPaqueteScreen({ navigation, route }) {
   };
 
   return (
-    <MainLayout title="Registro de Envio" navigation={navigation} backTo="FormDestinatario" activeTab="RastrearEnvio">
-      <Text style={styles.step}>Paso 3 de 4 - Informacion del paquete</Text>
+    <MainLayout title="Registro de Envío" navigation={navigation} backTo="FormDestinatario" activeTab="RastrearEnvio">
+      <Text style={styles.step}>Paso 3 de 4 - Información del paquete</Text>
 
       <View style={styles.card}>
         <TextInput style={styles.input} placeholder="Tipo de paquete" placeholderTextColor="#9AA4BF" value={tipoPaquete} onChangeText={setTipoPaquete} />
@@ -80,7 +80,7 @@ export default function FormPaqueteScreen({ navigation, route }) {
         <TextInput style={styles.input} placeholder="Ancho (cm)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={ancho} onChangeText={setAncho} />
         <TextInput style={styles.input} placeholder="Alto (cm)" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={alto} onChangeText={setAlto} />
         <TextInput style={styles.input} placeholder="Valor declarado" placeholderTextColor="#9AA4BF" keyboardType="numeric" value={valorDeclarado} onChangeText={setValorDeclarado} />
-        <TextInput style={styles.input} placeholder="Tipo servicio (normal, express, economico)" placeholderTextColor="#9AA4BF" value={tipoServicio} onChangeText={setTipoServicio} autoCapitalize="none" />
+        <TextInput style={styles.input} placeholder="Tipo servicio (normal, express, económico)" placeholderTextColor="#9AA4BF" value={tipoServicio} onChangeText={setTipoServicio} autoCapitalize="none" />
       </View>
 
       <View style={styles.actions}>

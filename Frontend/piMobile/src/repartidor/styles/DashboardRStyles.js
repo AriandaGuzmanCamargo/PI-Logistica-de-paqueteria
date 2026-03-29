@@ -30,7 +30,7 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 		nativeRoot: {
 			flex: 1,
 			backgroundColor: bgWeb,
-			padding: s(6),
+			padding: 0,
 		},
 		webRoot: {
 			flex: 1,
@@ -42,7 +42,7 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 		safeArea: {
 			flex: 4,
 			backgroundColor: colors.primaryDark,
-			borderRadius: s(20),
+			borderRadius: 0,
 			overflow: 'hidden',
 		},
 		header: {
@@ -128,11 +128,15 @@ export default function getDashboardRStyles(s, isDarkMode = false) {
 		},
 		statIconBlue: {
 			...iconBase,
-			backgroundColor: '#61A2D8',
+			backgroundColor: 'transparent',
 		},
 		statIconGold: {
 			...iconBase,
-			backgroundColor: '#F1D078',
+			backgroundColor: 'transparent',
+		},
+		statIconImage: {
+			width: s(16),
+			height: s(16),
 		},
 		statIconText: {
 			color: colors.white,

@@ -1,13 +1,45 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import colors from '../../theme/colors';
+
+function prettifyRouteName(routeName = '') {
+  const routeMap = {
+    DashboardR: 'Repartidor',
+    EntregasR: 'Entregas',
+    RutaR: 'Ruta',
+    PerfilR: 'Perfil',
+    ConfiguracionR: 'Configuración',
+    CambiarContrasenaR: 'Cambiar Contraseña',
+    NotificacionesR: 'Notificaciones',
+  };
+
+  if (routeMap[routeName]) {
+    return routeMap[routeName];
+  }
+
+  return String(routeName)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 export default function TopHeaderR({ s, navigation, title, subtitle }) {
   const styles = getStyles(s);
+  const state = navigation.getState();
+  const currentRouteName = state?.routes?.[state.index]?.name || '';
+  const centeredSubtitle = String(subtitle || '').trim()
+    || String(title || '').trim()
+    || prettifyRouteName(currentRouteName);
 
   return (
     <>
-      <View style={styles.header}>
+      <LinearGradient
+        colors={[colors.primaryDark, '#2F66B0', '#7399CC']}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.header}
+      >
         <View style={styles.headerRow}>
           <View style={styles.brandWrap}>
             <Image
@@ -26,21 +58,13 @@ export default function TopHeaderR({ s, navigation, title, subtitle }) {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate('PerfilR')}>
-              <Image
-                source={require('../../../images/usuario.png')}
-                style={styles.avatarIcon}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </LinearGradient>
 
-      {(title || subtitle) ? (
+      {centeredSubtitle ? (
         <View style={styles.pageHeading}>
-          {title ? <Text style={styles.title}>{title}</Text> : null}
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          <Text style={styles.centeredSubtitle}>{centeredSubtitle}</Text>
         </View>
       ) : null}
     </>
@@ -52,10 +76,12 @@ function getStyles(s) {
     header: {
       backgroundColor: colors.primaryDark,
       paddingHorizontal: s(14),
-      paddingTop: s(10),
-      paddingBottom: s(12),
-      borderBottomLeftRadius: s(14),
-      borderBottomRightRadius: s(14),
+      paddingTop: s(34),
+      paddingBottom: s(18),
+      borderBottomLeftRadius: s(28),
+      borderBottomRightRadius: s(28),
+      marginTop: 0,
+      overflow: 'hidden',
     },
     headerRow: {
       flexDirection: 'row',
@@ -69,17 +95,19 @@ function getStyles(s) {
       flex: 1,
     },
     brandLogo: {
-      width: s(120),
-      height: s(52),
-      marginLeft: s(-22),
-      transform: [{ scale: 1.55 }],
+      width: s(146),
+      height: s(64),
+      marginLeft: s(-24),
+      marginTop: s(2),
+      transform: [{ scale: 1.9 }],
     },
     brandText: {
       color: colors.white,
-      fontSize: s(22),
+      fontSize: s(26),
       fontWeight: '700',
       fontFamily: 'serif',
-      marginLeft: s(-18),
+      marginLeft: s(-16),
+      marginTop: s(2),
     },
     rightGroup: {
       flexDirection: 'row',
@@ -93,39 +121,29 @@ function getStyles(s) {
       backgroundColor: '#FFFFFF2E',
       alignItems: 'center',
       justifyContent: 'center',
+      marginTop: s(2),
     },
     bellIcon: {
       width: s(14),
       height: s(14),
     },
-    avatar: {
-      width: s(38),
-      height: s(38),
-      borderRadius: s(19),
-      backgroundColor: colors.white,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: '#DCE3F5',
-    },
-    avatarIcon: {
-      width: s(18),
-      height: s(18),
-    },
     pageHeading: {
+      backgroundColor: '#F4F6FB',
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderTopColor: '#DDE3F0',
+      borderBottomColor: '#DDE3F0',
       paddingHorizontal: s(14),
       paddingTop: s(12),
-      paddingBottom: s(6),
+      paddingBottom: s(12),
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    title: {
-      color: colors.primaryDark,
-      fontSize: s(21),
-      fontWeight: '600',
-    },
-    subtitle: {
-      color: colors.muted,
-      fontSize: s(12),
-      marginTop: s(2),
+    centeredSubtitle: {
+      color: '#1F3762',
+      fontSize: s(19),
+      fontWeight: '700',
+      textAlign: 'center',
     },
   });
 }

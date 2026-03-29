@@ -9,7 +9,7 @@ export default function PagoOpcionesScreen({ navigation, route }) {
   const returnTo = route?.params?.returnTo || null;
   const [selectedMethod, setSelectedMethod] = useState('tarjeta');
 
-  const title = useMemo(() => (returnTo ? 'Pago del envio' : 'Pago'), [returnTo]);
+  const title = useMemo(() => (returnTo ? 'Pago del envío' : 'Pago'), [returnTo]);
 
   const handleContinue = () => {
     if (selectedMethod === 'tarjeta') {
@@ -46,11 +46,11 @@ export default function PagoOpcionesScreen({ navigation, route }) {
       </View>
 
       <View style={styles.notice}>
-        <Text style={styles.noticeText}>Administra y confirma tu metodo de pago.</Text>
+        <Text style={styles.noticeText}>Administra y confirma tu método de pago.</Text>
       </View>
 
       <TouchableOpacity style={styles.btn} onPress={handleContinue}>
-        <Text style={styles.btnText}>Confirmar metodo y continuar</Text>
+        <Text style={styles.btnText}>Confirmar método y continuar</Text>
       </TouchableOpacity>
     </MainLayout>
   );

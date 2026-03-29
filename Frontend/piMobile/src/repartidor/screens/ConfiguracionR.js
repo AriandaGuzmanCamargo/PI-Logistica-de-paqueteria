@@ -10,6 +10,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
@@ -49,15 +50,25 @@ export default function ConfiguracionR({ navigation }) {
           <View style={styles.sectionCard}>
             <Text style={styles.sectionTitle}>Cuenta</Text>
             <TouchableOpacity style={styles.optionRow} onPress={() => navigation.navigate('CambiarContrasenaR')}>
-              <Text style={styles.optionText}>Cambiar contraseña</Text>
-              <Text style={styles.optionArrow}>{'>'}</Text>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIconWrap}>
+                  <Feather name="lock" size={s(15)} color="#4467A3" />
+                </View>
+                <Text style={styles.optionText}>Cambiar Contraseña</Text>
+              </View>
+              <Feather name="chevron-right" size={s(16)} color="#6B81AD" />
             </TouchableOpacity>
           </View>
 
           <View style={styles.sectionCard}>
             <Text style={styles.sectionTitle}>Preferencias</Text>
             <View style={styles.optionRow}>
-              <Text style={styles.optionText}>Modo oscuro</Text>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIconWrap}>
+                  <Ionicons name="moon-outline" size={s(15)} color="#4467A3" />
+                </View>
+                <Text style={styles.optionText}>Modo oscuro</Text>
+              </View>
               <Switch
                 value={darkModeEnabled}
                 onValueChange={setDarkModeEnabled}
@@ -66,7 +77,12 @@ export default function ConfiguracionR({ navigation }) {
               />
             </View>
             <View style={styles.optionRow}>
-              <Text style={styles.optionText}>Activar/desactivar notificaciones</Text>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIconWrap}>
+                  <MaterialCommunityIcons name="bell-outline" size={s(15)} color="#4467A3" />
+                </View>
+                <Text style={styles.optionText}>Activar/desactivar notificaciones</Text>
+              </View>
               <Switch
                 value={notificationsEnabled}
                 onValueChange={setNotificationsEnabled}

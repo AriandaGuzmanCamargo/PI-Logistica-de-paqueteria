@@ -36,7 +36,7 @@ export default function DatosPersonalesScreen({ navigation }) {
         const currentUser = getCurrentUser();
 
         if (!currentUser?.id_usuario) {
-          throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+          throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
         }
 
         const data = await getPerfilUsuarioRequest(currentUser.id_usuario);
@@ -61,7 +61,7 @@ export default function DatosPersonalesScreen({ navigation }) {
       const currentUser = getCurrentUser();
 
       if (!currentUser?.id_usuario) {
-        throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
       }
 
       const payload = {
@@ -77,12 +77,12 @@ export default function DatosPersonalesScreen({ navigation }) {
       }
 
       if (!/^\d{8,15}$/.test(payload.telefono)) {
-        throw new Error('Telefono invalido. Usa solo digitos de 8 a 15 caracteres.');
+        throw new Error('Teléfono inválido. Usa solo dígitos de 8 a 15 caracteres.');
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(payload.correo)) {
-        throw new Error('Correo invalido.');
+        throw new Error('Correo inválido.');
       }
 
       setIsSaving(true);
@@ -136,8 +136,8 @@ export default function DatosPersonalesScreen({ navigation }) {
         <Text style={styles.label}>Correo</Text>
         <TextInput style={styles.input} value={correo} onChangeText={setCorreo} placeholder="Correo" placeholderTextColor="#9AA4BF" autoCapitalize="none" keyboardType="email-address" />
 
-        <Text style={styles.label}>Telefono</Text>
-        <TextInput style={styles.input} value={telefono} onChangeText={setTelefono} placeholder="Telefono" placeholderTextColor="#9AA4BF" keyboardType="numeric" />
+        <Text style={styles.label}>Teléfono</Text>
+        <TextInput style={styles.input} value={telefono} onChangeText={setTelefono} placeholder="Teléfono" placeholderTextColor="#9AA4BF" keyboardType="numeric" />
 
         <Text style={styles.label}>Ciudad</Text>
         <TextInput style={styles.input} value={ciudad} onChangeText={setCiudad} placeholder="Ciudad" placeholderTextColor="#9AA4BF" />

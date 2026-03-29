@@ -1,5 +1,7 @@
 import {
+  createNotificationsForUsers,
   findUserById,
+  findUserIdsByRoles,
   listNotificationsByUser,
   listNotificationsForOperator,
 } from '../repositories/notificacionesRepository.js';
@@ -37,4 +39,9 @@ export async function getNotificationsByUser(userId) {
     : await listNotificationsByUser(parsedId);
 
   return rows.map(mapNotification);
+}
+
+export async function notifyUsersByRoles(roles, { titulo, mensaje }) {
+  const userIds = await findUserIdsByRoles(roles);
+  return createNotificationsForUsers(userIds, { titulo, mensaje });
 }

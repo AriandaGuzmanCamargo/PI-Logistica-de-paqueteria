@@ -147,6 +147,19 @@ export async function getIncidenciasOperador() {
   return payload.data || [];
 }
 
+export async function getNotificacionesOperador() {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/notificaciones/usuario/${encodeURIComponent(user.id_usuario)}`);
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudieron cargar las notificaciones.');
+  }
+
+  return payload.data || [];
+}
+
 export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
   const user = ensureSession();
 
@@ -157,6 +170,7 @@ export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
     },
     body: JSON.stringify({
       estado: nuevoEstado,
+      idUsuario: user.id_usuario,
     }),
   });
 

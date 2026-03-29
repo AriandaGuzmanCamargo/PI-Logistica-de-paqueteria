@@ -70,6 +70,20 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
     listWrap: {
       gap: s(8),
     },
+    stateWrap: {
+      paddingVertical: s(8),
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: s(8),
+    },
+    stateText: {
+      color: isDarkMode ? '#C9D6EE' : '#536A95',
+      fontSize: s(13),
+    },
+    stateError: {
+      color: '#B3261E',
+      textAlign: 'center',
+    },
     notificationCard: {
       borderRadius: s(9),
       borderWidth: 1,

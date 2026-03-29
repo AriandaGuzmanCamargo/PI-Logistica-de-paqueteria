@@ -45,6 +45,13 @@ export default function Incidencias() {
 
   const handleChangeStatus = async (nuevoEstado) => {
     if (!detalleIncidencia) return;
+
+    const estadoActual = String(detalleIncidencia.estado || '').toLowerCase();
+    if (['cerrada', 'cancelada'].includes(estadoActual)) {
+      alert('Esta incidencia ya esta finalizada y no permite cambios.');
+      return;
+    }
+
     try {
       setUpdatingStatus(true);
       await updateIncidenciaStatus(detalleIncidencia.id_incidencia, nuevoEstado);
@@ -189,24 +196,23 @@ export default function Incidencias() {
             }}>{estadoIncidenciaTexto(detalleIncidencia.estado)}</span>
           </div>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {detalleIncidencia.estado !== 'en_proceso' && (
+            {!['cerrada', 'cancelada'].includes(String(detalleIncidencia.estado || '').toLowerCase()) && detalleIncidencia.estado === 'abierta' && (
               <button onClick={() => handleChangeStatus('en_proceso')} disabled={updatingStatus}
                 style={{ flex: 1, padding: '10px', backgroundColor: '#f5a623', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: updatingStatus ? 'not-allowed' : 'pointer', opacity: updatingStatus ? 0.6 : 1 }}>
                 {updatingStatus ? 'Actualizando...' : 'En proceso'}
               </button>
             )}
-            {detalleIncidencia.estado !== 'cerrada' && (
+            {!['cerrada', 'cancelada'].includes(String(detalleIncidencia.estado || '').toLowerCase()) && (
               <button onClick={() => handleChangeStatus('cerrada')} disabled={updatingStatus}
                 style={{ flex: 1, padding: '10px', backgroundColor: '#43a047', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: updatingStatus ? 'not-allowed' : 'pointer', opacity: updatingStatus ? 0.6 : 1 }}>
                 {updatingStatus ? 'Actualizando...' : 'Cerrar'}
               </button>
             )}
-            {detalleIncidencia.estado !== 'abierta' && (
-              <button onClick={() => handleChangeStatus('abierta')} disabled={updatingStatus}
-                style={{ flex: 1, padding: '10px', backgroundColor: '#e53935', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: updatingStatus ? 'not-allowed' : 'pointer', opacity: updatingStatus ? 0.6 : 1 }}>
-                {updatingStatus ? 'Actualizando...' : 'Reabrir'}
-              </button>
-            )}
+            {['cerrada', 'cancelada'].includes(String(detalleIncidencia.estado || '').toLowerCase()) ? (
+              <p style={{ width: '100%', margin: 0, color: '#666', fontSize: '13px' }}>
+                Estado final: esta incidencia no permite mas cambios.
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

@@ -66,7 +66,6 @@ export default function MenuOperador() {
     <a href="/operador/incidencias" className="menu-hamburguesa__item">
       <img src="/piWeb/images/incidencias.png" alt="" className="menu-hamburguesa__icono-img" />
       Incidencias
-      <span className="badge">4</span>
     </a>
     <a href="/operador/mi-cuenta" className="menu-hamburguesa__item">
       <img src="/piWeb/images/perfil.png" alt="" className="menu-hamburguesa__icono-img" />

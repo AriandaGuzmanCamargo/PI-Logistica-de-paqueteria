@@ -306,7 +306,7 @@ export function estadoIncidenciaClase(estado) {
 }
 
 export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
-  ensureSession();
+  const user = ensureSession();
 
   const response = await fetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
     method: 'PATCH',
@@ -315,6 +315,7 @@ export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
     },
     body: JSON.stringify({
       estado: nuevoEstado,
+      idUsuario: user.id_usuario,
     }),
   });
 

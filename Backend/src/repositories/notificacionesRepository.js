@@ -46,3 +46,41 @@ export async function listNotificationsForOperator() {
 
   return result.rows;
 }
+
+export async function findUserIdsByRoles(roles) {
+  if (!Array.isArray(roles) || roles.length === 0) {
+    return [];
+  }
+
+  const result = await pool.query(
+    `SELECT id_usuario
+     FROM usuarios
+     WHERE rol::text = ANY($1::text[])`,
+    [roles]
+  );
+
+  return result.rows.map((row) => row.id_usuario);
+}
+
+export async function createNotificationsForUsers(userIds, { titulo, mensaje }) {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    return 0;
+  }
+
+  const title = String(titulo || '').trim();
+  const message = String(mensaje || '').trim();
+
+  if (!title || !message) {
+    return 0;
+  }
+
+  const result = await pool.query(
+    `INSERT INTO notificaciones (id_usuario, titulo, mensaje, leida, fecha)
+     SELECT DISTINCT u.id_usuario, $2, $3, FALSE, NOW()
+     FROM unnest($1::int[]) AS u(id_usuario)
+     RETURNING id_notificacion`,
+    [userIds, title, message]
+  );
+
+  return result.rowCount || 0;
+}

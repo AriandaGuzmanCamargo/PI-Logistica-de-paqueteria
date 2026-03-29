@@ -1,11 +1,13 @@
 import {
   createIncidenciaRow,
+  findIncidenciaById,
   findShipmentPackageById,
   findUserById,
   listIncidenciasByReporter,
   listIncidenciasForOperator,
   updateIncidenciaEstado,
 } from '../repositories/incidenciasRepository.js';
+import { notifyUsersByRoles } from './notificacionesService.js';
 
 function mapIncidencia(item) {
   return {
@@ -139,6 +141,15 @@ export async function createIncidencia(payload) {
     fotoEvidencia,
   });
 
+  try {
+    await notifyUsersByRoles(['operador', 'supervisor', 'admin'], {
+      titulo: 'Nueva incidencia reportada',
+      mensaje: `Se reporto una incidencia en el envio #${idEnvio}.`,
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de incidencia creada:', notificationError);
+  }
+
   return {
     id_incidencia: row.id_incidencia,
     id_envio: row.id_envio,
@@ -152,13 +163,34 @@ export async function createIncidencia(payload) {
   };
 }
 
-export async function updateIncidenciaStatusByOperator(idIncidencia, nuevoEstado) {
+export async function updateIncidenciaStatusByOperator(idIncidencia, nuevoEstado, idUsuarioActor) {
   const parsedId = Number(idIncidencia);
   const estado = String(nuevoEstado || '').toLowerCase().trim();
+  const parsedActorId = Number(idUsuarioActor);
 
   if (!Number.isInteger(parsedId) || parsedId <= 0) {
     const error = new Error('El id de incidencia no es valido.');
     error.statusCode = 400;
+    throw error;
+  }
+
+  if (!Number.isInteger(parsedActorId) || parsedActorId <= 0) {
+    const error = new Error('El id de usuario actor es requerido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const actor = await findUserById(parsedActorId);
+
+  if (!actor) {
+    const error = new Error('Usuario actor no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!['operador', 'supervisor', 'admin'].includes(String(actor.rol || '').toLowerCase())) {
+    const error = new Error('No tienes permisos para actualizar el estado de incidencias.');
+    error.statusCode = 403;
     throw error;
   }
 
@@ -168,12 +200,58 @@ export async function updateIncidenciaStatusByOperator(idIncidencia, nuevoEstado
     throw error;
   }
 
+  const actorRole = String(actor.rol || '').toLowerCase();
+
+  if (actorRole === 'operador' && estado === 'cancelada') {
+    const error = new Error('Solo supervisor o admin pueden cancelar incidencias.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const currentIncidencia = await findIncidenciaById(parsedId);
+
+  if (!currentIncidencia) {
+    const error = new Error('Incidencia no encontrada.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const currentEstado = String(currentIncidencia.estado || '').toLowerCase();
+
+  if (['cerrada', 'cancelada'].includes(currentEstado)) {
+    const error = new Error('La incidencia ya esta cerrada o cancelada y no permite mas cambios.');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  if (currentEstado === estado) {
+    return {
+      id_incidencia: currentIncidencia.id_incidencia,
+      estado: currentEstado,
+    };
+  }
+
   const row = await updateIncidenciaEstado(parsedId, estado);
 
   if (!row) {
     const error = new Error('Incidencia no encontrada.');
     error.statusCode = 404;
     throw error;
+  }
+
+  try {
+    const actorLabel = actorRole === 'supervisor'
+      ? 'Supervisor'
+      : actorRole === 'admin'
+        ? 'Admin'
+        : 'Operador';
+
+    await notifyUsersByRoles(['operador', 'supervisor', 'admin'], {
+      titulo: 'Estado de incidencia actualizado',
+      mensaje: `${actorLabel} actualizo la incidencia #${parsedId} a ${estado}.`,
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de cambio de estado:', notificationError);
   }
 
   return {

@@ -106,6 +106,18 @@ export async function findShipmentPackageById(idEnvio) {
   return result.rowCount > 0 ? result.rows[0].id_paquete : null;
 }
 
+export async function findIncidenciaById(idIncidencia) {
+  const result = await pool.query(
+    `SELECT id_incidencia, estado
+     FROM incidencias
+     WHERE id_incidencia = $1
+     LIMIT 1`,
+    [idIncidencia]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
 export async function createIncidenciaRow({
   idEnvio,
   idPaquete,

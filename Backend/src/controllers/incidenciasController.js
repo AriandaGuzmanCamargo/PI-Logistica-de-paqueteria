@@ -35,9 +35,9 @@ export async function createIncidenciaByUsuario(req, res, next) {
 export async function updateIncidenciaStatus(req, res, next) {
   try {
     const { idIncidencia } = req.params;
-    const { estado } = req.body ?? {};
+    const { estado, idUsuario } = req.body ?? {};
 
-    const result = await updateIncidenciaStatusByOperator(idIncidencia, estado);
+    const result = await updateIncidenciaStatusByOperator(idIncidencia, estado, idUsuario);
 
     res.json({
       ok: true,

@@ -59,3 +59,40 @@ export async function listIncidenciasByReporter(userId) {
 
   return result.rows;
 }
+
+export async function findShipmentPackageById(idEnvio) {
+  const result = await pool.query(
+    `SELECT ep.id_paquete
+     FROM envio_paquete ep
+     WHERE ep.id_envio = $1
+     ORDER BY ep.id_paquete ASC
+     LIMIT 1`,
+    [idEnvio]
+  );
+
+  return result.rowCount > 0 ? result.rows[0].id_paquete : null;
+}
+
+export async function createIncidenciaRow({
+  idEnvio,
+  idPaquete,
+  idUsuario,
+  tipoIncidencia,
+  descripcion,
+}) {
+  const result = await pool.query(
+    `INSERT INTO incidencias (
+      id_envio,
+      id_paquete,
+      id_usuario,
+      tipo_incidencia,
+      descripcion,
+      fecha_reporte,
+      estado
+    ) VALUES ($1, $2, $3, $4, $5, NOW(), 'abierta')
+    RETURNING id_incidencia, id_envio, id_paquete, id_usuario, tipo_incidencia, descripcion, fecha_reporte, estado`,
+    [idEnvio, idPaquete, idUsuario, tipoIncidencia, descripcion]
+  );
+
+  return result.rows[0];
+}

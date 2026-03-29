@@ -243,7 +243,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 							</TouchableOpacity>
 						</View>
 
-						<TouchableOpacity style={styles.reportBtn} onPress={() => navigation.navigate('IncidenciasR')}>
+						<TouchableOpacity style={styles.reportBtn} onPress={() => navigation.navigate('IncidenciasR', { delivery })}>
 							<Text style={styles.actionText}>Reportar Incidencia</Text>
 						</TouchableOpacity>
 					</View>

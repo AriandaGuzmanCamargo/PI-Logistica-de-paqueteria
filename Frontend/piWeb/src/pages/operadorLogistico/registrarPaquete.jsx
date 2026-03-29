@@ -2,6 +2,76 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MenuOperador from './menuOperador.jsx';
 
+const ESTADOS_MX = [
+  'Aguascalientes',
+  'Baja California',
+  'Baja California Sur',
+  'Campeche',
+  'Chiapas',
+  'Chihuahua',
+  'CDMX',
+  'Coahuila',
+  'Colima',
+  'Durango',
+  'Estado de México',
+  'Guanajuato',
+  'Guerrero',
+  'Hidalgo',
+  'Jalisco',
+  'Michoacán',
+  'Morelos',
+  'Nayarit',
+  'Nuevo León',
+  'Oaxaca',
+  'Puebla',
+  'Querétaro',
+  'Quintana Roo',
+  'San Luis Potosí',
+  'Sinaloa',
+  'Sonora',
+  'Tabasco',
+  'Tamaulipas',
+  'Tlaxcala',
+  'Veracruz',
+  'Yucatán',
+  'Zacatecas',
+];
+
+const ESTADO_SUGERENCIAS = {
+  'Aguascalientes': { ciudades: ['Aguascalientes'], codigo_postal: '20000' },
+  'Baja California': { ciudades: ['Mexicali', 'Tijuana'], codigo_postal: '21000' },
+  'Baja California Sur': { ciudades: ['La Paz', 'Los Cabos'], codigo_postal: '23000' },
+  'Campeche': { ciudades: ['Campeche'], codigo_postal: '24000' },
+  'Chiapas': { ciudades: ['Tuxtla Gutierrez', 'San Cristobal de las Casas'], codigo_postal: '29000' },
+  'Chihuahua': { ciudades: ['Chihuahua', 'Ciudad Juarez'], codigo_postal: '31000' },
+  'CDMX': { ciudades: ['Ciudad de Mexico', 'Coyoacan', 'Iztapalapa'], codigo_postal: '01000' },
+  'Coahuila': { ciudades: ['Saltillo', 'Torreon'], codigo_postal: '25000' },
+  'Colima': { ciudades: ['Colima', 'Manzanillo'], codigo_postal: '28000' },
+  'Durango': { ciudades: ['Durango', 'Gomez Palacio'], codigo_postal: '34000' },
+  'Estado de México': { ciudades: ['Toluca', 'Naucalpan', 'Ecatepec'], codigo_postal: '50000' },
+  'Guanajuato': { ciudades: ['Leon', 'Irapuato', 'Guanajuato'], codigo_postal: '36000' },
+  'Guerrero': { ciudades: ['Chilpancingo', 'Acapulco'], codigo_postal: '39000' },
+  'Hidalgo': { ciudades: ['Pachuca', 'Tulancingo'], codigo_postal: '42000' },
+  'Jalisco': { ciudades: ['Guadalajara', 'Zapopan', 'Puerto Vallarta'], codigo_postal: '44100' },
+  'Michoacán': { ciudades: ['Morelia', 'Uruapan'], codigo_postal: '58000' },
+  'Morelos': { ciudades: ['Cuernavaca', 'Jiutepec'], codigo_postal: '62000' },
+  'Nayarit': { ciudades: ['Tepic'], codigo_postal: '63000' },
+  'Nuevo León': { ciudades: ['Monterrey', 'Guadalupe', 'San Nicolas'], codigo_postal: '64000' },
+  'Oaxaca': { ciudades: ['Oaxaca de Juarez', 'Juchitan'], codigo_postal: '68000' },
+  'Puebla': { ciudades: ['Puebla', 'Tehuacan'], codigo_postal: '72000' },
+  'Querétaro': { ciudades: ['Queretaro', 'San Juan del Rio'], codigo_postal: '76000' },
+  'Quintana Roo': { ciudades: ['Chetumal', 'Cancun'], codigo_postal: '77000' },
+  'San Luis Potosí': { ciudades: ['San Luis Potosi', 'Ciudad Valles'], codigo_postal: '78000' },
+  'Sinaloa': { ciudades: ['Culiacan', 'Mazatlan'], codigo_postal: '80000' },
+  'Sonora': { ciudades: ['Hermosillo', 'Ciudad Obregon'], codigo_postal: '83000' },
+  'Tabasco': { ciudades: ['Villahermosa'], codigo_postal: '86000' },
+  'Tamaulipas': { ciudades: ['Ciudad Victoria', 'Tampico'], codigo_postal: '87000' },
+  'Tlaxcala': { ciudades: ['Tlaxcala'], codigo_postal: '90000' },
+  'Veracruz': { ciudades: ['Xalapa', 'Veracruz'], codigo_postal: '91000' },
+  'Yucatán': { ciudades: ['Merida', 'Valladolid'], codigo_postal: '97000' },
+  'Zacatecas': { ciudades: ['Zacatecas', 'Guadalupe'], codigo_postal: '98000' },
+};
+
 export default function RegistrarPaquete() {
   const navigate = useNavigate();
   const [pasoActivo, setPasoActivo] = useState(0);
@@ -37,6 +107,23 @@ export default function RegistrarPaquete() {
         [field]: value,
       },
     }));
+  }
+
+  function updateEstado(section, estado) {
+    setForm((prev) => {
+      const current = prev[section];
+      const sugerencia = ESTADO_SUGERENCIAS[estado];
+
+      return {
+        ...prev,
+        [section]: {
+          ...current,
+          estado,
+          ciudad: current.ciudad?.trim() ? current.ciudad : (sugerencia?.ciudades?.[0] || current.ciudad),
+          codigo_postal: current.codigo_postal?.trim() ? current.codigo_postal : (sugerencia?.codigo_postal || current.codigo_postal),
+        },
+      };
+    });
   }
 
   function validateStep(index) {
@@ -85,6 +172,11 @@ export default function RegistrarPaquete() {
     sessionStorage.setItem('registroEnvioDraft', JSON.stringify(form));
     navigate('/operador/datos-paquete');
   }
+
+  const ciudadesRemitente = ESTADO_SUGERENCIAS[form.remitente.estado]?.ciudades || [];
+  const ciudadesDestinatario = ESTADO_SUGERENCIAS[form.destinatario.estado]?.ciudades || [];
+  const cpRemitenteSugerido = ESTADO_SUGERENCIAS[form.remitente.estado]?.codigo_postal || '';
+  const cpDestinatarioSugerido = ESTADO_SUGERENCIAS[form.destinatario.estado]?.codigo_postal || '';
 
   return (
     <div className="tablero-operador tablero-operador--sin-sidebar">
@@ -190,26 +282,32 @@ export default function RegistrarPaquete() {
                 Ciudad
                 <input
                   type="text"
+                  list="ciudades-remitente"
                   value={form.remitente.ciudad}
                   onChange={(e) => updateField('remitente', 'ciudad', e.target.value)}
                 />
+                <datalist id="ciudades-remitente">
+                  {ciudadesRemitente.map((ciudad) => (
+                    <option key={ciudad} value={ciudad} />
+                  ))}
+                </datalist>
               </label>
               <label>
                 Estado
                 <select
                   value={form.remitente.estado}
-                  onChange={(e) => updateField('remitente', 'estado', e.target.value)}
+                  onChange={(e) => updateEstado('remitente', e.target.value)}
                 >
-                  <option>CDMX</option>
-                  <option>Jalisco</option>
-                  <option>Nuevo León</option>
+                  {ESTADOS_MX.map((estado) => (
+                    <option key={estado} value={estado}>{estado}</option>
+                  ))}
                 </select>
               </label>
               <label>
                 Código postal
                 <input
                   type="text"
-                  placeholder="Ingresar código postal..."
+                  placeholder={cpRemitenteSugerido ? `Ej. ${cpRemitenteSugerido}` : 'Ingresar código postal...'}
                   value={form.remitente.codigo_postal}
                   onChange={(e) => updateField('remitente', 'codigo_postal', e.target.value)}
                 />
@@ -277,26 +375,32 @@ export default function RegistrarPaquete() {
                 Ciudad
                 <input
                   type="text"
+                  list="ciudades-destinatario"
                   value={form.destinatario.ciudad}
                   onChange={(e) => updateField('destinatario', 'ciudad', e.target.value)}
                 />
+                <datalist id="ciudades-destinatario">
+                  {ciudadesDestinatario.map((ciudad) => (
+                    <option key={ciudad} value={ciudad} />
+                  ))}
+                </datalist>
               </label>
               <label>
                 Estado
                 <select
                   value={form.destinatario.estado}
-                  onChange={(e) => updateField('destinatario', 'estado', e.target.value)}
+                  onChange={(e) => updateEstado('destinatario', e.target.value)}
                 >
-                  <option>CDMX</option>
-                  <option>Jalisco</option>
-                  <option>Nuevo León</option>
+                  {ESTADOS_MX.map((estado) => (
+                    <option key={estado} value={estado}>{estado}</option>
+                  ))}
                 </select>
               </label>
               <label>
                 Código postal
                 <input
                   type="text"
-                  placeholder="Ingresar código postal..."
+                  placeholder={cpDestinatarioSugerido ? `Ej. ${cpDestinatarioSugerido}` : 'Ingresar código postal...'}
                   value={form.destinatario.codigo_postal}
                   onChange={(e) => updateField('destinatario', 'codigo_postal', e.target.value)}
                 />

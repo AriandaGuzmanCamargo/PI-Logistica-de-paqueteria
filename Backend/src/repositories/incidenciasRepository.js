@@ -1,5 +1,32 @@
 import { pool } from '../db/pool.js';
 
+async function ensurePhotoColumn() {
+  await pool.query(
+    `ALTER TABLE incidencias
+     ADD COLUMN IF NOT EXISTS foto_evidencia TEXT`
+  );
+}
+
+async function ensureCanceladaEstadoValue() {
+  await pool.query(
+    `DO $$
+     BEGIN
+       IF EXISTS (
+         SELECT 1
+         FROM pg_type
+         WHERE typname = 'estado_incidencia_enum'
+       ) THEN
+         BEGIN
+           ALTER TYPE estado_incidencia_enum ADD VALUE IF NOT EXISTS 'cancelada';
+         EXCEPTION
+           WHEN duplicate_object THEN
+             NULL;
+         END;
+       END IF;
+     END$$;`
+  );
+}
+
 export async function findUserById(userId) {
   const result = await pool.query(
     `SELECT id_usuario, rol
@@ -13,6 +40,8 @@ export async function findUserById(userId) {
 }
 
 export async function listIncidenciasForOperator() {
+  await ensurePhotoColumn();
+  
   const result = await pool.query(
     `SELECT
         i.id_incidencia,
@@ -20,6 +49,7 @@ export async function listIncidenciasForOperator() {
         i.descripcion,
         i.fecha_reporte,
         i.estado,
+        i.foto_evidencia,
         u.id_usuario AS reportado_por_id,
         CONCAT(u.nombre, ' ', u.apellido) AS reportado_por_nombre,
         e.id_envio,
@@ -36,6 +66,8 @@ export async function listIncidenciasForOperator() {
 }
 
 export async function listIncidenciasByReporter(userId) {
+  await ensurePhotoColumn();
+  
   const result = await pool.query(
     `SELECT
         i.id_incidencia,
@@ -43,6 +75,7 @@ export async function listIncidenciasByReporter(userId) {
         i.descripcion,
         i.fecha_reporte,
         i.estado,
+        i.foto_evidencia,
         u.id_usuario AS reportado_por_id,
         CONCAT(u.nombre, ' ', u.apellido) AS reportado_por_nombre,
         e.id_envio,
@@ -79,7 +112,10 @@ export async function createIncidenciaRow({
   idUsuario,
   tipoIncidencia,
   descripcion,
+  fotoEvidencia,
 }) {
+  await ensurePhotoColumn();
+  
   const result = await pool.query(
     `INSERT INTO incidencias (
       id_envio,
@@ -87,12 +123,28 @@ export async function createIncidenciaRow({
       id_usuario,
       tipo_incidencia,
       descripcion,
+      foto_evidencia,
       fecha_reporte,
       estado
-    ) VALUES ($1, $2, $3, $4, $5, NOW(), 'abierta')
-    RETURNING id_incidencia, id_envio, id_paquete, id_usuario, tipo_incidencia, descripcion, fecha_reporte, estado`,
-    [idEnvio, idPaquete, idUsuario, tipoIncidencia, descripcion]
+    ) VALUES ($1, $2, $3, $4, $5, $6, NOW(), 'abierta')
+    RETURNING id_incidencia, id_envio, id_paquete, id_usuario, tipo_incidencia, descripcion, foto_evidencia, fecha_reporte, estado`,
+    [idEnvio, idPaquete, idUsuario, tipoIncidencia, descripcion, fotoEvidencia || null]
   );
 
   return result.rows[0];
+}
+
+
+export async function updateIncidenciaEstado(idIncidencia, nuevoEstado) {
+  await ensureCanceladaEstadoValue();
+
+  const result = await pool.query(
+    `UPDATE incidencias
+     SET estado = $1
+     WHERE id_incidencia = $2
+     RETURNING id_incidencia, estado`,
+    [nuevoEstado, idIncidencia]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
 }

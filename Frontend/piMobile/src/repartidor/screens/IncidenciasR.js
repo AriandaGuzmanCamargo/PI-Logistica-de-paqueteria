@@ -9,6 +9,7 @@ import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 import { getCurrentUser } from '../../services/sessionService';
 import { createIncidenciaByUsuario } from '../../services/incidenciasService';
+import { selectAndConvertImage } from '../../utils/imageUtils';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -46,49 +47,19 @@ export default function IncidenciasR({ navigation, route }) {
 	};
 
 	const handlePickEvidence = async () => {
-		if (Platform.OS === 'web') {
-			showMessage('No disponible', 'La seleccion de imagen desde galeria esta habilitada en Android/iOS.');
-			return;
-		}
-
 		try {
-			const pickerModule = await import('expo-image-picker');
-			const ImagePicker = pickerModule?.default || pickerModule;
+			const imageData = await selectAndConvertImage();
 
-			if (!ImagePicker?.requestMediaLibraryPermissionsAsync) {
-				showMessage('No disponible', 'No se pudo inicializar el selector de imagen.');
-				return;
-			}
-
-			const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-			if (permission.status !== 'granted') {
-				showMessage('Permiso requerido', 'Debes permitir acceso a galeria para adjuntar evidencia.');
-				return;
-			}
-
-			const result = await ImagePicker.launchImageLibraryAsync({
-				mediaTypes: ['images'],
-				allowsEditing: true,
-				quality: 0.7,
-			});
-
-			if (result.canceled) {
-				return;
-			}
-
-			const firstAsset = Array.isArray(result.assets) ? result.assets[0] : null;
-			if (!firstAsset?.uri) {
-				showMessage('Sin imagen', 'No se pudo obtener la imagen seleccionada.');
+			if (!imageData) {
 				return;
 			}
 
 			setSelectedEvidence({
-				uri: firstAsset.uri,
-				fileName: firstAsset.fileName || null,
+				uri: imageData.uri,
+				base64: imageData.base64,
 			});
 		} catch {
-			showMessage('Modulo faltante', 'Instala expo-image-picker para habilitar evidencia con imagen.');
+			showMessage('Error', 'No se pudo seleccionar la imagen.');
 		}
 	};
 
@@ -117,6 +88,11 @@ export default function IncidenciasR({ navigation, route }) {
 			return;
 		}
 
+		let fotoEvidencia = null;
+		if (selectedEvidence?.base64) {
+			fotoEvidencia = selectedEvidence.base64;
+		}
+
 		try {
 			setIsSubmitting(true);
 			const created = await createIncidenciaByUsuario({
@@ -124,6 +100,7 @@ export default function IncidenciasR({ navigation, route }) {
 				idEnvio,
 				tipoIncidencia: selectedIncident,
 				descripcion: comment.trim(),
+				fotoEvidencia,
 			});
 
 		const newIncidentReport = {

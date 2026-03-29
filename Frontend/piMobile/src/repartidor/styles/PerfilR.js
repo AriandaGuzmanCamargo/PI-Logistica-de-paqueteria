@@ -66,6 +66,22 @@ export default function getPerfilRStyles(s, isDarkMode = false) {
 			height: '100%',
 			borderRadius: s(52),
 		},
+		editPhotoOverlay: {
+			position: 'absolute',
+			bottom: 0,
+			right: 0,
+			width: s(40),
+			height: s(40),
+			borderRadius: s(20),
+			backgroundColor: '#3D64A7',
+			justifyContent: 'center',
+			alignItems: 'center',
+			borderWidth: 3,
+			borderColor: '#E6ECF8',
+		},
+		editPhotoText: {
+			fontSize: s(20),
+		},
 		profileName: {
 			marginTop: s(10),
 			color: isDarkMode ? '#E4ECFF' : '#2F4E8D',

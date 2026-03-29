@@ -9,7 +9,7 @@ const REQUIRED_TABLES = [
   'envios',
 ];
 
-async function ensureUserPhotoColumn() {
+export async function ensureUserPhotoColumn() {
   await pool.query(
     `ALTER TABLE usuarios
      ADD COLUMN IF NOT EXISTS foto_perfil_url TEXT`
@@ -197,13 +197,16 @@ export async function cancelActiveAssignmentForShipment(idEnvio) {
 }
 
 export async function listAvailableDrivers(fechaAsignacion) {
+  await ensureUserPhotoColumn();
+  
   const result = await pool.query(
     `SELECT
         c.id_conductor,
         c.id_usuario,
         u.nombre,
         u.apellido,
-        u.correo
+        u.correo,
+        u.foto_perfil_url
      FROM conductores c
      JOIN usuarios u ON u.id_usuario = c.id_usuario
      LEFT JOIN asignaciones_ruta ar
@@ -221,13 +224,16 @@ export async function listAvailableDrivers(fechaAsignacion) {
 }
 
 export async function findAvailableDriverById(idConductor, fechaAsignacion) {
+  await ensureUserPhotoColumn();
+  
   const result = await pool.query(
     `SELECT
         c.id_conductor,
         c.id_usuario,
         u.nombre,
         u.apellido,
-        u.correo
+        u.correo,
+        u.foto_perfil_url
      FROM conductores c
      JOIN usuarios u ON u.id_usuario = c.id_usuario
      LEFT JOIN asignaciones_ruta ar

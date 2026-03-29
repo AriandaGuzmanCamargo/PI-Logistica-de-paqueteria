@@ -147,6 +147,28 @@ export async function getIncidenciasOperador() {
   return payload.data || [];
 }
 
+export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      estado: nuevoEstado,
+    }),
+  });
+
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudo actualizar el estado de la incidencia.');
+  }
+
+  return payload.data;
+}
+
 export async function createEnvioWeb(payload) {
   const user = ensureSession();
 
@@ -219,6 +241,7 @@ export function estadoIncidenciaTexto(estado) {
     abierta: 'Abierta',
     en_proceso: 'En proceso',
     cerrada: 'Cerrada',
+    cancelada: 'Cancelada',
   };
 
   return map[normalized] || 'Sin estado';
@@ -227,7 +250,7 @@ export function estadoIncidenciaTexto(estado) {
 export function estadoIncidenciaClase(estado) {
   const normalized = String(estado || '').toLowerCase().trim();
 
-  if (normalized === 'cerrada') return 'estado-incidencia--cerrada';
+  if (normalized === 'cerrada' || normalized === 'cancelada') return 'estado-incidencia--cerrada';
   if (normalized === 'en_proceso') return 'estado-incidencia--proceso';
 
   return 'estado-incidencia--abierta';

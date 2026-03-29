@@ -16,6 +16,7 @@ export async function createIncidenciaByUsuario({
   idEnvio,
   tipoIncidencia,
   descripcion,
+  fotoEvidencia,
 }) {
   const response = await fetch(`${API_BASE_URL}/api/incidencias`, {
     method: 'POST',
@@ -27,6 +28,7 @@ export async function createIncidenciaByUsuario({
       idEnvio,
       tipoIncidencia,
       descripcion,
+      fotoEvidencia,
     }),
   });
 

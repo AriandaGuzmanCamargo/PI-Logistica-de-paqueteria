@@ -1,6 +1,7 @@
 import {
   createIncidencia,
   getIncidenciasByUser,
+  updateIncidenciaStatusByOperator,
 } from '../services/incidenciasService.js';
 
 export async function getIncidenciasByUsuario(req, res, next) {
@@ -25,6 +26,23 @@ export async function createIncidenciaByUsuario(req, res, next) {
       ok: true,
       message: 'Incidencia registrada correctamente.',
       data: incidencia,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateIncidenciaStatus(req, res, next) {
+  try {
+    const { idIncidencia } = req.params;
+    const { estado } = req.body ?? {};
+
+    const result = await updateIncidenciaStatusByOperator(idIncidencia, estado);
+
+    res.json({
+      ok: true,
+      message: `Incidencia actualizada a estado: ${result.estado}`,
+      data: result,
     });
   } catch (error) {
     next(error);

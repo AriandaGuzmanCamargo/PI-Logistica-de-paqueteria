@@ -156,6 +156,7 @@ export async function getAvailableDrivers({ fechaAsignacion } = {}) {
     id_usuario: driver.id_usuario,
     nombre: `${driver.nombre} ${driver.apellido}`.trim(),
     correo: driver.correo,
+    foto_perfil_url: driver.foto_perfil_url || null,
   }));
 }
 

@@ -7,6 +7,13 @@ async function ensureDeliveryPhotoColumn() {
   );
 }
 
+async function ensureDeliveryReceiverColumn() {
+  await pool.query(
+    `ALTER TABLE envios
+     ADD COLUMN IF NOT EXISTS recibio_entrega_nombre VARCHAR(120)`
+  );
+}
+
 export async function findUserById(userId) {
   const result = await pool.query(
     `SELECT id_usuario, nombre, apellido, rol
@@ -170,6 +177,7 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
 
 export async function findShipmentById(idEnvio) {
   await ensureDeliveryPhotoColumn();
+  await ensureDeliveryReceiverColumn();
 
   const result = await pool.query(
     `SELECT
@@ -183,6 +191,7 @@ export async function findShipmentById(idEnvio) {
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
         e.foto_entrega_url,
+        e.recibio_entrega_nombre,
         e.costo_total,
         c_rem.id_cliente AS remitente_id,
         c_rem.nombre AS remitente_nombre,
@@ -295,8 +304,15 @@ export async function cancelShipmentById(idEnvio) {
   return result.rowCount > 0 ? result.rows[0] : null;
 }
 
-export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual, observaciones, fotoEntregaUrl }) {
+export async function markShipmentAsDeliveredByDriver({
+  idEnvio,
+  ubicacionActual,
+  observaciones,
+  fotoEntregaUrl,
+  recibioEntregaNombre,
+}) {
   await ensureDeliveryPhotoColumn();
+  await ensureDeliveryReceiverColumn();
 
   const client = await pool.connect();
 
@@ -307,10 +323,11 @@ export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual
       `UPDATE envios
        SET estado_envio = 'entregado',
            fecha_entrega_real = NOW(),
-           foto_entrega_url = COALESCE($2, foto_entrega_url)
+           foto_entrega_url = COALESCE($2, foto_entrega_url),
+           recibio_entrega_nombre = COALESCE($3, recibio_entrega_nombre)
        WHERE id_envio = $1
        RETURNING id_envio, ciudad_destino`,
-      [idEnvio, fotoEntregaUrl || null]
+      [idEnvio, fotoEntregaUrl || null, recibioEntregaNombre || null]
     );
 
     if (shipmentResult.rowCount === 0) {

@@ -62,7 +62,7 @@ export async function cancelEnvioByCliente({ idEnvio, idUsuario }) {
   return data.data;
 }
 
-export async function marcarEnvioComoEntregado({ idEnvio, idUsuario, fotoEntregaUrl }) {
+export async function marcarEnvioComoEntregado({ idEnvio, idUsuario, fotoEntregaUrl, recibioEntregaNombre }) {
   const response = await fetch(`${API_BASE_URL}/api/envios/${idEnvio}/entregar`, {
     method: 'PATCH',
     headers: {
@@ -71,6 +71,7 @@ export async function marcarEnvioComoEntregado({ idEnvio, idUsuario, fotoEntrega
     body: JSON.stringify({
       idUsuario,
       foto_entrega_url: fotoEntregaUrl || null,
+      recibio_entrega_nombre: recibioEntregaNombre ? String(recibioEntregaNombre).trim() : null,
     }),
   });
 

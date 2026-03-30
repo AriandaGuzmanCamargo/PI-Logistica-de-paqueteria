@@ -208,6 +208,7 @@ export default function DetalleEnvio() {
 							<div className="info-lista">
 								<p><span>Estado:</span> <span className={`estado ${estadoEnvioClase(envio?.estado_envio)}`}>● {estadoEnvioTexto(envio?.estado_envio)}</span> <strong className="hora">{envio?.fecha_creacion ? new Date(envio.fecha_creacion).toLocaleString() : '-'}</strong></p>
 								<p><span>Conductor:</span> {conductorAsignado}</p>
+								<p><span>Recibio entrega:</span> {envio?.recibio_entrega_nombre || 'No especificado'}</p>
 								{!envio?.asignacion ? (
 									<p>
 										<span>Asignar:</span>{' '}

@@ -123,6 +123,7 @@ export async function getShipmentDetailById(idEnvio) {
     fecha_estimada_entrega: item.fecha_estimada_entrega,
     fecha_entrega_real: item.fecha_entrega_real,
     foto_entrega_url: item.foto_entrega_url || null,
+    recibio_entrega_nombre: item.recibio_entrega_nombre || null,
     fecha_asignacion_sugerida: item.fecha_salida_asignacion || item.fecha_estimada_entrega || item.fecha_creacion,
     costo_total: item.costo_total,
     remitente: {
@@ -349,7 +350,7 @@ export async function cancelShipmentByClient({ userId, idEnvio }) {
   return getShipmentDetailById(parsedShipmentId);
 }
 
-export async function markShipmentDeliveredByDriver({ userId, idEnvio, fotoEntregaUrl }) {
+export async function markShipmentDeliveredByDriver({ userId, idEnvio, fotoEntregaUrl, recibioEntregaNombre }) {
   const parsedUserId = Number(userId);
   const parsedShipmentId = Number(idEnvio);
 
@@ -405,11 +406,23 @@ export async function markShipmentDeliveredByDriver({ userId, idEnvio, fotoEntre
       ? fotoEntregaUrl.trim()
       : null;
 
+  const parsedReceiverName =
+    typeof recibioEntregaNombre === 'string' && recibioEntregaNombre.trim().length > 0
+      ? recibioEntregaNombre.trim().slice(0, 120)
+      : null;
+
+  if (!parsedReceiverName) {
+    const error = new Error('Debes indicar quien recibio la entrega.');
+    error.statusCode = 400;
+    throw error;
+  }
+
   await markShipmentAsDeliveredByDriver({
     idEnvio: parsedShipmentId,
     ubicacionActual: shipment.ciudad_destino,
     observaciones: `Entrega confirmada por ${user.nombre || 'conductor'}`,
     fotoEntregaUrl: parsedDeliveryPhoto,
+    recibioEntregaNombre: parsedReceiverName,
   });
 
   return getShipmentDetailById(parsedShipmentId);

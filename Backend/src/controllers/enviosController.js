@@ -98,12 +98,17 @@ export async function cancelEnvioByCliente(req, res, next) {
 export async function marcarEnvioComoEntregado(req, res, next) {
   try {
     const { idEnvio } = req.params;
-    const { idUsuario, foto_entrega_url: fotoEntregaUrl } = req.body ?? {};
+    const {
+      idUsuario,
+      foto_entrega_url: fotoEntregaUrl,
+      recibio_entrega_nombre: recibioEntregaNombre,
+    } = req.body ?? {};
 
     const envio = await markShipmentDeliveredByDriver({
       userId: idUsuario,
       idEnvio,
       fotoEntregaUrl,
+      recibioEntregaNombre,
     });
 
     res.json({

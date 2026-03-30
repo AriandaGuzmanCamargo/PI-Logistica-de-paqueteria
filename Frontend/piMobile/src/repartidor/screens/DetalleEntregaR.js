@@ -18,7 +18,7 @@ import TopHeaderR from '../components/TopHeaderR';
 import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
 import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, resolveCurrentPosition, toKm, toMinutes } from '../services/rutaMapService';
-import { cancelarEnvioComoConductor, marcarEnvioComoEntregado } from '../../services/enviosService';
+import { cancelarEnvioComoConductor, getDetalleEnvio } from '../../services/enviosService';
 import { getCurrentUser } from '../../services/sessionService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -55,6 +55,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 		durationSeconds: null,
 	});
 	const [isSubmittingDelivery, setIsSubmittingDelivery] = useState(false);
+	const [deliveryDetail, setDeliveryDetail] = useState(null);
 
 	const resolveMapPreview = async () => {
 		setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
@@ -146,6 +147,34 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const shipmentStatus = String(delivery?.estado_envio || '').toLowerCase();
 	const isDelivered = shipmentStatus === 'entregado';
 	const isCancelled = shipmentStatus === 'cancelado';
+	const receiverName = deliveryDetail?.recibio_entrega_nombre || 'No especificado';
+
+	useEffect(() => {
+		let isMounted = true;
+
+		async function loadDeliveryDetail() {
+			if (!shipmentId) {
+				return;
+			}
+
+			try {
+				const detail = await getDetalleEnvio(shipmentId);
+				if (isMounted) {
+					setDeliveryDetail(detail);
+				}
+			} catch {
+				if (isMounted) {
+					setDeliveryDetail(null);
+				}
+			}
+		}
+
+		loadDeliveryDetail();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [shipmentId]);
 
 	const handleMarkAsDelivered = () => {
 		navigation.navigate('TomarFotoEntregaR', {
@@ -271,6 +300,10 @@ export default function DetalleEntregaR({ navigation, route }) {
 							<Text style={styles.metricText}>Distancia: <Text style={styles.infoStrong}>{toKm(mapState.distanceMeters)} km</Text></Text>
 							<Text style={styles.metricText}>Tiempo Estimado: <Text style={styles.infoStrong}>{toMinutes(mapState.durationSeconds)} min</Text></Text>
 						</View>
+
+						<Text style={styles.metricText}>
+							Quien recibio el paquete: <Text style={styles.infoStrong}>{receiverName}</Text>
+						</Text>
 
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
 

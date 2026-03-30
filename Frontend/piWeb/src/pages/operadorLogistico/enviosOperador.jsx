@@ -155,10 +155,6 @@ export default function EnviosOperador() {
           Envío registrado correctamente.
         </div>
 
-        <div className="envios-encabezado">
-          <a href="#" className="envios-encabezado__ver">Ver Todo</a>
-        </div>
-
         <div className="filtros-envios">
           <div className="filtros-envios__fila">
             <div className="campo-filtro">
@@ -209,29 +205,6 @@ export default function EnviosOperador() {
 
           {error ? <p style={{ color: '#b71c1c', margin: '0 0 10px 0' }}>{error}</p> : null}
 
-          <div className="leyenda-estados" aria-label="Leyenda de estados de envío">
-            <span className="leyenda-estados__item">
-              <span className="estado estado--pendiente">●</span>
-              Pendiente
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--transito">●</span>
-              En ruta
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--retrasado">●</span>
-              Retrasado
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--entregado">●</span>
-              Entregado
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--cancelado">●</span>
-              Cancelado
-            </span>
-          </div>
-
           <div className="tabla-envios">
             <table>
               <thead>
@@ -259,10 +232,10 @@ export default function EnviosOperador() {
                       <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
                       <td>
                         <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                          ● {estadoEnvioTexto(item.estado_envio)}
+                          {estadoEnvioTexto(item.estado_envio)}
                         </span>
                       </td>
-                      <td><span className="prioridad prioridad--normal">□ {item.paquete?.tipo_servicio || 'normal'}</span></td>
+                      <td><span className="prioridad prioridad--normal">{item.paquete?.tipo_servicio || 'normal'}</span></td>
                       <td>{item.ciudad_origen} - {item.ciudad_destino}</td>
                       <td><strong>{new Date(item.fecha_creacion).toLocaleString()}</strong></td>
                       <td>

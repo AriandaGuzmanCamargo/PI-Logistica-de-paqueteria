@@ -155,29 +155,6 @@ export default function DashboardOperador() {
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
-            <a href="/operador/envios" className="panel-tabla__ver">Ver Todo</a>
-          </div>
-          <div className="leyenda-estados leyenda-estados--compacta" aria-label="Leyenda de estados de envío">
-            <span className="leyenda-estados__item">
-              <span className="estado estado--pendiente">●</span>
-              Pendiente
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--transito">●</span>
-              En ruta
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--retrasado">●</span>
-              Retrasado
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--entregado">●</span>
-              Entregado
-            </span>
-            <span className="leyenda-estados__item">
-              <span className="estado estado--cancelado">●</span>
-              Cancelado
-            </span>
           </div>
           <div className="tabla-envios">
             <table>
@@ -210,7 +187,7 @@ export default function DashboardOperador() {
                     <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
                     <td>
                       <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                        ● {estadoEnvioTexto(item.estado_envio)}
+                        {estadoEnvioTexto(item.estado_envio)}
                       </span>
                     </td>
                     <td>{item.remitente?.nombre || 'Sin remitente'}</td>

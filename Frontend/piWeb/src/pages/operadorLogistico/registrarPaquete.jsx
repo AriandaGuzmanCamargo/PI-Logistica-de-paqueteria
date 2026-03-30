@@ -572,10 +572,9 @@ export default function RegistrarPaquete() {
           <a href="/operador/dashboard" className="boton-secundario">Cancelar</a>
           <button
             type="button"
-            className="boton-terceario"
+            className="boton-secundario"
             onClick={limpiarDatosGuardados}
             title="Eliminar datos guardados del formulario"
-            style={{ padding: '8px 12px', fontSize: '0.9rem', marginLeft: '8px' }}
           >
             Limpiar datos
           </button>

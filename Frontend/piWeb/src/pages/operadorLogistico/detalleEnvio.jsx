@@ -152,7 +152,6 @@ export default function DetalleEnvio() {
 			<h2 className="titulo-pagina-operador">Detalles del Envío</h2>
 
 			<section className="modulo-detalle">
-				<div className="miga-detalle"><span className="miga-detalle__icono">◘</span> Envíos <span className="miga-detalle__separador">/</span> Detalles del Envío</div>
 				<h2 className="titulo-detalle">Envío ID: <strong>{guia}</strong></h2>
 
 				{error ? <p style={{ color: '#b71c1c' }}>{error}</p> : null}
@@ -206,7 +205,7 @@ export default function DetalleEnvio() {
 						<article className="tarjeta-detalle">
 							<h3>Información de Envío</h3>
 							<div className="info-lista">
-								<p><span>Estado:</span> <span className={`estado ${estadoEnvioClase(envio?.estado_envio)}`}>● {estadoEnvioTexto(envio?.estado_envio)}</span> <strong className="hora">{envio?.fecha_creacion ? new Date(envio.fecha_creacion).toLocaleString() : '-'}</strong></p>
+								<p><span>Estado:</span> <span className={`estado ${estadoEnvioClase(envio?.estado_envio)}`}>{estadoEnvioTexto(envio?.estado_envio)}</span> <strong className="hora">{envio?.fecha_creacion ? new Date(envio.fecha_creacion).toLocaleString() : '-'}</strong></p>
 								<p><span>Conductor:</span> {conductorAsignado}</p>
 								<p><span>Recibio entrega:</span> {envio?.recibio_entrega_nombre || 'No especificado'}</p>
 								{!envio?.asignacion ? (

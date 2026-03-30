@@ -146,7 +146,6 @@ export default function Incidencias() {
                     </td>
                     <td>
                       <div className="repartidor-celda">
-                        <img src="/piWeb/images/usuario.png" alt={item.reportado_por?.nombre || 'Usuario'} />
                         <span>{item.reportado_por?.nombre || 'Sin nombre'}</span>
                       </div>
                     </td>

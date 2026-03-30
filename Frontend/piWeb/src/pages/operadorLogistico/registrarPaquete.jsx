@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MenuOperador from './menuOperador.jsx';
 
@@ -84,6 +84,7 @@ export default function RegistrarPaquete() {
       telefono: '',
       correo: '',
       direccion: '',
+      colonia: '',
       ciudad: 'Ciudad de Mexico',
       estado: 'CDMX',
       codigo_postal: '',
@@ -93,11 +94,34 @@ export default function RegistrarPaquete() {
       telefono: '',
       correo: '',
       direccion: '',
+      colonia: '',
       ciudad: 'Ciudad de Mexico',
       estado: 'CDMX',
       codigo_postal: '',
     },
   });
+
+  // Recuperar datos guardados del localStorage al montar el componente
+  useEffect(() => {
+    const datosGuardados = localStorage.getItem('registroPaqueteFormulario');
+    if (datosGuardados) {
+      try {
+        const formGuardado = JSON.parse(datosGuardados);
+        setForm(formGuardado);
+      } catch (_error) {
+        console.warn('No se pudieron recuperar los datos guardados');
+      }
+    }
+  }, []);
+
+  // Auto-guardar en localStorage cada 2 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      localStorage.setItem('registroPaqueteFormulario', JSON.stringify(form));
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [form]);
 
   function updateField(section, field, value) {
     setForm((prev) => ({
@@ -127,15 +151,90 @@ export default function RegistrarPaquete() {
   }
 
   function validateStep(index) {
+    // Validar formato de email
+    const validateEmail = (email) => {
+      if (!email || email.trim().length === 0) {
+        return true; // email es opcional
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email.trim());
+    };
+
     if (index === 0) {
-      if (!form.remitente.nombre || !form.remitente.direccion || !form.remitente.ciudad) {
-        return 'Completa nombre, dirección y ciudad del remitente.';
+      const remitente = form.remitente;
+
+      // Validar nombre (mínimo 5 caracteres)
+      if (!remitente.nombre || remitente.nombre.trim().length < 5) {
+        return 'El nombre del remitente debe tener mínimo 5 caracteres.';
+      }
+
+      // Validar teléfono (exactamente 10 dígitos)
+      if (!remitente.telefono || !/^\d{10}$/.test(remitente.telefono.trim())) {
+        return 'El teléfono del remitente debe tener exactamente 10 dígitos.';
+      }
+
+      // Validar email si se proporciona
+      if (!validateEmail(remitente.correo)) {
+        return 'El correo del remitente debe ser un email válido.';
+      }
+
+      // Validar calle/dirección (mínimo 3 caracteres)
+      if (!remitente.direccion || remitente.direccion.trim().length < 3) {
+        return 'La calle del remitente debe tener mínimo 3 caracteres.';
+      }
+
+      // Validar colonia (mínimo 3 caracteres)
+      if (!remitente.colonia || remitente.colonia.trim().length < 3) {
+        return 'La colonia del remitente debe tener mínimo 3 caracteres.';
+      }
+
+      // Validar ciudad
+      if (!remitente.ciudad || remitente.ciudad.trim().length === 0) {
+        return 'La ciudad del remitente es obligatoria.';
+      }
+
+      // Validar código postal (solo números)
+      if (!remitente.codigo_postal || !/^\d+$/.test(remitente.codigo_postal.trim())) {
+        return 'El código postal del remitente debe contener solo números.';
       }
     }
 
     if (index === 1) {
-      if (!form.destinatario.nombre || !form.destinatario.direccion || !form.destinatario.ciudad) {
-        return 'Completa nombre, dirección y ciudad del destinatario.';
+      const destinatario = form.destinatario;
+
+      // Validar nombre (mínimo 5 caracteres)
+      if (!destinatario.nombre || destinatario.nombre.trim().length < 5) {
+        return 'El nombre del destinatario debe tener mínimo 5 caracteres.';
+      }
+
+      // Validar teléfono (exactamente 10 dígitos)
+      if (!destinatario.telefono || !/^\d{10}$/.test(destinatario.telefono.trim())) {
+        return 'El teléfono del destinatario debe tener exactamente 10 dígitos.';
+      }
+
+      // Validar email si se proporciona
+      if (!validateEmail(destinatario.correo)) {
+        return 'El correo del destinatario debe ser un email válido.';
+      }
+
+      // Validar calle/dirección (mínimo 3 caracteres)
+      if (!destinatario.direccion || destinatario.direccion.trim().length < 3) {
+        return 'La calle del destinatario debe tener mínimo 3 caracteres.';
+      }
+
+      // Validar colonia (mínimo 3 caracteres)
+      if (!destinatario.colonia || destinatario.colonia.trim().length < 3) {
+        return 'La colonia del destinatario debe tener mínimo 3 caracteres.';
+      }
+
+      // Validar ciudad
+      if (!destinatario.ciudad || destinatario.ciudad.trim().length === 0) {
+        return 'La ciudad del destinatario es obligatoria.';
+      }
+
+      // Validar código postal (solo números)
+      if (!destinatario.codigo_postal || !/^\d+$/.test(destinatario.codigo_postal.trim())) {
+        return 'El código postal del destinatario debe contener solo números.';
       }
     }
 
@@ -170,7 +269,37 @@ export default function RegistrarPaquete() {
     setIsSavingDraft(true);
 
     sessionStorage.setItem('registroEnvioDraft', JSON.stringify(form));
+    // Limpiar datos guardados del localStorage después de avanzar a datosPaquete
+    localStorage.removeItem('registroPaqueteFormulario');
     navigate('/operador/datos-paquete');
+  }
+
+  function limpiarDatosGuardados() {
+    localStorage.removeItem('registroPaqueteFormulario');
+    setForm({
+      remitente: {
+        nombre: '',
+        telefono: '',
+        correo: '',
+        direccion: '',
+        colonia: '',
+        ciudad: 'Ciudad de Mexico',
+        estado: 'CDMX',
+        codigo_postal: '',
+      },
+      destinatario: {
+        nombre: '',
+        telefono: '',
+        correo: '',
+        direccion: '',
+        colonia: '',
+        ciudad: 'Ciudad de Mexico',
+        estado: 'CDMX',
+        codigo_postal: '',
+      },
+    });
+    setError('');
+    setPasoActivo(0);
   }
 
   const ciudadesRemitente = ESTADO_SUGERENCIAS[form.remitente.estado]?.ciudades || [];
@@ -242,9 +371,14 @@ export default function RegistrarPaquete() {
                 Teléfono
                 <input
                   type="tel"
-                  placeholder="Ingresar teléfono..."
+                  inputMode="numeric"
+                  maxLength="10"
+                  placeholder="Ingresar teléfono (10 dígitos)..."
                   value={form.remitente.telefono}
-                  onChange={(e) => updateField('remitente', 'telefono', e.target.value)}
+                  onChange={(e) => {
+                    const valor = e.target.value.replace(/[^\d]/g, '').slice(0, 10);
+                    updateField('remitente', 'telefono', valor);
+                  }}
                 />
               </label>
             </div>
@@ -273,7 +407,12 @@ export default function RegistrarPaquete() {
               </label>
               <label>
                 Colonia
-                <input type="text" placeholder="Ingresar colonia..." />
+                <input 
+                  type="text" 
+                  placeholder="Ingresar colonia..."
+                  value={form.remitente.colonia}
+                  onChange={(e) => updateField('remitente', 'colonia', e.target.value)}
+                />
               </label>
             </div>
 
@@ -307,9 +446,13 @@ export default function RegistrarPaquete() {
                 Código postal
                 <input
                   type="text"
+                  inputMode="numeric"
                   placeholder={cpRemitenteSugerido ? `Ej. ${cpRemitenteSugerido}` : 'Ingresar código postal...'}
                   value={form.remitente.codigo_postal}
-                  onChange={(e) => updateField('remitente', 'codigo_postal', e.target.value)}
+                  onChange={(e) => {
+                    const valor = e.target.value.replace(/[^\d]/g, '');
+                    updateField('remitente', 'codigo_postal', valor);
+                  }}
                 />
               </label>
             </div>
@@ -335,9 +478,14 @@ export default function RegistrarPaquete() {
                 Teléfono
                 <input
                   type="tel"
-                  placeholder="Ingresar teléfono..."
+                  inputMode="numeric"
+                  maxLength="10"
+                  placeholder="Ingresar teléfono (10 dígitos)..."
                   value={form.destinatario.telefono}
-                  onChange={(e) => updateField('destinatario', 'telefono', e.target.value)}
+                  onChange={(e) => {
+                    const valor = e.target.value.replace(/[^\d]/g, '').slice(0, 10);
+                    updateField('destinatario', 'telefono', valor);
+                  }}
                 />
               </label>
             </div>
@@ -366,7 +514,12 @@ export default function RegistrarPaquete() {
               </label>
               <label>
                 Colonia
-                <input type="text" placeholder="Ingresar colonia..." />
+                <input 
+                  type="text" 
+                  placeholder="Ingresar colonia..."
+                  value={form.destinatario.colonia}
+                  onChange={(e) => updateField('destinatario', 'colonia', e.target.value)}
+                />
               </label>
             </div>
 
@@ -400,9 +553,13 @@ export default function RegistrarPaquete() {
                 Código postal
                 <input
                   type="text"
+                  inputMode="numeric"
                   placeholder={cpDestinatarioSugerido ? `Ej. ${cpDestinatarioSugerido}` : 'Ingresar código postal...'}
                   value={form.destinatario.codigo_postal}
-                  onChange={(e) => updateField('destinatario', 'codigo_postal', e.target.value)}
+                  onChange={(e) => {
+                    const valor = e.target.value.replace(/[^\d]/g, '');
+                    updateField('destinatario', 'codigo_postal', valor);
+                  }}
                 />
               </label>
             </div>
@@ -413,6 +570,15 @@ export default function RegistrarPaquete() {
 
         <div className="acciones-formulario">
           <a href="/operador/dashboard" className="boton-secundario">Cancelar</a>
+          <button
+            type="button"
+            className="boton-terceario"
+            onClick={limpiarDatosGuardados}
+            title="Eliminar datos guardados del formulario"
+            style={{ padding: '8px 12px', fontSize: '0.9rem', marginLeft: '8px' }}
+          >
+            Limpiar datos
+          </button>
           <button
             type="button"
             className="boton-primario"

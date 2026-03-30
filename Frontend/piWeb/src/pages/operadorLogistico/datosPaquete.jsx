@@ -31,6 +31,8 @@ export default function DatosPaquete() {
     tipo_servicio: 'normal',
     fecha_asignacion: today,
     id_conductor: '',
+    es_fragil: false,
+    requiere_seguro: false,
   });
 
   const draft = useMemo(() => {
@@ -88,6 +90,58 @@ export default function DatosPaquete() {
     }));
   }
 
+  function validateFormData() {
+    const peso = Number(form.peso);
+    const largo = Number(form.largo) || 0;
+    const ancho = Number(form.ancho) || 0;
+    const alto = Number(form.alto) || 0;
+    const valorDeclarado = Number(form.valor_declarado) || 0;
+
+    // Validar peso
+    if (!Number.isFinite(peso) || peso <= 0) {
+      return { valid: false, message: 'El peso debe ser un número mayor a 0.' };
+    }
+
+    if (peso > 100) {
+      return { valid: false, message: 'El peso no puede exceder 100 kg.' };
+    }
+
+    // Validar dimensiones
+    if (largo < 0 || ancho < 0 || alto < 0) {
+      return { valid: false, message: 'Las dimensiones no pueden ser negativas.' };
+    }
+
+    // Verificar coherencia de dimensiones
+    const tieneDimension = largo > 0 || ancho > 0 || alto > 0;
+    if (tieneDimension && (largo === 0 || ancho === 0 || alto === 0)) {
+      return { valid: false, message: 'Si ingresas dimensiones, todas debe tener un valor mayor a 0.' };
+    }
+
+    // Validar valor declarado
+    if (valorDeclarado < 0) {
+      return { valid: false, message: 'El valor declarado no puede ser negativo.' };
+    }
+
+    if (form.es_fragil && valorDeclarado === 0) {
+      return { valid: false, warning: 'Advertencia: El paquete es frágil pero no tiene valor declarado. Se recomienda declarar un valor.' };
+    }
+
+    // Evitar redundancia: Descripción no debe ser copia del tipo_contenido
+    const descLower = form.descripcion.toLowerCase().trim();
+    const tipoLower = form.tipo_contenido.toLowerCase().trim();
+    
+    if (descLower && descLower === tipoLower) {
+      return { valid: false, message: 'La descripción no debe ser idéntica al tipo de contenido. Por favor, proporciona más detalles.' };
+    }
+
+    // Si es frágil, recomendar seguro
+    if (form.es_fragil && !form.requiere_seguro) {
+      return { valid: true, warning: 'Sugerencia: Este paquete es frágil. Considera agregar seguro.' };
+    }
+
+    return { valid: true };
+  }
+
   async function handleGuardar() {
     setError('');
     setWarning('');
@@ -97,12 +151,19 @@ export default function DatosPaquete() {
       return;
     }
 
-    const peso = Number(form.peso);
-
-    if (!Number.isFinite(peso) || peso <= 0) {
-      setError('El peso debe ser mayor a 0.');
+    // Validar datos del formulario
+    const validation = validateFormData();
+    
+    if (!validation.valid) {
+      setError(validation.message);
       return;
     }
+
+    if (validation.warning) {
+      setWarning(validation.warning);
+    }
+
+    const peso = Number(form.peso);
 
     const payload = {
       remitente: draft.remitente,
@@ -116,6 +177,8 @@ export default function DatosPaquete() {
         alto: form.alto ? Number(form.alto) : null,
         valor_declarado: form.valor_declarado ? Number(form.valor_declarado) : 0,
         tipo_servicio: form.tipo_servicio,
+        es_fragil: form.es_fragil,
+        requiere_seguro: form.requiere_seguro,
       },
     };
 
@@ -238,8 +301,22 @@ export default function DatosPaquete() {
             </div>
 
             <div className="checks-linea">
-              <label className="check-item"><input type="checkbox" /> ¿Es frágil?</label>
-              <label className="check-item"><input type="checkbox" /> ¿Requiere seguro?</label>
+              <label className="check-item">
+                <input 
+                  type="checkbox" 
+                  checked={form.es_fragil}
+                  onChange={(e) => updateField('es_fragil', e.target.checked)}
+                /> 
+                ¿Es frágil?
+              </label>
+              <label className="check-item">
+                <input 
+                  type="checkbox" 
+                  checked={form.requiere_seguro}
+                  onChange={(e) => updateField('requiere_seguro', e.target.checked)}
+                /> 
+                ¿Requiere seguro?
+              </label>
             </div>
           </section>
 

@@ -74,6 +74,7 @@ export default function RutaRepartidorSupervisor() {
         </header>
 
         <h2 className="titulo-pagina-operador">Ruta del Repartidor</h2>
+        {/* Botón Volver flotante en la esquina inferior derecha */}
 
         {error ? <p style={{ color: '#b71c1c', marginBottom: '10px' }}>{error}</p> : null}
         {loading ? <p style={{ color: '#5a6d8a', marginBottom: '10px' }}>Cargando informacion...</p> : null}
@@ -139,7 +140,7 @@ export default function RutaRepartidorSupervisor() {
                           <td>{item.direccion_destino || '-'} ({item.ciudad_destino || '-'})</td>
                           <td>
                             <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                              * {estadoEnvioTexto(item.estado_envio)}
+                              ● {estadoEnvioTexto(item.estado_envio)}
                             </span>
                           </td>
                           <td>
@@ -152,6 +153,15 @@ export default function RutaRepartidorSupervisor() {
                 </table>
               </div>
             </article>
+            {/* Botón Volver al final */}
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: '38px 0 0 0' }}>
+              <button
+                className="boton-volver-azul"
+                onClick={() => window.history.back()}
+              >
+                Volver
+              </button>
+            </div>
           </section>
         ) : null}
       </main>

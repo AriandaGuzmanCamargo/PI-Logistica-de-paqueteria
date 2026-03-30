@@ -1,3 +1,27 @@
+/* Botón Volver azul y alineado a la derecha */
+.boton-volver-azul {
+  border: none;
+  background: linear-gradient(180deg, #3a6edb 0%, #2356a8 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 9px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(47,64,120,0.06);
+  transition: background 0.2s;
+}
+.boton-volver-azul:hover {
+  background: linear-gradient(180deg, #2356a8 0%, #3a6edb 100%);
+}
+
+/* Botón flotante para volver */
+.boton-volver-flotante {
+  position: fixed;
+  right: 38px;
+  bottom: 38px;
+  z-index: 1000;
+}
 
 
 /* ── Bienvenida del supervisor ── */

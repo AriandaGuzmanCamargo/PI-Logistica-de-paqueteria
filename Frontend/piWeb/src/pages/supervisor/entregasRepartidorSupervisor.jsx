@@ -222,6 +222,15 @@ export default function EntregasRepartidorSupervisor() {
                 </table>
               </div>
             </div>
+            {/* Botón Volver al final */}
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: '38px 0 0 0' }}>
+              <button
+                className="boton-volver-azul"
+                onClick={() => window.history.back()}
+              >
+                Volver
+              </button>
+            </div>
           </section>
         ) : null}
       </main>

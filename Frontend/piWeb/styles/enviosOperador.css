@@ -49,7 +49,7 @@
 .filtros-envios {
   border: 1px solid #d9dff9;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   background: rgba(241, 244, 255, 0.8);
 }
 

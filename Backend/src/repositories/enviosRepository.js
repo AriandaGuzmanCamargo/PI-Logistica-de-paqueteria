@@ -60,6 +60,53 @@ export async function findClientIdByUserId(userId) {
   return result.rowCount > 0 ? result.rows[0].id_cliente : null;
 }
 
+export async function findUserIdsByClientIds(clientIds) {
+  if (!Array.isArray(clientIds) || clientIds.length === 0) {
+    return [];
+  }
+
+  const normalizedClientIds = [...new Set(
+    clientIds
+      .map((id) => Number(id))
+      .filter((id) => Number.isInteger(id) && id > 0)
+  )];
+
+  if (normalizedClientIds.length === 0) {
+    return [];
+  }
+
+  const hasIdUsuarioColumnResult = await pool.query(
+    `SELECT 1
+     FROM information_schema.columns
+     WHERE table_schema = 'public'
+       AND table_name = 'clientes'
+       AND column_name = 'id_usuario'
+     LIMIT 1`
+  );
+
+  let result;
+
+  if (hasIdUsuarioColumnResult.rowCount > 0) {
+    result = await pool.query(
+      `SELECT DISTINCT id_usuario
+       FROM clientes
+       WHERE id_cliente = ANY($1::int[])
+         AND id_usuario IS NOT NULL`,
+      [normalizedClientIds]
+    );
+  } else {
+    result = await pool.query(
+      `SELECT DISTINCT u.id_usuario
+       FROM clientes c
+       JOIN usuarios u ON LOWER(u.correo) = LOWER(c.correo)
+       WHERE c.id_cliente = ANY($1::int[])`,
+      [normalizedClientIds]
+    );
+  }
+
+  return result.rows.map((row) => row.id_usuario);
+}
+
 export async function listShipmentsByClientId(clientId) {
   const result = await pool.query(
     `SELECT
@@ -142,8 +189,6 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
   const result = await pool.query(
     `SELECT DISTINCT ON (e.id_envio)
         ar.id_asignacion,
-        ar.estado_asignacion,
-        ar.fecha_salida,
         e.id_envio,
         e.estado_envio,
         e.direccion_origen,
@@ -158,11 +203,7 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
         c_des.nombre AS destinatario_nombre,
         p.id_paquete,
         p.codigo_rastreo,
-        p.estado_actual AS estado_paquete,
-        r.nombre_ruta,
-        r.origen AS ruta_origen,
-        r.destino AS ruta_destino,
-        v.placa AS vehiculo_placa
+        p.estado_actual AS estado_paquete
      FROM usuarios u
      JOIN conductores c ON c.id_usuario = u.id_usuario
      JOIN asignaciones_ruta ar ON ar.id_conductor = c.id_conductor
@@ -172,8 +213,6 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
      JOIN clientes c_des ON c_des.id_cliente = e.id_cliente_destinatario
      LEFT JOIN envio_paquete ep ON ep.id_envio = e.id_envio
      LEFT JOIN paquetes p ON p.id_paquete = ep.id_paquete
-     LEFT JOIN rutas r ON r.id_ruta = ar.id_ruta
-     LEFT JOIN vehiculos v ON v.id_vehiculo = ar.id_vehiculo
      WHERE u.id_usuario = $1
        AND ar.estado_asignacion IN ('programada', 'en_proceso')
      ORDER BY e.id_envio, e.fecha_creacion DESC`,

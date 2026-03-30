@@ -2,7 +2,6 @@ import {
   createNotificationsForUsers,
   findUserById,
   findUserIdsByRoles,
-  listNotificationsByRoles,
   listNotificationsByUser,
   listNotificationsForOperator,
   markAllNotificationsAsReadByUser,
@@ -39,12 +38,8 @@ export async function getNotificationsByUser(userId) {
 
   let rows;
 
-  if (user.rol === 'operador' || user.rol === 'admin') {
+  if (user.rol === 'operador' || user.rol === 'admin' || user.rol === 'supervisor') {
     rows = await listNotificationsForOperator();
-  } else if (user.rol === 'conductor') {
-    rows = await listNotificationsByRoles(['conductor']);
-  } else if (user.rol === 'cliente') {
-    rows = await listNotificationsByRoles(['cliente']);
   } else {
     rows = await listNotificationsByUser(parsedId);
   }
@@ -55,6 +50,20 @@ export async function getNotificationsByUser(userId) {
 export async function notifyUsersByRoles(roles, { titulo, mensaje }) {
   const userIds = await findUserIdsByRoles(roles);
   return createNotificationsForUsers(userIds, { titulo, mensaje });
+}
+
+export async function notifyUsersByIds(userIds, { titulo, mensaje }) {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    return 0;
+  }
+
+  const sanitizedUserIds = [...new Set(
+    userIds
+      .map((id) => Number(id))
+      .filter((id) => Number.isInteger(id) && id > 0)
+  )];
+
+  return createNotificationsForUsers(sanitizedUserIds, { titulo, mensaje });
 }
 
 export async function markNotificationAsRead({ userId, notificationId }) {

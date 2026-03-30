@@ -1,6 +1,7 @@
 import {
   cancelShipmentById,
   createShipmentWithPackageByClient,
+  findUserIdsByClientIds,
   findShipmentById,
   findUserById,
   findClientIdByUserId,
@@ -11,10 +12,34 @@ import {
   updateClientProfileById,
   updateShipmentBasicDataById,
 } from '../repositories/enviosRepository.js';
+import { notifyUsersByIds, notifyUsersByRoles } from './notificacionesService.js';
+
+async function notifyShipmentStakeholders(idEnvio, { titulo, mensaje, includeRoles = [] } = {}) {
+  if (!idEnvio || !titulo || !mensaje) {
+    return;
+  }
+
+  const shipment = await findShipmentById(idEnvio);
+
+  if (!shipment) {
+    return;
+  }
+
+  const userIds = await findUserIdsByClientIds([
+    shipment.remitente_id,
+    shipment.destinatario_id,
+  ]);
+
+  if (userIds.length > 0) {
+    await notifyUsersByIds(userIds, { titulo, mensaje });
+  }
+
+  if (Array.isArray(includeRoles) && includeRoles.length > 0) {
+    await notifyUsersByRoles(includeRoles, { titulo, mensaje });
+  }
+}
 
 function mapShipment(item) {
-  const hasAssignment = Boolean(item.id_asignacion_activa || item.id_asignacion);
-
   return {
     id_envio: item.id_envio,
     estado_envio: item.estado_envio,
@@ -45,17 +70,6 @@ function mapShipment(item) {
       : null,
     asignado_al_conductor: Boolean(item.asignado_al_conductor),
     id_asignacion_activa: item.id_asignacion_activa || null,
-    asignacion: hasAssignment
-      ? {
-          id_asignacion: item.id_asignacion_activa || item.id_asignacion,
-          estado_asignacion: item.estado_asignacion || null,
-          fecha_salida: item.fecha_salida || null,
-          ruta_nombre: item.nombre_ruta || null,
-          ruta_origen: item.ruta_origen || null,
-          ruta_destino: item.ruta_destino || null,
-          vehiculo_placa: item.vehiculo_placa || null,
-        }
-      : null,
   };
 }
 
@@ -328,6 +342,17 @@ export async function cancelShipmentByClient({ userId, idEnvio }) {
   if (user.rol === 'cliente') {
     const shipmentId = await ensureClientOwnsShipment(parsedUserId, parsedShipmentId);
     await cancelShipmentById(shipmentId);
+
+    try {
+      await notifyShipmentStakeholders(shipmentId, {
+        titulo: 'Envio cancelado',
+        mensaje: `El envio #${shipmentId} fue cancelado por el cliente.`,
+        includeRoles: ['operador', 'admin', 'supervisor'],
+      });
+    } catch (notificationError) {
+      console.error('No se pudo generar notificacion de envio cancelado:', notificationError);
+    }
+
     return getShipmentDetailById(shipmentId);
   }
 
@@ -359,6 +384,16 @@ export async function cancelShipmentByClient({ userId, idEnvio }) {
   }
 
   await cancelShipmentById(parsedShipmentId);
+
+  try {
+    await notifyShipmentStakeholders(parsedShipmentId, {
+      titulo: 'Envio cancelado',
+      mensaje: `El envio #${parsedShipmentId} fue cancelado por ${user.rol}.`,
+      includeRoles: ['operador', 'admin', 'supervisor'],
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de envio cancelado:', notificationError);
+  }
 
   return getShipmentDetailById(parsedShipmentId);
 }
@@ -437,6 +472,16 @@ export async function markShipmentDeliveredByDriver({ userId, idEnvio, fotoEntre
     fotoEntregaUrl: parsedDeliveryPhoto,
     recibioEntregaNombre: parsedReceiverName,
   });
+
+  try {
+    await notifyShipmentStakeholders(parsedShipmentId, {
+      titulo: 'Envio entregado',
+      mensaje: `El envio #${parsedShipmentId} fue entregado correctamente.`,
+      includeRoles: ['operador', 'admin', 'supervisor'],
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de envio entregado:', notificationError);
+  }
 
   return getShipmentDetailById(parsedShipmentId);
 }
@@ -572,6 +617,16 @@ export async function createShipmentByClient({ userId, payload }) {
       codigo_rastreo: generateTrackingCode(),
     },
   });
+
+  try {
+    await notifyShipmentStakeholders(created.id_envio, {
+      titulo: 'Nuevo envio registrado',
+      mensaje: `Se registro el envio #${created.id_envio} con guia ${created.codigo_rastreo}.`,
+      includeRoles: ['operador', 'admin', 'supervisor'],
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de envio creado:', notificationError);
+  }
 
   return getShipmentDetailById(created.id_envio);
 }

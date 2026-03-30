@@ -407,27 +407,31 @@ export default function ResportesSupervisor() {
           </div>
         </header>
 
-        <div className="rep-header">
-          <h2 className="rep-header__titulo">Reportes</h2>
-          <div className="rep-header__controles">
-            <button className="rep-header__fecha">
-              {rangoTexto} <span>&#8964;</span>
-            </button>
+        <h2 className="titulo-pagina-operador">Reportes</h2>
+
+        <div className="rep-header-toolbar">
+          <p className="rep-header-toolbar__aviso" role="status">
+            Periodo mostrado: <strong>{rangoTexto}</strong>
+          </p>
+          <div className="rep-header-toolbar__acciones">
             <select
-              className="rep-header__fecha"
+              className="rep-header__select"
               value={rango}
               onChange={(event) => setRango(event.target.value)}
+              aria-label="Rango de fechas del reporte"
             >
               <option value="hoy">Hoy</option>
               <option value="7d">Ultimos 7 dias</option>
               <option value="30d">Ultimos 30 dias</option>
               <option value="90d">Ultimos 90 dias</option>
             </select>
-            <button className="rep-header__exportar" onClick={exportarPdf}>Exportar PDF</button>
+            <button type="button" className="rep-header__exportar" onClick={exportarPdf}>
+              Exportar PDF
+            </button>
           </div>
         </div>
 
-        {error ? <p style={{ color: '#b71c1c', maxWidth: '1260px', margin: '0 auto 12px' }}>{error}</p> : null}
+        {error ? <p className="rep-page-error">{error}</p> : null}
 
         <section className="rep-resumen">
           <article className="rep-card rep-card--azul">

@@ -2,43 +2,54 @@
    Reportes Supervisor – Estilos
    ═══════════════════════════════════════════ */
 
-/* ── Header Reportes ── */
-.rep-header {
-  max-width: 1260px;
-  margin: 0 auto 16px;
+/* ── Barra bajo título (reportes): aviso + controles ── */
+.rep-header-toolbar {
+  max-width: 1420px;
+  margin: 0 auto 18px;
+  padding: 12px 16px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
-}
-.rep-header__titulo {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-  color: #1a2d50;
-  text-align: center;
-}
-.rep-header__controles {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  align-self: flex-end;
-  justify-content: flex-end;
+  gap: 12px 16px;
+  background: linear-gradient(180deg, #f5f8ff 0%, #eef2fb 100%);
+  border: 1px solid #dbe2f4;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(45, 66, 116, 0.05);
 }
-.rep-header__fecha {
+.rep-header-toolbar__aviso {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a6a8a;
+  line-height: 1.4;
+  flex: 1 1 220px;
+}
+.rep-header-toolbar__aviso strong {
+  color: #1a2d50;
+  font-weight: 700;
+}
+.rep-header-toolbar__acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.rep-header__select {
   background: #fff;
   border: 1px solid #d8e0f0;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   font-size: 14px;
+  font-weight: 600;
   color: #2b3552;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
+  min-height: 40px;
+}
+.rep-header__select:hover {
+  background: #fafcff;
+  border-color: #c5d0ea;
 }
 .rep-header__exportar {
   background: #fff;
@@ -46,11 +57,19 @@
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
+  font-weight: 600;
   color: #2b3552;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 40px;
+}
+.rep-page-error {
+  color: #b71c1c;
+  max-width: 1420px;
+  margin: 0 auto 12px;
+  padding: 0 4px;
 }
 .rep-header__flecha {
   background: #fff;
@@ -65,7 +84,6 @@
   align-items: center;
   justify-content: center;
 }
-.rep-header__fecha:hover,
 .rep-header__exportar:hover,
 .rep-header__flecha:hover {
   background: #f0f3fc;
@@ -73,7 +91,7 @@
 
 /* ── Tarjetas resumen reportes ── */
 .rep-resumen {
-  max-width: 1260px;
+  max-width: 1420px;
   margin: 0 auto 18px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -131,7 +149,7 @@
 /* ── Paneles grid ── */
 .rep-grid-top,
 .rep-grid-bottom {
-  max-width: 1260px;
+  max-width: 1420px;
   margin: 0 auto 18px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -469,4 +487,16 @@
 @media (max-width: 640px) {
   .rep-resumen { grid-template-columns: repeat(2, 1fr); }
   .rep-entregas-dia { flex-direction: column; }
+  .rep-header-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rep-header-toolbar__acciones {
+    justify-content: stretch;
+  }
+  .rep-header__select,
+  .rep-header__exportar {
+    flex: 1;
+    justify-content: center;
+  }
 }

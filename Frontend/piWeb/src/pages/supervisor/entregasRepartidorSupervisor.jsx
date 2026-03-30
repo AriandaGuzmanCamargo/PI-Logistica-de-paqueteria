@@ -104,73 +104,123 @@ export default function EntregasRepartidorSupervisor() {
 
         {!loading && detalle ? (
           <section className="modulo-incidencias">
-            <div className="incidencias-resumen">
-              <div className="incidencias-resumen__item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <img
-                  src={conductor?.foto_perfil_url || '/piWeb/images/usuario.png'}
-                  alt={conductor?.nombre || 'Repartidor'}
-                  style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #cbd8f0' }}
-                />
-                <span><strong>Repartidor:</strong> {conductor?.nombre || '-'}</span>
+            <div className="resumen-sv" style={{ marginBottom: 24 }}>
+              <div className="tarjeta-sv tarjeta-sv--gris">
+                <div className="tarjeta-sv__icono">
+                  <img className="tarjeta-sv__icono-img" src={conductor?.foto_perfil_url || '/piWeb/images/usuario.png'} alt={conductor?.nombre || 'Repartidor'} />
+                </div>
+                <div>
+                  <div className="tarjeta-sv__numero" style={{ fontSize: 16 }}>{conductor?.nombre || '-'}</div>
+                  <div className="tarjeta-sv__label">Repartidor</div>
+                </div>
               </div>
-              <div className="incidencias-resumen__item"><strong>Total:</strong> {resumen?.total_envios ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>En ruta:</strong> {resumen?.en_ruta ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>Entregados:</strong> {resumen?.entregados ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>Retrasados:</strong> {resumen?.retrasados ?? 0}</div>
-            </div>
-
-            <div className="filtros-envios" style={{ marginTop: '10px' }}>
-              <div className="filtros-envios__fila">
-                <div className="buscador-envios">
-                  <input
-                    type="text"
-                    placeholder="Buscar guia, destinatario o direccion..."
-                    value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                  />
+              <div className="tarjeta-sv tarjeta-sv--azul">
+                <div className="tarjeta-sv__icono">
+                  <img className="tarjeta-sv__icono-img" src="/piWeb/images/supervisor/entregas.png" alt="Total" />
+                </div>
+                <div>
+                  <div className="tarjeta-sv__numero">{resumen?.total_envios ?? 0}</div>
+                  <div className="tarjeta-sv__label">Total</div>
+                </div>
+              </div>
+              <div className="tarjeta-sv tarjeta-sv--amarillo">
+                <div className="tarjeta-sv__icono">
+                  <img className="tarjeta-sv__icono-img" src="/piWeb/images/supervisor/enRuta.png" alt="En ruta" />
+                </div>
+                <div>
+                  <div className="tarjeta-sv__numero">{resumen?.en_ruta ?? 0}</div>
+                  <div className="tarjeta-sv__label">En ruta</div>
+                </div>
+              </div>
+              <div className="tarjeta-sv tarjeta-sv--verde-inc">
+                <div className="tarjeta-sv__icono">
+                  <img className="tarjeta-sv__icono-img" src="/piWeb/images/supervisor/repartidores.png" alt="Entregados" />
+                </div>
+                <div>
+                  <div className="tarjeta-sv__numero">{resumen?.entregados ?? 0}</div>
+                  <div className="tarjeta-sv__label">Entregados</div>
+                </div>
+              </div>
+              <div className="tarjeta-sv tarjeta-sv--rojo">
+                <div className="tarjeta-sv__icono">
+                  <img className="tarjeta-sv__icono-img" src="/piWeb/images/supervisor/retrasadas.png" alt="Retrasados" />
+                </div>
+                <div>
+                  <div className="tarjeta-sv__numero">{resumen?.retrasados ?? 0}</div>
+                  <div className="tarjeta-sv__label">Retrasados</div>
                 </div>
               </div>
             </div>
 
-            <div className="tabla-incidencias">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Guia</th>
-                    <th>Destinatario</th>
-                    <th>Destino</th>
-                    <th>Estado</th>
-                    <th>Salida</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {enviosFiltrados.length === 0 ? (
+            <div style={{
+              background: '#f7f9ff',
+              border: '1px solid #e0e8f0',
+              borderRadius: '14px',
+              padding: '24px 18px 18px 18px',
+              marginTop: 10,
+              boxShadow: '0 2px 8px rgba(47,64,120,0.04)'
+            }}>
+              <div style={{ marginBottom: 18 }}>
+                <input
+                  type="text"
+                  placeholder="Buscar guia, destinatario o direccion..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  style={{
+                    width: '100%',
+                    minWidth: '900px',
+                    padding: '10px 14px',
+                    border: '1px solid #ccd6f6',
+                    borderRadius: 8,
+                    fontSize: 15,
+                    background: '#fff',
+                    color: '#2b3552',
+                    boxShadow: '0 1px 2px rgba(47,64,120,0.03)',
+                    display: 'block',
+                    margin: '0 auto'
+                  }}
+                />
+              </div>
+              <div className="tabla-incidencias" style={{ overflowX: 'auto' }}>
+                <table style={{ minWidth: 900 }}>
+                  <thead>
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No hay entregas para mostrar.</td>
+                      <th>Guia</th>
+                      <th>Destinatario</th>
+                      <th>Destino</th>
+                      <th>Estado</th>
+                      <th>Salida</th>
+                      <th>Acciones</th>
                     </tr>
-                  ) : (
-                    enviosFiltrados.map((item) => (
-                      <tr key={item.id_envio}>
-                        <td><strong>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</strong></td>
-                        <td>{item.destinatario?.nombre || '-'}</td>
-                        <td>{item.direccion_destino || '-'} ({item.ciudad_destino || '-'})</td>
-                        <td>
-                          <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                            * {estadoEnvioTexto(item.estado_envio)}
-                          </span>
-                        </td>
-                        <td>{item.asignacion?.fecha_salida ? new Date(item.asignacion.fecha_salida).toLocaleString() : '-'}</td>
-                        <td>
-                          <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>
-                            Ver envio
-                          </a>
-                        </td>
+                  </thead>
+                  <tbody>
+                    {enviosFiltrados.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No hay entregas para mostrar.</td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      enviosFiltrados.map((item) => (
+                        <tr key={item.id_envio}>
+                          <td><strong>{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</strong></td>
+                          <td>{item.destinatario?.nombre || '-'}</td>
+                          <td>{item.direccion_destino || '-'} ({item.ciudad_destino || '-'})</td>
+                          <td>
+                            <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
+                              {estadoEnvioTexto(item.estado_envio)}
+                            </span>
+                          </td>
+                          <td>{item.asignacion?.fecha_salida ? new Date(item.asignacion.fecha_salida).toLocaleString() : '-'}</td>
+                          <td>
+                            <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>
+                              Ver envio
+                            </a>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </section>
         ) : null}

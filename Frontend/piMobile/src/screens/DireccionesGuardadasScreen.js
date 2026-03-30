@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Modal,
-  ScrollView,
   Switch,
   Text,
   TextInput,
@@ -252,7 +251,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>{modalTitle}</Text>
 
-            <ScrollView contentContainerStyle={styles.formWrap} keyboardShouldPersistTaps="handled">
+            <View style={styles.formWrap}>
               <TextInput
                 style={styles.input}
                 value={form.alias}
@@ -310,7 +309,7 @@ export default function DireccionesGuardadasScreen({ navigation }) {
                   onValueChange={(value) => setForm((prev) => ({ ...prev, es_predeterminada: value }))}
                 />
               </View>
-            </ScrollView>
+            </View>
 
             <View style={styles.modalActions}>
               <TouchableOpacity style={styles.secondaryButton} onPress={closeModal} disabled={isSubmitting}>

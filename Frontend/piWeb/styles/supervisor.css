@@ -95,6 +95,7 @@
 .tarjeta-sv--rojo .tarjeta-sv__icono { background: #fdd; color: #d32f2f; }
 .tarjeta-sv--gris .tarjeta-sv__icono { background: #e0e8f0; color: #5a6a80; }
 .tarjeta-sv--morado .tarjeta-sv__icono { background: #e8daf8; color: #7b1fa2; }
+.tarjeta-sv--verde-inc .tarjeta-sv__icono { background: #d0f0db; color: #2e7d32; }
 .tarjeta-sv__numero {
   margin: 0;
   font-size: 32px;

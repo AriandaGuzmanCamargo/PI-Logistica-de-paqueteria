@@ -12,6 +12,7 @@ export default function IncidenciasSupervisor() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [estado, setEstado] = useState('todas');
+  const [estadoAbierto, setEstadoAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState('');
   const [detalleIncidencia, setDetalleIncidencia] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
@@ -127,41 +128,115 @@ export default function IncidenciasSupervisor() {
 
         <h2 className="titulo-pagina-operador">Gestion de Incidencias</h2>
 
-        <section className="modulo-incidencias">
-          <div className="incidencias-resumen">
-            <div className="incidencias-resumen__item"><strong>Total:</strong> {loading ? '...' : resumen.total}</div>
-            <div className="incidencias-resumen__item"><strong>Abiertas:</strong> {loading ? '...' : resumen.abiertas}</div>
-            <div className="incidencias-resumen__item"><strong>En proceso:</strong> {loading ? '...' : resumen.proceso}</div>
-            <div className="incidencias-resumen__item"><strong>Cerradas:</strong> {loading ? '...' : resumen.cerradas}</div>
-            <div className="incidencias-resumen__item"><strong>Canceladas:</strong> {loading ? '...' : resumen.canceladas}</div>
-          </div>
+        <section className="resumen-sv" style={{ marginBottom: '20px' }}>
+          <article className="tarjeta-sv tarjeta-sv--azul">
+            <span className="tarjeta-sv__icono">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </span>
+            <div>
+              <p className="tarjeta-sv__numero">{loading ? '...' : resumen.total}</p>
+              <p className="tarjeta-sv__label">Total</p>
+            </div>
+          </article>
+          <article className="tarjeta-sv tarjeta-sv--rojo">
+            <span className="tarjeta-sv__icono">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+            <div>
+              <p className="tarjeta-sv__numero">{loading ? '...' : resumen.abiertas}</p>
+              <p className="tarjeta-sv__label">Abiertas</p>
+            </div>
+          </article>
+          <article className="tarjeta-sv tarjeta-sv--amarillo">
+            <span className="tarjeta-sv__icono">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <div>
+              <p className="tarjeta-sv__numero">{loading ? '...' : resumen.proceso}</p>
+              <p className="tarjeta-sv__label">En proceso</p>
+            </div>
+          </article>
+          <article className="tarjeta-sv tarjeta-sv--verde-inc">
+            <span className="tarjeta-sv__icono">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </span>
+            <div>
+              <p className="tarjeta-sv__numero">{loading ? '...' : resumen.cerradas}</p>
+              <p className="tarjeta-sv__label">Cerradas</p>
+            </div>
+          </article>
+          <article className="tarjeta-sv tarjeta-sv--gris">
+            <span className="tarjeta-sv__icono">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </span>
+            <div>
+              <p className="tarjeta-sv__numero">{loading ? '...' : resumen.canceladas}</p>
+              <p className="tarjeta-sv__label">Canceladas</p>
+            </div>
+          </article>
+        </section>
 
-          <div className="filtros-envios" style={{ marginTop: '10px' }}>
-            <div className="filtros-envios__fila">
-              <div className="campo-filtro">
-                <label htmlFor="estado-incidencia-sv">Estado</label>
-                <select id="estado-incidencia-sv" value={estado} onChange={(e) => setEstado(e.target.value)}>
-                  <option value="todas">Todas</option>
-                  <option value="abierta">Abierta</option>
-                  <option value="en_proceso">En proceso</option>
-                  <option value="cerrada">Cerrada</option>
-                  <option value="cancelada">Cancelada</option>
-                </select>
-              </div>
-              <div className="buscador-envios">
-                <input
-                  type="text"
-                  placeholder="Buscar por guia, tipo o descripcion..."
-                  value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
-                />
-              </div>
+        <section className="modulo-incidencias" style={{ background: '#fff', border: '1px solid #d9e0f8', borderRadius: '12px', boxShadow: '0 4px 12px rgba(45,66,116,0.08)', overflow: 'visible' }}>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 20px', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative' }}>
+              <button
+                type="button"
+                onClick={() => setEstadoAbierto((prev) => !prev)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 16px', background: '#fff',
+                  border: '1px solid #d8e0f0', borderRadius: '8px', color: '#4c5880',
+                  fontSize: '14px', cursor: 'pointer', minWidth: '160px',
+                }}
+              >
+                {{ todas: 'Todas', abierta: 'Abierta', en_proceso: 'En proceso', cerrada: 'Cerrada', cancelada: 'Cancelada' }[estado]}
+                <span style={{ fontSize: '10px', marginLeft: '8px' }}>{estadoAbierto ? '\u25B2' : '\u25BC'}</span>
+              </button>
+              {estadoAbierto && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, marginTop: '4px',
+                  background: '#fff', border: '1px solid #d8e0f0', borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 10, minWidth: '100%',
+                  overflow: 'hidden',
+                }}>
+                  {[{ value: 'todas', label: 'Todas' }, { value: 'abierta', label: 'Abierta' }, { value: 'en_proceso', label: 'En proceso' }, { value: 'cerrada', label: 'Cerrada' }, { value: 'cancelada', label: 'Cancelada' }].map((op) => (
+                    <button
+                      key={op.value}
+                      onClick={() => { setEstado(op.value); setEstadoAbierto(false); }}
+                      style={{
+                        display: 'block', width: '100%', padding: '8px 14px',
+                        border: 'none', background: estado === op.value ? '#eef3ff' : '#fff',
+                        color: '#4c5880', fontSize: '13px', cursor: 'pointer', textAlign: 'left',
+                        fontWeight: estado === op.value ? '600' : '400',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#f0f3fc'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = estado === op.value ? '#eef3ff' : '#fff'; }}
+                    >
+                      {op.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <input
+                type="text"
+                placeholder="Buscar por guia, tipo o descripcion..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                style={{
+                  width: '100%', height: '40px', border: '1px solid #d8e0f0', borderRadius: '8px',
+                  background: '#f7f9ff', color: '#4f5b7f', padding: '0 14px', fontSize: '14px',
+                  outline: 'none',
+                }}
+              />
             </div>
           </div>
 
-          {error ? <p style={{ color: '#b71c1c', margin: '0 14px 10px' }}>{error}</p> : null}
+          {error ? <p style={{ color: '#b71c1c', margin: '0 20px 10px' }}>{error}</p> : null}
 
-          <div className="tabla-incidencias">
+          <div className="tabla-incidencias" style={{ margin: 0, border: 'none', borderRadius: 0, borderTop: '1px solid #e6ecfb' }}>
             <table>
               <thead>
                 <tr>

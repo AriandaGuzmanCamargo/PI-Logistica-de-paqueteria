@@ -95,6 +95,7 @@ export default function DashboardSupervisor() {
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState('');
   const [periodo, setPeriodo] = useState('hoy');
+  const [filtroAbierto, setFiltroAbierto] = useState(false);
   const [estadoLista, setEstadoLista] = useState('todos');
   const [perfil, setPerfil] = useState(null);
 
@@ -247,7 +248,12 @@ export default function DashboardSupervisor() {
   }, [envios, busqueda, estadoLista]);
 
   function handleFiltroClick() {
-    setPeriodo((current) => nextPeriodo(current));
+    setFiltroAbierto((prev) => !prev);
+  }
+
+  function seleccionarPeriodo(valor) {
+    setPeriodo(valor);
+    setFiltroAbierto(false);
   }
 
   function handleExportPdf() {
@@ -421,7 +427,7 @@ export default function DashboardSupervisor() {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
-              <a href="/supervisor/envios" className="envios-sv__btn-todos">Ver todo <span>&#8964;</span></a>
+              <a href="/supervisor/envios" className="envios-sv__btn-todos">Ver todo</a>
             </div>
           </div>
 
@@ -431,7 +437,7 @@ export default function DashboardSupervisor() {
               className={`filtro-sv ${estadoLista === 'todos' ? 'filtro-sv--activo' : ''}`}
               onClick={() => setEstadoLista('todos')}
             >
-              Todos <span>&#8964;</span>
+              Todos
             </button>
             <button
               className={`filtro-sv ${estadoLista === 'pendiente' ? 'filtro-sv--activo' : ''}`}
@@ -449,13 +455,13 @@ export default function DashboardSupervisor() {
               className={`filtro-sv ${estadoLista === 'retrasado' ? 'filtro-sv--activo' : ''}`}
               onClick={() => setEstadoLista('retrasado')}
             >
-              <span className="filtro-sv__dot filtro-sv__dot--rojo"></span> Retrasado <span>&#8964;</span>
+              <span className="filtro-sv__dot filtro-sv__dot--rojo"></span> Retrasado
             </button>
             <button
               className={`filtro-sv ${estadoLista === 'entregado' ? 'filtro-sv--activo' : ''}`}
               onClick={() => setEstadoLista('entregado')}
             >
-              <span className="filtro-sv__dot filtro-sv__dot--teal"></span> Entregado <span>&#8964;</span>
+              <span className="filtro-sv__dot filtro-sv__dot--teal"></span> Entregado
             </button>
             <button
               className="filtro-sv filtro-sv--more"
@@ -518,11 +524,38 @@ export default function DashboardSupervisor() {
         {/* Panel derecho: estadísticas */}
         <aside className="stats-sv">
           <div className="stats-sv__header">
-            <button className="stats-sv__filtro-btn" onClick={handleFiltroClick}>
-              Filtro: {formatPeriodoLabel(periodo)} <span>&#8964;</span>
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button className="stats-sv__filtro-btn" onClick={handleFiltroClick}>
+                Filtro: {formatPeriodoLabel(periodo)} <span style={{ fontSize: '10px', marginLeft: '4px' }}>{filtroAbierto ? '▲' : '▼'}</span>
+              </button>
+              {filtroAbierto && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, marginTop: '4px',
+                  background: '#fff', border: '1px solid #d8e0f0', borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 10, minWidth: '100%',
+                  overflow: 'hidden',
+                }}>
+                  {['hoy', '7d', '30d'].map((op) => (
+                    <button
+                      key={op}
+                      onClick={() => seleccionarPeriodo(op)}
+                      style={{
+                        display: 'block', width: '100%', padding: '8px 14px',
+                        border: 'none', background: periodo === op ? '#eef3ff' : '#fff',
+                        color: '#4c5880', fontSize: '13px', cursor: 'pointer', textAlign: 'left',
+                        fontWeight: periodo === op ? '600' : '400',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#f0f3fc'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = periodo === op ? '#eef3ff' : '#fff'; }}
+                    >
+                      {formatPeriodoLabel(op)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button className="stats-sv__export-btn" onClick={handleExportPdf}>
-              Exportar PDF <span>&#8964;</span>
+              Exportar PDF
             </button>
           </div>
 

@@ -168,9 +168,9 @@ export default function Login() {
               <span className="grupo-campo__icono">
                 <img src="/piWeb/images/gmail.png" alt="Correo" />
               </span>
-              <input
-                type="email"
-                placeholder="Correo electronico"
+                <input
+                  type="email"
+                  placeholder="Correo electrónico"
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
                 onKeyDown={(e) => {
@@ -185,9 +185,9 @@ export default function Login() {
               <span className="grupo-campo__icono">
                 <img src="/piWeb/images/candado.png" alt="Contraseña" />
               </span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Contrasena"
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Contraseña"
                 className="input-contrasena"
                 value={contrasena}
                 onChange={(e) => setContrasena(e.target.value)}
@@ -218,8 +218,8 @@ export default function Login() {
               </button>
             </div>
 
-            <button className="boton boton--primario" onClick={handleLogin} disabled={isLoading}>
-              {isLoading ? 'Validando...' : 'Iniciar Sesion'}
+              <button className="boton boton--primario" onClick={handleLogin} disabled={isLoading}>
+                {isLoading ? 'Validando...' : 'Iniciar Sesión'}
             </button>
             <a className="enlace-olvido" href="/recuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
           </div>

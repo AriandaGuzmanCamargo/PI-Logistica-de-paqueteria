@@ -183,7 +183,7 @@ export default function EnviosSupervisor() {
                         <td><strong>{item.destinatario?.nombre || 'Sin destinatario'}</strong></td>
                         <td>
                           <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                            * {estadoEnvioTexto(item.estado_envio)}
+                            ● {estadoEnvioTexto(item.estado_envio)}
                           </span>
                         </td>
                         <td>{item.ciudad_origen || '-'} - {item.ciudad_destino || '-'}</td>

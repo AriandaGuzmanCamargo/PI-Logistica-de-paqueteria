@@ -475,9 +475,6 @@ export default function DashboardSupervisor() {
             </button>
           </div>
 
-          <p style={{ color: '#5a6d8a', margin: '6px 4px 10px', fontSize: '13px' }}>
-            Total en BD: {envios.length} · Mostrando: {enviosFiltrados.length}
-          </p>
 
           {/* Lista de envíos */}
           <div className="envios-sv__lista">

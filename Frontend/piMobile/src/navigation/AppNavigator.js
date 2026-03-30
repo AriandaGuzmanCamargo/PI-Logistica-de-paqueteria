@@ -26,6 +26,7 @@ import DashboardR from '../repartidor/screens/DashboardR';
 import EntregasR from '../repartidor/screens/EntregasR';
 import RutaR from '../repartidor/screens/RutaR';
 import DetalleEntregaR from '../repartidor/screens/DetalleEntregaR';
+import TomarFotoEntregaR from '../repartidor/screens/TomarFotoEntregaR';
 import IncidenciasR from '../repartidor/screens/IncidenciasR';
 import DetalleIncidenciaR from '../repartidor/screens/DetalleIncidenciaR';
 import NotificacionesR from '../repartidor/screens/notificaciones';
@@ -46,6 +47,7 @@ export default function AppNavigator() {
       <Stack.Screen name="EntregasR" component={EntregasR} />
       <Stack.Screen name="RutaR" component={RutaR} />
       <Stack.Screen name="DetalleEntregaR" component={DetalleEntregaR} />
+      <Stack.Screen name="TomarFotoEntregaR" component={TomarFotoEntregaR} />
       <Stack.Screen name="IncidenciasR" component={IncidenciasR} />
       <Stack.Screen name="DetalleIncidenciaR" component={DetalleIncidenciaR} />
       <Stack.Screen name="NotificacionesR" component={NotificacionesR} />

@@ -147,36 +147,11 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const isDelivered = shipmentStatus === 'entregado';
 	const isCancelled = shipmentStatus === 'cancelado';
 
-	const handleMarkAsDelivered = async () => {
-		try {
-			const user = getCurrentUser();
-			const idUsuario = Number(user?.id_usuario);
-
-			if (!Number.isInteger(idUsuario) || idUsuario <= 0) {
-				throw new Error('No hay sesion activa de conductor.');
-			}
-
-			if (!shipmentId) {
-				throw new Error('No se encontro el id del envio para marcar entrega.');
-			}
-
-			setIsSubmittingDelivery(true);
-			await marcarEnvioComoEntregado({
-				idEnvio: shipmentId,
-				idUsuario,
-			});
-
-			Alert.alert('Entrega confirmada', 'El envio se marco como entregado.', [
-				{
-					text: 'OK',
-					onPress: () => navigation.navigate('EntregasR', { refresh: Date.now() }),
-				},
-			]);
-		} catch (error) {
-			Alert.alert('No se pudo marcar entrega', error.message || 'Intenta nuevamente.');
-		} finally {
-			setIsSubmittingDelivery(false);
-		}
+	const handleMarkAsDelivered = () => {
+		navigation.navigate('TomarFotoEntregaR', {
+			delivery,
+			idEnvio: shipmentId,
+		});
 	};
 
 	const handleCancelShipment = async () => {

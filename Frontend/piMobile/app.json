@@ -6,7 +6,13 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "La app necesita acceso a la camara para tomar fotografia de entrega."
+        }
+      ]
     ]
   }
 }

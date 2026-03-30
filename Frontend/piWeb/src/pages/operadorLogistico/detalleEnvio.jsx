@@ -241,6 +241,30 @@ export default function DetalleEnvio() {
 							</div>
 						</article>
 
+						<article className="tarjeta-detalle">
+							<h3>Evidencia de Entrega</h3>
+							{envio?.foto_entrega_url ? (
+								<div style={{ marginTop: '8px' }}>
+									<img
+										src={envio.foto_entrega_url}
+										alt="Evidencia de entrega"
+										style={{
+											width: '100%',
+											maxHeight: '300px',
+											objectFit: 'cover',
+											borderRadius: '12px',
+											border: '1px solid #e5e7eb',
+										}}
+									/>
+									<p style={{ marginTop: '8px', color: '#5a6d8a' }}>
+										Foto capturada por el repartidor al confirmar la entrega.
+									</p>
+								</div>
+							) : (
+								<p style={{ color: '#5a6d8a' }}>Aun no hay evidencia fotografica registrada para este envio.</p>
+							)}
+						</article>
+
 						<article className="tarjeta-detalle tarjeta-detalle--acciones">
 							<a className="boton-volver" href="/operador/envios">Volver</a>
 						</article>

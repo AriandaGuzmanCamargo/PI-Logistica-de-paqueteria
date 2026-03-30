@@ -1,5 +1,12 @@
 import { pool } from '../db/pool.js';
 
+async function ensureDeliveryPhotoColumn() {
+  await pool.query(
+    `ALTER TABLE envios
+     ADD COLUMN IF NOT EXISTS foto_entrega_url TEXT`
+  );
+}
+
 export async function findUserById(userId) {
   const result = await pool.query(
     `SELECT id_usuario, nombre, apellido, rol
@@ -162,6 +169,8 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
 }
 
 export async function findShipmentById(idEnvio) {
+  await ensureDeliveryPhotoColumn();
+
   const result = await pool.query(
     `SELECT
         e.id_envio,
@@ -173,6 +182,7 @@ export async function findShipmentById(idEnvio) {
         e.fecha_creacion,
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
+        e.foto_entrega_url,
         e.costo_total,
         c_rem.id_cliente AS remitente_id,
         c_rem.nombre AS remitente_nombre,
@@ -285,7 +295,9 @@ export async function cancelShipmentById(idEnvio) {
   return result.rowCount > 0 ? result.rows[0] : null;
 }
 
-export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual, observaciones }) {
+export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual, observaciones, fotoEntregaUrl }) {
+  await ensureDeliveryPhotoColumn();
+
   const client = await pool.connect();
 
   try {
@@ -294,10 +306,11 @@ export async function markShipmentAsDeliveredByDriver({ idEnvio, ubicacionActual
     const shipmentResult = await client.query(
       `UPDATE envios
        SET estado_envio = 'entregado',
-           fecha_entrega_real = NOW()
+           fecha_entrega_real = NOW(),
+           foto_entrega_url = COALESCE($2, foto_entrega_url)
        WHERE id_envio = $1
        RETURNING id_envio, ciudad_destino`,
-      [idEnvio]
+      [idEnvio, fotoEntregaUrl || null]
     );
 
     if (shipmentResult.rowCount === 0) {

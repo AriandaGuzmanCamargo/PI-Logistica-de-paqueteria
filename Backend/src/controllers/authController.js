@@ -1,4 +1,5 @@
 import {
+  deleteManagedUserByAdmin,
   createManagedUserByAdmin,
   changePassword,
   changePasswordByAdmin,
@@ -159,6 +160,26 @@ export async function createUsuarioByAdmin(req, res, next) {
     res.status(201).json({
       ok: true,
       message: 'Usuario creado correctamente por admin.',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteUsuarioByAdmin(req, res, next) {
+  try {
+    const { idUsuario } = req.params;
+    const { idAdmin } = req.body ?? {};
+
+    const data = await deleteManagedUserByAdmin({
+      idAdmin,
+      idUsuarioObjetivo: idUsuario,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Usuario eliminado correctamente por admin.',
       data,
     });
   } catch (error) {

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
 	createUsuarioByAdmin,
+	deleteUsuarioByAdmin,
 	getUsuariosGestionAdmin,
 	recoverPassword,
 	getPerfilUsuario,
@@ -22,5 +23,6 @@ authRouter.patch('/cambiar-contrasena/:idUsuario', updatePassword);
 authRouter.get('/usuarios-gestion', getUsuariosGestionAdmin);
 authRouter.patch('/cambiar-contrasena-admin/:idUsuario', updatePasswordByAdmin);
 authRouter.post('/usuarios-gestion', createUsuarioByAdmin);
+authRouter.delete('/usuarios-gestion/:idUsuario', deleteUsuarioByAdmin);
 
 export default authRouter;

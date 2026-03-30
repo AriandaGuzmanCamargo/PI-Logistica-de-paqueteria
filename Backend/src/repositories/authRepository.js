@@ -279,11 +279,37 @@ export async function listManageableUsersByRoles(roles = []) {
         foto_perfil_url
      FROM usuarios
         WHERE rol::text = ANY($1::text[])
+          AND estado = 'activo'
      ORDER BY rol ASC, nombre ASC, apellido ASC, id_usuario ASC`,
     [safeRoles]
   );
 
   return result.rows;
+}
+
+export async function disableConductorByUserId(idUsuario) {
+  const result = await pool.query(
+    `UPDATE conductores
+     SET estado = 'inactivo'
+     WHERE id_usuario = $1
+     RETURNING id_conductor`,
+    [idUsuario]
+  );
+
+  return result.rowCount;
+}
+
+export async function disableUserById(idUsuario) {
+  const result = await pool.query(
+    `UPDATE usuarios
+     SET estado = 'inactivo'
+     WHERE id_usuario = $1
+       AND estado <> 'inactivo'
+     RETURNING id_usuario, rol, estado`,
+    [idUsuario]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
 }
 
 export async function createOperationalUser(payload) {

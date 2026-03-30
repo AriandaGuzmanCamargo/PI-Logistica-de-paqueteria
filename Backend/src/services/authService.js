@@ -1,4 +1,6 @@
 import {
+  disableConductorByUserId,
+  disableUserById,
   createConductorFromUser,
   createClientFromUser,
   createOperationalUser,
@@ -573,4 +575,77 @@ export async function createManagedUserByAdmin({ idAdmin, payload }) {
     estado: created.estado,
     id_conductor: conductor?.id_conductor || null,
   };
+}
+
+export async function deleteManagedUserByAdmin({ idAdmin, idUsuarioObjetivo }) {
+  const parsedAdminId = Number(idAdmin);
+  const parsedTargetId = Number(idUsuarioObjetivo);
+
+  if (!Number.isInteger(parsedAdminId) || parsedAdminId <= 0) {
+    const error = new Error('El id del admin no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!Number.isInteger(parsedTargetId) || parsedTargetId <= 0) {
+    const error = new Error('El id del usuario objetivo no es valido.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (parsedAdminId === parsedTargetId) {
+    const error = new Error('No puedes eliminar tu propio usuario.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const admin = await findUserById(parsedAdminId);
+
+  if (!admin) {
+    const error = new Error('Admin no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (admin.rol !== 'admin') {
+    const error = new Error('Solo un admin puede eliminar operadores o conductores.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const target = await findUserById(parsedTargetId);
+
+  if (!target) {
+    const error = new Error('Usuario objetivo no encontrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!['operador', 'conductor'].includes(target.rol)) {
+    const error = new Error('Solo se pueden eliminar usuarios con rol operador o conductor.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  if (target.estado === 'inactivo') {
+    return {
+      id_usuario: target.id_usuario,
+      rol: target.rol,
+      estado: target.estado,
+    };
+  }
+
+  const updated = await disableUserById(parsedTargetId);
+
+  if (!updated) {
+    const error = new Error('No se pudo eliminar el usuario objetivo.');
+    error.statusCode = 500;
+    throw error;
+  }
+
+  if (updated.rol === 'conductor') {
+    await disableConductorByUserId(parsedTargetId);
+  }
+
+  return updated;
 }

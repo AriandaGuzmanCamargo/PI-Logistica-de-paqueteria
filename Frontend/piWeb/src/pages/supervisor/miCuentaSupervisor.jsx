@@ -4,6 +4,7 @@ import {
   actualizarPerfilSupervisor,
   cambiarContrasenaSupervisor,
   cambiarContrasenaUsuarioPorAdmin,
+  eliminarUsuarioGestionPorAdmin,
   crearUsuarioGestionPorAdmin,
   getPerfilSupervisor,
   getUsuariosGestionAdmin,
@@ -102,6 +103,7 @@ export default function MiCuentaSupervisor() {
     confirmarContrasena: '',
   });
   const [savingManagedPassword, setSavingManagedPassword] = useState(false);
+  const [deletingManagedUser, setDeletingManagedUser] = useState(false);
   const [savingCreateUser, setSavingCreateUser] = useState(false);
   const [createUserForm, setCreateUserForm] = useState({
     rol: 'operador',
@@ -354,6 +356,40 @@ export default function MiCuentaSupervisor() {
       showToast('error', createError.message || 'No se pudo crear el usuario.');
     } finally {
       setSavingCreateUser(false);
+    }
+  }
+
+  async function handleDeleteManagedUser() {
+    if (!selectedManagedUser) {
+      return;
+    }
+
+    const fullName = `${selectedManagedUser.nombre || ''} ${selectedManagedUser.apellido || ''}`.trim();
+    const confirmed = window.confirm(
+      `Se eliminara el usuario ${fullName || selectedManagedUser.correo}. Esta accion lo dejara inactivo. ¿Deseas continuar?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      clearFeedback();
+      setDeletingManagedUser(true);
+
+      await eliminarUsuarioGestionPorAdmin(selectedManagedUser.id_usuario);
+
+      await reloadAdminUsersWithFilter(adminRoleFilter);
+      setManagedPasswordForm({
+        nuevaContrasena: '',
+        confirmarContrasena: '',
+      });
+
+      showToast('ok', `Usuario ${fullName || selectedManagedUser.correo} eliminado correctamente.`);
+    } catch (deleteError) {
+      showToast('error', deleteError.message || 'No se pudo eliminar el usuario.');
+    } finally {
+      setDeletingManagedUser(false);
     }
   }
 
@@ -929,6 +965,15 @@ export default function MiCuentaSupervisor() {
                                 <div className="perfil-actions">
                                   <button type="submit" className="btn-main" disabled={savingManagedPassword}>
                                     {savingManagedPassword ? 'Guardando...' : 'Cambiar contrasena del usuario'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn-alt"
+                                    disabled={deletingManagedUser}
+                                    onClick={handleDeleteManagedUser}
+                                    style={{ borderColor: '#f3b4bd', color: '#b4232f', background: '#fff5f6' }}
+                                  >
+                                    {deletingManagedUser ? 'Eliminando...' : 'Eliminar usuario'}
                                   </button>
                                 </div>
                               </form>

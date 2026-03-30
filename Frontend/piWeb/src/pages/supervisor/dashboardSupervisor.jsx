@@ -403,7 +403,7 @@ export default function DashboardSupervisor() {
         </article>
         <article className="tarjeta-sv tarjeta-sv--morado">
           <span className="tarjeta-sv__icono">
-            <img src="/piWeb/images/supervisor/enRuta.png" alt="En ruta" className="tarjeta-sv__icono-img" />
+            <img src="/piWeb/images/supervisor/repartidores.png" alt="Repartidores" className="tarjeta-sv__icono-img" />
           </span>
           <div>
             <p className="tarjeta-sv__numero">{loading ? '...' : resumenOperativo.enRuta}</p>

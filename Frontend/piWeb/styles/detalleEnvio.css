@@ -56,7 +56,6 @@
 .detalle-columna {
   display: grid;
   gap: 12px;
-  align-content: start;
 }
 
 .tarjeta-detalle {
@@ -175,13 +174,11 @@
 }
 
 .boton-volver {
-  height: 44px;
-  padding: 0 24px;
-  font-size: 15px;
+  height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #f7f9ff;
   border: 1px solid #d6ddfa;
   color: #525f8e;

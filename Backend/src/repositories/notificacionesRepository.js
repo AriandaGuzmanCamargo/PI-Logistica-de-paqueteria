@@ -47,6 +47,30 @@ export async function listNotificationsForOperator() {
   return result.rows;
 }
 
+export async function listNotificationsByRoles(roles) {
+  if (!Array.isArray(roles) || roles.length === 0) {
+    return [];
+  }
+
+  const result = await pool.query(
+    `SELECT
+        n.id_notificacion,
+        n.titulo,
+        n.mensaje,
+        n.leida,
+        n.fecha,
+        n.id_usuario
+     FROM notificaciones n
+     JOIN usuarios u ON u.id_usuario = n.id_usuario
+     WHERE u.rol::text = ANY($1::text[])
+     ORDER BY n.fecha DESC
+     LIMIT 200`,
+    [roles]
+  );
+
+  return result.rows;
+}
+
 export async function findUserIdsByRoles(roles) {
   if (!Array.isArray(roles) || roles.length === 0) {
     return [];

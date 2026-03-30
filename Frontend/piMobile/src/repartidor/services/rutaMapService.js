@@ -1,6 +1,7 @@
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
 const MAPS_CO_BASE_URL = 'https://geocode.maps.co/search';
 const OSRM_BASE_URL = 'https://router.project-osrm.org/route/v1/driving';
+const REQUEST_TIMEOUT_MS = 7000;
 
 export async function getExpoLocationModule() {
   const locationModule = await import('expo-location');
@@ -53,10 +54,24 @@ function mapGeocodeResult(latitude, longitude, displayName) {
   };
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function geocodeWithNominatim(query) {
   const url = `${NOMINATIM_BASE_URL}?format=json&limit=1&addressdetails=0&q=${encodeURIComponent(query)}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     headers: {
       Accept: 'application/json',
       'Accept-Language': 'es',
@@ -80,7 +95,7 @@ async function geocodeWithNominatim(query) {
 async function geocodeWithMapsCo(query) {
   const url = `${MAPS_CO_BASE_URL}?q=${encodeURIComponent(query)}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     headers: {
       Accept: 'application/json',
     },
@@ -125,31 +140,74 @@ export async function getDrivingRoute(origin, destination) {
 
   const url = `${OSRM_BASE_URL}/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson&steps=false`;
 
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-    },
-  });
+  const fallbackRoute = buildFallbackRoute(origin, destination);
 
-  if (!response.ok) {
-    throw new Error('No fue posible calcular la ruta.');
+  try {
+    const response = await fetchWithTimeout(url, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return {
+        ...fallbackRoute,
+        isFallbackRoute: true,
+      };
+    }
+
+    const payload = await response.json();
+
+    if (!payload?.routes?.length) {
+      return {
+        ...fallbackRoute,
+        isFallbackRoute: true,
+      };
+    }
+
+    const route = payload.routes[0];
+    const coordinates = Array.isArray(route?.geometry?.coordinates)
+      ? route.geometry.coordinates.map(([longitude, latitude]) => ({ latitude, longitude }))
+      : [];
+
+    return {
+      distanceMeters: route.distance,
+      durationSeconds: route.duration,
+      coordinates,
+      isFallbackRoute: false,
+    };
+  } catch {
+    return {
+      ...fallbackRoute,
+      isFallbackRoute: true,
+    };
   }
+}
 
-  const payload = await response.json();
+function toRadians(value) {
+  return (value * Math.PI) / 180;
+}
 
-  if (!payload?.routes?.length) {
-    throw new Error('No se encontro una ruta disponible entre los puntos.');
-  }
+export function buildFallbackRoute(origin, destination) {
+  ensureCoordinate(origin, 'origen');
+  ensureCoordinate(destination, 'destino');
 
-  const route = payload.routes[0];
-  const coordinates = Array.isArray(route?.geometry?.coordinates)
-    ? route.geometry.coordinates.map(([longitude, latitude]) => ({ latitude, longitude }))
-    : [];
+  const earthRadiusMeters = 6371000;
+  const deltaLat = toRadians(destination.latitude - origin.latitude);
+  const deltaLon = toRadians(destination.longitude - origin.longitude);
+  const lat1 = toRadians(origin.latitude);
+  const lat2 = toRadians(destination.latitude);
+
+  const a =
+    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const straightDistanceMeters = Math.max(0, earthRadiusMeters * c);
 
   return {
-    distanceMeters: route.distance,
-    durationSeconds: route.duration,
-    coordinates,
+    distanceMeters: straightDistanceMeters,
+    durationSeconds: Math.max(60, Math.round(straightDistanceMeters / 7.5)),
+    coordinates: [origin, destination],
   };
 }
 

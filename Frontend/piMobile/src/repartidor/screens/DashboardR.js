@@ -13,6 +13,7 @@ import { getCurrentUser } from '../../services/sessionService';
 import { getEnviosByUsuario } from '../../services/enviosService';
 import {
 	geocodeAddress,
+	getExpoLocationModule,
 	getDrivingRoute,
 	normalizeAddressQuery,
 	resolveCurrentPosition,
@@ -208,13 +209,44 @@ export default function DashboardR({ navigation }) {
 
 			try {
 				const currentPosition = await resolveCurrentPosition(DEFAULT_ORIGIN);
+				const Location = await getExpoLocationModule();
 				const origin = currentPosition.origin;
 				let destination = null;
 				let warning = currentPosition.warning || '';
+				const fullAddress = normalizeAddressQuery(nextRouteDelivery.address);
+				const cityOnly = normalizeAddressQuery(String(nextRouteDelivery.address || '').split(',').slice(-1)[0]);
 
 				try {
-					destination = await geocodeAddress(normalizeAddressQuery(nextRouteDelivery.address));
+					const localResults = await Location.geocodeAsync(fullAddress);
+					const localFirst = Array.isArray(localResults) ? localResults[0] : null;
+
+					if (localFirst?.latitude && localFirst?.longitude) {
+						destination = {
+							latitude: localFirst.latitude,
+							longitude: localFirst.longitude,
+						};
+					}
 				} catch {
+					destination = null;
+				}
+
+				if (!destination) {
+					try {
+						destination = await geocodeAddress(fullAddress);
+					} catch {
+						destination = null;
+					}
+				}
+
+				if (!destination && cityOnly) {
+					try {
+						destination = await geocodeAddress(cityOnly);
+					} catch {
+						destination = null;
+					}
+				}
+
+				if (!destination) {
 					destination = { ...DEFAULT_DESTINATION };
 					warning = warning || 'No se pudo geocodificar el destino exacto. Mostrando aproximación.';
 				}

@@ -2,6 +2,7 @@ import {
   createNotificationsForUsers,
   findUserById,
   findUserIdsByRoles,
+  listNotificationsByRoles,
   listNotificationsByUser,
   listNotificationsForOperator,
   markAllNotificationsAsReadByUser,
@@ -36,9 +37,17 @@ export async function getNotificationsByUser(userId) {
     throw error;
   }
 
-  const rows = user.rol === 'operador' || user.rol === 'admin'
-    ? await listNotificationsForOperator()
-    : await listNotificationsByUser(parsedId);
+  let rows;
+
+  if (user.rol === 'operador' || user.rol === 'admin') {
+    rows = await listNotificationsForOperator();
+  } else if (user.rol === 'conductor') {
+    rows = await listNotificationsByRoles(['conductor']);
+  } else if (user.rol === 'cliente') {
+    rows = await listNotificationsByRoles(['cliente']);
+  } else {
+    rows = await listNotificationsByUser(parsedId);
+  }
 
   return rows.map(mapNotification);
 }

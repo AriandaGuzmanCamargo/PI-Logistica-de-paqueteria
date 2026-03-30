@@ -42,6 +42,12 @@ function toDeliveryItem(envio, index) {
 		id_envio: envio?.id_envio,
 		asignadoAlConductor: Boolean(envio?.asignado_al_conductor),
 		idAsignacionActiva: envio?.id_asignacion_activa || null,
+		rutaAsignada: {
+			nombre: envio?.asignacion?.ruta_nombre || null,
+			origen: envio?.asignacion?.ruta_origen || null,
+			destino: envio?.asignacion?.ruta_destino || null,
+			vehiculoPlaca: envio?.asignacion?.vehiculo_placa || null,
+		},
 	};
 }
 
@@ -151,9 +157,9 @@ export default function EntregasR({ navigation, route }) {
 		const normalizedSearch = searchText.trim().toLowerCase();
 		const searched = normalizedSearch
 			? sourceDeliveries.filter((item) => {
-					const haystack = `${item.id} ${item.name} ${item.address}`.toLowerCase();
-					return haystack.includes(normalizedSearch);
-				})
+				const haystack = `${item.id} ${item.name} ${item.address}`.toLowerCase();
+				return haystack.includes(normalizedSearch);
+			})
 			: sourceDeliveries;
 
 		switch (activeFilter) {
@@ -197,9 +203,6 @@ export default function EntregasR({ navigation, route }) {
 
 					{isLoadingDeliveries ? <Text style={styles.emptyText}>Cargando entregas reales...</Text> : null}
 					{!isLoadingDeliveries && deliveriesError ? <Text style={styles.emptyText}>{deliveriesError}</Text> : null}
-					{!isLoadingDeliveries && !deliveriesError && realDeliveries.length > 0 ? (
-						<Text style={styles.emptyText}>Mostrando entregas reales del backend.</Text>
-					) : null}
 					{assignmentSummary ? (
 						<Text style={styles.assignmentSummary}>
 							Asignadas por operador: {assignmentSummary.assignedCount}

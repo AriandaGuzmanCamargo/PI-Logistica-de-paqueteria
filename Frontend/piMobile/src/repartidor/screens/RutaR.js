@@ -16,8 +16,9 @@ import colors from '../../theme/colors';
 import getRutaRStyles from '../styles/RutaRStyles';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
-import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
+import { getCurrentUser } from '../../services/sessionService';
+import { getEnviosByUsuario } from '../../services/enviosService';
 import {
 	buildGoogleMapsDirectionsUrl,
 	geocodeAddress,
@@ -29,10 +30,21 @@ import {
 	toMinutes,
 } from '../services/rutaMapService';
 
+let MapViewComponent = null;
+let MarkerComponent = null;
+let PolylineComponent = null;
+
+if (Platform.OS !== 'web') {
+	const Maps = require('react-native-maps');
+	MapViewComponent = Maps.default || Maps;
+	MarkerComponent = Maps.Marker;
+	PolylineComponent = Maps.Polyline;
+}
+
 const DELIVERY_SAMPLE = {
-	clientName: 'Ana Martínez',
-	address: 'Londres 247, Col. Juárez, Ciudad de México',
-	phone: '+52 55 1234 5678',
+	clientName: 'Entrega asignada',
+	address: '',
+	phone: '',
 };
 
 const DEFAULT_ORIGIN = {
@@ -47,16 +59,104 @@ const DEFAULT_DESTINATION = {
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
+const isPlaceholderDelivery = (delivery) => {
+	if (!delivery || typeof delivery !== 'object') {
+		return true;
+	}
+
+	const name = String(delivery.clientName || delivery.name || '').trim().toLowerCase();
+	const address = String(delivery.address || '').trim().toLowerCase();
+
+	return name === 'ana martinez' || address.includes('londres 247');
+};
+
+const mapShipmentToRouteDelivery = (envio, index) => {
+	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
+	const clientName = envio?.destinatario?.nombre || 'Destinatario';
+	const address = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean).join(', ');
+	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
+	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
+	const done = estadoEnvio === 'entregado' || estadoPaquete === 'entregado';
+	const canceled = estadoEnvio === 'cancelado';
+
+	return {
+		id: codigo,
+		clientName,
+		name: clientName,
+		address,
+		phone: envio?.destinatario?.telefono || '',
+		done,
+		canceled,
+		id_envio: envio?.id_envio || null,
+	};
+};
+
 export default function RutaR({ navigation, route }) {
 	const { width } = useWindowDimensions();
 	const { isDarkMode } = useDarkMode();
 	const selectedDelivery = route?.params?.delivery;
+	const [deliveryFromApi, setDeliveryFromApi] = useState(null);
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		async function loadActiveDelivery() {
+			if (selectedDelivery && !isPlaceholderDelivery(selectedDelivery)) {
+				setDeliveryFromApi(null);
+				return;
+			}
+
+			try {
+				const user = getCurrentUser();
+				const userId = Number(user?.id_usuario);
+
+				if (!Number.isInteger(userId) || userId <= 0) {
+					return;
+				}
+
+				const envios = await getEnviosByUsuario(userId);
+				const assigned = envios
+					.filter((envio) => Boolean(envio?.asignado_al_conductor))
+					.map(mapShipmentToRouteDelivery);
+
+				if (assigned.length === 0 || isCancelled) {
+					return;
+				}
+
+				const nextPending = assigned.find((item) => !item.done && !item.canceled) || assigned[0];
+				setDeliveryFromApi(nextPending);
+			} catch {
+				if (!isCancelled) {
+					setDeliveryFromApi(null);
+				}
+			}
+		}
+
+		loadActiveDelivery();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [selectedDelivery]);
+
+	const preferredDelivery = useMemo(() => {
+		if (selectedDelivery && !isPlaceholderDelivery(selectedDelivery)) {
+			return selectedDelivery;
+		}
+
+		if (deliveryFromApi) {
+			return deliveryFromApi;
+		}
+
+		return null;
+	}, [deliveryFromApi, selectedDelivery]);
+
 	const deliveryData = useMemo(
 		() => ({
 			...DELIVERY_SAMPLE,
-			...(selectedDelivery || {}),
+			...(preferredDelivery || {}),
 		}),
-		[selectedDelivery]
+		[preferredDelivery]
 	);
 	const [mapState, setMapState] = useState({
 		loading: true,
@@ -109,11 +209,14 @@ export default function RutaR({ navigation, route }) {
 					destination = await geocodeAddress(deliveryData.address);
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
-					warning = warning || 'Usando ubicación aproximada: no se pudo geocodificar la dirección exacta.';
+					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
 				}
 			}
 
 			const routeData = await getDrivingRoute(origin, destination);
+			if (routeData?.isFallbackRoute) {
+				warning = warning || 'No fue posible consultar la ruta en tiempo real. Se muestra un trazo aproximado.';
+			}
 
 			setMapState({
 				loading: false,
@@ -150,7 +253,7 @@ export default function RutaR({ navigation, route }) {
 
 	const startLiveTracking = async () => {
 		if (Platform.OS === 'web') {
-			Alert.alert('No disponible', 'El seguimiento en vivo está disponible solo en Android/iOS.');
+			Alert.alert('No disponible', 'El seguimiento en vivo esta disponible solo en Android/iOS.');
 			return;
 		}
 
@@ -163,14 +266,14 @@ export default function RutaR({ navigation, route }) {
 			const requestPermission = Location.requestForegroundPermissionsAsync;
 
 			if (typeof requestPermission !== 'function') {
-				Alert.alert('No disponible', 'Este dispositivo no permite solicitar permisos de ubicación.');
+				Alert.alert('No disponible', 'Este dispositivo no permite solicitar permisos de ubicacion.');
 				return;
 			}
 
 			const permission = await requestPermission();
 
 			if (permission.status !== 'granted') {
-				Alert.alert('Permiso requerido', 'Debes habilitar ubicación para seguimiento en vivo.');
+				Alert.alert('Permiso requerido', 'Debes habilitar ubicacion para seguimiento en vivo.');
 				return;
 			}
 
@@ -259,7 +362,7 @@ export default function RutaR({ navigation, route }) {
 
 	const openExternalNavigation = async () => {
 		if (!mapState.origin || !mapState.destination) {
-			Alert.alert('Ruta no disponible', 'Todavía no se cargaron los puntos para navegar.');
+			Alert.alert('Ruta no disponible', 'Todavia no se cargaron los puntos para navegar.');
 			return;
 		}
 
@@ -294,7 +397,7 @@ export default function RutaR({ navigation, route }) {
 			>
 				<StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
 
-				<TopHeaderR s={s} navigation={navigation} title="Ruta del Día" />
+				<TopHeaderR s={s} navigation={navigation} title="Ruta del Dia" />
 
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
 					<View style={styles.mapCard}>
@@ -313,7 +416,7 @@ export default function RutaR({ navigation, route }) {
 									region={mapRegion}
 								>
 									{mapState.origin ? (
-										<MarkerComponent coordinate={mapState.origin} title="Tu ubicación" pinColor="#2563EB" />
+										<MarkerComponent coordinate={mapState.origin} title="Tu ubicacion" pinColor="#2563EB" />
 									) : null}
 									{mapState.destination ? (
 										<MarkerComponent
@@ -371,7 +474,7 @@ export default function RutaR({ navigation, route }) {
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
 
 						<TouchableOpacity style={styles.refreshBtn} onPress={resolveRoute}>
-							<Text style={styles.refreshBtnText}>Actualizar ubicación real</Text>
+							<Text style={styles.refreshBtnText}>Actualizar ubicacion real</Text>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -384,7 +487,7 @@ export default function RutaR({ navigation, route }) {
 						{isLiveTracking ? <Text style={styles.liveStatus}>Seguimiento en vivo activo</Text> : null}
 
 						<TouchableOpacity style={styles.startBtn} onPress={openExternalNavigation}>
-							<Text style={styles.startBtnText}>Iniciar navegación</Text>
+							<Text style={styles.startBtnText}>Iniciar navegacion</Text>
 						</TouchableOpacity>
 					</View>
 

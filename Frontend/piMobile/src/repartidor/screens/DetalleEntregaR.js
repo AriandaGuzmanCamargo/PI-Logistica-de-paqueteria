@@ -44,6 +44,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const { width } = useWindowDimensions();
 	const { isDarkMode } = useDarkMode();
 	const delivery = route?.params?.delivery || FALLBACK_DELIVERY;
+	const shipmentId = route?.params?.idEnvio || delivery?.id_envio;
 	const [mapState, setMapState] = useState({
 		loading: true,
 		error: '',
@@ -57,6 +58,22 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const [isSubmittingDelivery, setIsSubmittingDelivery] = useState(false);
 	const [deliveryDetail, setDeliveryDetail] = useState(null);
 
+	const resolvedDelivery = useMemo(() => {
+		const detailAddress = [deliveryDetail?.direccion_destino, deliveryDetail?.ciudad_destino].filter(Boolean).join(', ');
+
+		return {
+			id:
+				delivery?.id ||
+				deliveryDetail?.paquete?.codigo_rastreo ||
+				(Number.isInteger(Number(shipmentId)) ? `ENV-${shipmentId}` : FALLBACK_DELIVERY.id),
+			name: deliveryDetail?.destinatario?.nombre || delivery?.name || FALLBACK_DELIVERY.name,
+			address: detailAddress || delivery?.address || FALLBACK_DELIVERY.address,
+			phone: deliveryDetail?.destinatario?.telefono || delivery?.phone || FALLBACK_DELIVERY.phone,
+			id_envio: shipmentId || delivery?.id_envio || null,
+			estado_envio: deliveryDetail?.estado_envio || delivery?.estado_envio || null,
+		};
+	}, [delivery, deliveryDetail, shipmentId]);
+
 	const resolveMapPreview = async () => {
 		setMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
 
@@ -67,7 +84,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 			const origin = currentPosition.origin;
 			let warning = currentPosition.warning || '';
 
-			const normalizedAddress = normalizeAddressQuery(delivery.address);
+			const normalizedAddress = normalizeAddressQuery(resolvedDelivery.address);
 
 			try {
 				const localResults = await Location.geocodeAsync(normalizedAddress);
@@ -85,7 +102,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 
 			if (!destination) {
 				try {
-					destination = await geocodeAddress(delivery.address);
+					destination = await geocodeAddress(resolvedDelivery.address);
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
 					warning = warning || 'Usando ubicación aproximada: no se pudo geocodificar la dirección exacta.';
@@ -116,7 +133,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 
 	useEffect(() => {
 		resolveMapPreview();
-	}, [delivery.address]);
+	}, [resolvedDelivery.address]);
 
 	const previewRegion = useMemo(() => {
 		if (mapState.origin && mapState.destination) {
@@ -143,8 +160,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 	const scale = clamp(phoneWidth / 390, 0.88, 1.05);
 	const s = (size) => Math.round(size * scale);
 	const styles = getDetalleEntregaRStyles(s, isDarkMode);
-	const shipmentId = route?.params?.idEnvio || delivery?.id_envio;
-	const shipmentStatus = String(delivery?.estado_envio || '').toLowerCase();
+	const shipmentStatus = String(resolvedDelivery?.estado_envio || '').toLowerCase();
 	const isDelivered = shipmentStatus === 'entregado';
 	const isCancelled = shipmentStatus === 'cancelado';
 	const receiverName = deliveryDetail?.recibio_entrega_nombre || 'No especificado';
@@ -178,7 +194,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 
 	const handleMarkAsDelivered = () => {
 		navigation.navigate('TomarFotoEntregaR', {
-			delivery,
+			delivery: resolvedDelivery,
 			idEnvio: shipmentId,
 		});
 	};
@@ -235,7 +251,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 				<ScrollView style={styles.content} contentContainerStyle={styles.content}>
 					<View style={styles.idRow}>
 						<View style={styles.idDot} />
-						<Text style={styles.idText}>{delivery.id}</Text>
+						<Text style={styles.idText}>{resolvedDelivery.id}</Text>
 					</View>
 
 					<View style={styles.card}>
@@ -245,9 +261,9 @@ export default function DetalleEntregaR({ navigation, route }) {
 							</View>
 
 							<View style={styles.receiverInfo}>
-								<Text style={styles.receiverName}>{delivery.name}</Text>
-								<Text style={styles.addressText}>{delivery.address}</Text>
-								<Text style={styles.phoneText}>{delivery.phone || FALLBACK_DELIVERY.phone}</Text>
+								<Text style={styles.receiverName}>{resolvedDelivery.name}</Text>
+								<Text style={styles.addressText}>{resolvedDelivery.address}</Text>
+								<Text style={styles.phoneText}>{resolvedDelivery.phone || FALLBACK_DELIVERY.phone}</Text>
 							</View>
 						</View>
 
@@ -263,7 +279,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 											<MarkerComponent coordinate={mapState.origin} title="Origen" pinColor="#2563EB" />
 										) : null}
 										{mapState.destination ? (
-											<MarkerComponent coordinate={mapState.destination} title={delivery.name} description={delivery.address} pinColor="#D97706" />
+											<MarkerComponent coordinate={mapState.destination} title={resolvedDelivery.name} description={resolvedDelivery.address} pinColor="#D97706" />
 										) : null}
 										{mapState.routeCoordinates.length > 0 ? (
 											<PolylineComponent coordinates={mapState.routeCoordinates} strokeWidth={4} strokeColor="#1D4ED8" />
@@ -292,7 +308,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 							)}
 						</View>
 
-						<TouchableOpacity style={styles.routeBtn} onPress={() => navigation.navigate('RutaR', { delivery })}>
+						<TouchableOpacity style={styles.routeBtn} onPress={() => navigation.navigate('RutaR', { delivery: resolvedDelivery, idEnvio: shipmentId })}>
 							<Text style={styles.actionText}>Ver ruta real en mapa</Text>
 						</TouchableOpacity>
 
@@ -330,7 +346,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 							</TouchableOpacity>
 						</View>
 
-						<TouchableOpacity style={styles.reportBtn} onPress={() => navigation.navigate('IncidenciasR', { delivery })}>
+						<TouchableOpacity style={styles.reportBtn} onPress={() => navigation.navigate('IncidenciasR', { delivery: resolvedDelivery })}>
 							<Text style={styles.actionText}>Reportar Incidencia</Text>
 						</TouchableOpacity>
 					</View>

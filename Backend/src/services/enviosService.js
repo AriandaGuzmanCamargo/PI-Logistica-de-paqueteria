@@ -13,6 +13,8 @@ import {
 } from '../repositories/enviosRepository.js';
 
 function mapShipment(item) {
+  const hasAssignment = Boolean(item.id_asignacion_activa || item.id_asignacion);
+
   return {
     id_envio: item.id_envio,
     estado_envio: item.estado_envio,
@@ -43,6 +45,17 @@ function mapShipment(item) {
       : null,
     asignado_al_conductor: Boolean(item.asignado_al_conductor),
     id_asignacion_activa: item.id_asignacion_activa || null,
+    asignacion: hasAssignment
+      ? {
+          id_asignacion: item.id_asignacion_activa || item.id_asignacion,
+          estado_asignacion: item.estado_asignacion || null,
+          fecha_salida: item.fecha_salida || null,
+          ruta_nombre: item.nombre_ruta || null,
+          ruta_origen: item.ruta_origen || null,
+          ruta_destino: item.ruta_destino || null,
+          vehiculo_placa: item.vehiculo_placa || null,
+        }
+      : null,
   };
 }
 

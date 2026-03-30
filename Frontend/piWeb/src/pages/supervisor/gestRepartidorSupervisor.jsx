@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MenuSupervisor from './menuSupervisor.jsx';
 import { getConductoresResumenSupervisor } from '../../services/supervisorService';
@@ -366,7 +366,7 @@ export default function GestRepartidorSupervisor() {
                     <div className="grep-card__acciones">
                       <Link to={`/supervisor/ruta-repartidor?idConductor=${conductor.id_conductor}`} className="grep-accion">Ver ruta</Link>
                       <Link to={`/supervisor/entregas-repartidor?idConductor=${conductor.id_conductor}`} className="grep-accion">Ver entregas</Link>
-                      <Link to={`/supervisor/entregas-repartidor?openReasignar=1&idConductor=${conductor.id_conductor}`} className="grep-accion">Reasignar paquetes</Link>
+                      <Link to={`/supervisor/detalle-envio?idConductor=${conductor.id_conductor}`} className="grep-accion">Reasignar paquetes</Link>
                     </div>
                   </div>
                 );

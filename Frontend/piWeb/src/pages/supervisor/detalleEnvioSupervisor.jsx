@@ -1,9 +1,11 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MenuSupervisor from './menuSupervisor.jsx';
 import {
   estadoEnvioClase,
   estadoEnvioTexto,
   getConductoresDisponiblesSupervisor,
+  getDetalleConductorSupervisor,
   getDetalleEnvioSupervisor,
   reasignarEnvioSupervisor,
 } from '../../services/supervisorService';
@@ -26,7 +28,15 @@ function toDateOnly(value) {
   return parsed.toISOString().slice(0, 10);
 }
 
+function normalizeEstadoEnvio(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
 export default function DetalleEnvioSupervisor() {
+  const [searchParams] = useSearchParams();
+  const idParam = searchParams.get('id');
+  const idConductorParam = searchParams.get('idConductor');
+
   const [envio, setEnvio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -35,11 +45,6 @@ export default function DetalleEnvioSupervisor() {
   const [selectedDriverId, setSelectedDriverId] = useState('');
   const [isLoadingDrivers, setIsLoadingDrivers] = useState(false);
 
-  const idEnvio = useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
-  }, []);
-
   useEffect(() => {
     let isMounted = true;
 
@@ -47,6 +52,21 @@ export default function DetalleEnvioSupervisor() {
       try {
         setLoading(true);
         setError('');
+        setEnvio(null);
+
+        let idEnvio = idParam;
+
+        if (!idEnvio && idConductorParam) {
+          const detalle = await getDetalleConductorSupervisor(idConductorParam);
+          const envios = detalle?.envios || [];
+          const elegible =
+            envios.find((e) => normalizeEstadoEnvio(e.estado_envio) !== 'entregado') || envios[0];
+
+          if (!elegible?.id_envio) {
+            throw new Error('Este repartidor no tiene envios asignados para reasignar.');
+          }
+          idEnvio = String(elegible.id_envio);
+        }
 
         if (!idEnvio) {
           throw new Error('No se recibio id de envio en la URL.');
@@ -73,7 +93,7 @@ export default function DetalleEnvioSupervisor() {
     return () => {
       isMounted = false;
     };
-  }, [idEnvio]);
+  }, [idParam, idConductorParam]);
 
   const fechaAsignacion = useMemo(() => {
     if (!envio) return null;
@@ -126,8 +146,8 @@ export default function DetalleEnvioSupervisor() {
   }, [envio, fechaAsignacion]);
 
   async function refreshDetalle() {
-    if (!idEnvio) return;
-    const data = await getDetalleEnvioSupervisor(idEnvio);
+    if (!envio?.id_envio) return;
+    const data = await getDetalleEnvioSupervisor(envio.id_envio);
     setEnvio(data);
   }
 

@@ -39,11 +39,10 @@ function formatRelativeDate(isoString) {
 }
 
 function NotificationCard({ item, styles }) {
-	const isRead = item?.leida === true;
 
 	return (
 		<View style={styles.notificationCard}>
-			<View style={[styles.notificationDot, isRead ? styles.dotConfirmed : styles.dotAssigned]} />
+			<View style={[styles.notificationDot, styles.dotAssigned]} />
 			<View style={styles.notificationBody}>
 				<Text style={styles.notificationId}>{item.titulo || 'Notificacion'}</Text>
 				<Text style={styles.notificationText}>{item.mensaje || 'Sin detalle'}</Text>
@@ -84,6 +83,9 @@ export default function NotificacionesR({ navigation }) {
 		}, [loadNotificaciones])
 	);
 
+const role = String(getCurrentUser()?.rol || '').toLowerCase();
+const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cliente' : 'Usuario';
+
 	const { isDarkMode } = useDarkMode();
 	const { width } = useWindowDimensions();
 	const isWeb = Platform.OS === 'web';
@@ -111,6 +113,7 @@ export default function NotificacionesR({ navigation }) {
 				<ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
 					<View style={styles.sectionCard}>
 						<Text style={styles.sectionTitle}>Notificaciones</Text>
+						<Text style={styles.roleText}>Mostrando notificaciones para rol: {roleLabel}</Text>
 						<View style={styles.listWrap}>
 							{isLoading ? (
 								<View style={styles.stateWrap}>

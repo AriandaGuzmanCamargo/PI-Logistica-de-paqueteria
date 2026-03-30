@@ -66,7 +66,6 @@ export default function MenuUsuarioScreen({ navigation }) {
     { label: 'Rastrear Envío', route: 'RastrearEnvio', iconSet: 'material', iconName: 'map-marker-path' },
     { label: 'Nuevo Envío', route: 'NuevoEnvio', iconSet: 'feather', iconName: 'plus-square' },
     { label: 'Direcciones Guardadas', route: 'DireccionesGuardadas', iconSet: 'ion', iconName: 'location-outline' },
-    { label: 'Facturación', route: 'PagoOpciones', iconSet: 'feather', iconName: 'credit-card' },
     { label: 'Configuración', route: 'ConfiguracionUsuario', iconSet: 'ion', iconName: 'settings-outline' },
   ];
 

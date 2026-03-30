@@ -2,6 +2,15 @@ import { StyleSheet } from 'react-native';
 import colors from '../theme/colors';
 
 const styles = StyleSheet.create({
+  roleWrap: {
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  roleText: {
+    color: colors.primaryDark,
+    fontSize: 13,
+    fontWeight: '600',
+  },
   card: {
     backgroundColor: colors.surface,
     borderWidth: 1,

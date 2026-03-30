@@ -7,7 +7,6 @@ import styles from '../styles/FormResumenEnvioStyles';
 
 export default function FormResumenEnvioScreen({ navigation, route }) {
   const formData = route?.params?.formData || {};
-  const paymentResult = route?.params?.paymentResult || null;
   const remitente = formData.remitente || {};
   const destinatario = formData.destinatario || {};
   const paquete = formData.paquete || {};
@@ -59,10 +58,6 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
 
       if (!user?.id_usuario) {
         throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
-      }
-
-      if (!paymentResult?.method || !paymentResult?.reference) {
-        throw new Error('Debes confirmar el pago antes de crear el envío.');
       }
 
       setIsSubmitting(true);
@@ -141,31 +136,13 @@ export default function FormResumenEnvioScreen({ navigation, route }) {
 
       <View style={styles.card}>
         <Text style={styles.title}>Pago</Text>
-        {paymentResult?.method ? (
-          <>
-            <Text style={styles.row}>Método: {paymentResult.method}</Text>
-            <Text style={styles.row}>Referencia: {paymentResult.reference}</Text>
-            <Text style={styles.row}>Estado: {paymentResult.status || 'confirmado'}</Text>
-          </>
-        ) : (
-          <Text style={styles.row}>Aún no has confirmado un método de pago.</Text>
-        )}
+        <Text style={styles.row}>Método: Contraentrega</Text>
+        <Text style={styles.row}>Estado: Pendiente de cobro al entregar</Text>
       </View>
 
       <View style={styles.actions}>
         <TouchableOpacity style={styles.btnSecondary} onPress={() => navigation.navigate('FormPaquete', { formData })}>
           <Text style={styles.btnSecondaryText}>Editar datos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btnSecondary}
-          onPress={() =>
-            navigation.navigate('PagoOpciones', {
-              formData,
-              returnTo: 'FormResumenEnvio',
-            })
-          }
-        >
-          <Text style={styles.btnSecondaryText}>{paymentResult?.reference ? 'Cambiar pago' : 'Ir a pago'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={handleCreateShipment} disabled={isSubmitting}>
           {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.btnText}>Crear envío</Text>}

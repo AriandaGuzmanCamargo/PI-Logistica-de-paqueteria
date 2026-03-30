@@ -84,3 +84,28 @@ export async function createNotificationsForUsers(userIds, { titulo, mensaje }) 
 
   return result.rowCount || 0;
 }
+
+export async function markNotificationAsReadByUser(idNotificacion, idUsuario) {
+  const result = await pool.query(
+    `UPDATE notificaciones
+     SET leida = TRUE
+     WHERE id_notificacion = $1
+       AND id_usuario = $2
+     RETURNING id_notificacion, id_usuario, leida`,
+    [idNotificacion, idUsuario]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+}
+
+export async function markAllNotificationsAsReadByUser(idUsuario) {
+  const result = await pool.query(
+    `UPDATE notificaciones
+     SET leida = TRUE
+     WHERE id_usuario = $1
+       AND leida = FALSE`,
+    [idUsuario]
+  );
+
+  return result.rowCount || 0;
+}

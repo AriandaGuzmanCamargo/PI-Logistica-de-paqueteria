@@ -70,6 +70,11 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
     listWrap: {
       gap: s(8),
     },
+    roleText: {
+      color: isDarkMode ? '#DFEAFF' : '#335992',
+      fontSize: s(12),
+      fontWeight: '600',
+    },
     stateWrap: {
       paddingVertical: s(8),
       alignItems: 'center',

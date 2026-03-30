@@ -217,6 +217,28 @@ export async function crearUsuarioGestionPorAdmin(payload) {
   return data.data;
 }
 
+export async function eliminarUsuarioGestionPorAdmin(idUsuario) {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/auth/usuarios-gestion/${encodeURIComponent(idUsuario)}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idAdmin: user.id_usuario,
+    }),
+  });
+
+  const payload = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message || 'No se pudo eliminar el usuario.');
+  }
+
+  return payload.data;
+}
+
 export async function getConductoresDisponiblesSupervisor(fechaAsignacion) {
   const query = fechaAsignacion ? `?fecha=${encodeURIComponent(fechaAsignacion)}` : '';
   const response = await fetch(`/api/asignaciones/conductores-disponibles${query}`);

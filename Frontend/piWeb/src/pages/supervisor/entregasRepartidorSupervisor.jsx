@@ -103,36 +103,79 @@ export default function EntregasRepartidorSupervisor() {
         {loading ? <p style={{ color: '#5a6d8a', marginBottom: '10px' }}>Cargando entregas...</p> : null}
 
         {!loading && detalle ? (
-          <section className="modulo-incidencias">
-            <div className="incidencias-resumen">
-              <div className="incidencias-resumen__item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <>
+          {/* Tarjetas resumen */}
+          <section className="resumen-sv" style={{ marginBottom: '20px' }}>
+            <article className="tarjeta-sv tarjeta-sv--morado">
+              <span className="tarjeta-sv__icono">
                 <img
                   src={conductor?.foto_perfil_url || '/piWeb/images/usuario.png'}
                   alt={conductor?.nombre || 'Repartidor'}
-                  style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #cbd8f0' }}
+                  style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
                 />
-                <span><strong>Repartidor:</strong> {conductor?.nombre || '-'}</span>
+              </span>
+              <div>
+                <p className="tarjeta-sv__numero" style={{ fontSize: '18px' }}>{conductor?.nombre || '-'}</p>
+                <p className="tarjeta-sv__label">Repartidor</p>
               </div>
-              <div className="incidencias-resumen__item"><strong>Total:</strong> {resumen?.total_envios ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>En ruta:</strong> {resumen?.en_ruta ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>Entregados:</strong> {resumen?.entregados ?? 0}</div>
-              <div className="incidencias-resumen__item"><strong>Retrasados:</strong> {resumen?.retrasados ?? 0}</div>
+            </article>
+            <article className="tarjeta-sv tarjeta-sv--azul">
+              <span className="tarjeta-sv__icono">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </span>
+              <div>
+                <p className="tarjeta-sv__numero">{resumen?.total_envios ?? 0}</p>
+                <p className="tarjeta-sv__label">Total</p>
+              </div>
+            </article>
+            <article className="tarjeta-sv tarjeta-sv--amarillo">
+              <span className="tarjeta-sv__icono">
+                <img src="/piWeb/images/supervisor/enRuta.png" alt="En ruta" className="tarjeta-sv__icono-img" />
+              </span>
+              <div>
+                <p className="tarjeta-sv__numero">{resumen?.en_ruta ?? 0}</p>
+                <p className="tarjeta-sv__label">En ruta</p>
+              </div>
+            </article>
+            <article className="tarjeta-sv tarjeta-sv--verde-inc">
+              <span className="tarjeta-sv__icono">
+                <img src="/piWeb/images/supervisor/entregas.png" alt="Entregados" className="tarjeta-sv__icono-img" />
+              </span>
+              <div>
+                <p className="tarjeta-sv__numero">{resumen?.entregados ?? 0}</p>
+                <p className="tarjeta-sv__label">Entregados</p>
+              </div>
+            </article>
+            <article className="tarjeta-sv tarjeta-sv--rojo">
+              <span className="tarjeta-sv__icono">
+                <img src="/piWeb/images/supervisor/retrasadas.png" alt="Retrasados" className="tarjeta-sv__icono-img" />
+              </span>
+              <div>
+                <p className="tarjeta-sv__numero">{resumen?.retrasados ?? 0}</p>
+                <p className="tarjeta-sv__label">Retrasados</p>
+              </div>
+            </article>
+          </section>
+
+          <section className="modulo-incidencias" style={{ background: '#fff', border: '1px solid #d9e0f8', borderRadius: '12px', boxShadow: '0 4px 12px rgba(45,66,116,0.08)', overflow: 'visible' }}>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 20px' }}>
+              <div style={{ flex: 1, minWidth: '200px' }}>
+                <input
+                  type="text"
+                  placeholder="Buscar guia, destinatario o direccion..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  style={{
+                    width: '100%', height: '40px', border: '1px solid #d8e0f0', borderRadius: '8px',
+                    background: '#f7f9ff', color: '#4f5b7f', padding: '0 14px', fontSize: '14px',
+                    outline: 'none',
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="filtros-envios" style={{ marginTop: '10px' }}>
-              <div className="filtros-envios__fila">
-                <div className="buscador-envios">
-                  <input
-                    type="text"
-                    placeholder="Buscar guia, destinatario o direccion..."
-                    value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="tabla-incidencias">
+            <div className="tabla-incidencias" style={{ margin: 0, border: 'none', borderRadius: 0, borderTop: '1px solid #e6ecfb' }}>
               <table>
                 <thead>
                   <tr>
@@ -157,7 +200,7 @@ export default function EntregasRepartidorSupervisor() {
                         <td>{item.direccion_destino || '-'} ({item.ciudad_destino || '-'})</td>
                         <td>
                           <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                            * {estadoEnvioTexto(item.estado_envio)}
+                            ● {estadoEnvioTexto(item.estado_envio)}
                           </span>
                         </td>
                         <td>{item.asignacion?.fecha_salida ? new Date(item.asignacion.fecha_salida).toLocaleString() : '-'}</td>
@@ -173,6 +216,19 @@ export default function EntregasRepartidorSupervisor() {
               </table>
             </div>
           </section>
+
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+            <a href="/supervisor/gestion-repartidores" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              color: '#4c5880', fontSize: '14px', textDecoration: 'none',
+              background: '#fff', border: '1px solid #d8e0f0', borderRadius: '8px',
+              padding: '8px 16px', fontWeight: '500',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Regresar a Repartidores
+            </a>
+          </div>
+          </>
         ) : null}
       </main>
     </div>

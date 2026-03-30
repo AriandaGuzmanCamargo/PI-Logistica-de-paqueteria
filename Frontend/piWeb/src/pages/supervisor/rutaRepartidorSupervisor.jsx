@@ -79,6 +79,7 @@ export default function RutaRepartidorSupervisor() {
         {loading ? <p style={{ color: '#5a6d8a', marginBottom: '10px' }}>Cargando informacion...</p> : null}
 
         {!loading && detalle ? (
+          <>
           <section className="modulo-detalle">
             <article className="tarjeta-detalle" style={{ marginBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -153,6 +154,19 @@ export default function RutaRepartidorSupervisor() {
               </div>
             </article>
           </section>
+
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+            <a href="/supervisor/gestion-repartidores" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              color: '#4c5880', fontSize: '14px', textDecoration: 'none',
+              background: '#fff', border: '1px solid #d8e0f0', borderRadius: '8px',
+              padding: '8px 16px', fontWeight: '500',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Regresar a Repartidores
+            </a>
+          </div>
+          </>
         ) : null}
       </main>
     </div>

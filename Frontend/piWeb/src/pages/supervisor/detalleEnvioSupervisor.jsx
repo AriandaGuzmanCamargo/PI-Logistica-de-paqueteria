@@ -227,7 +227,7 @@ export default function DetalleEnvioSupervisor() {
             <h2 className="titulo-detalle">Guía: <strong>{guia}</strong></h2>
 
             <div className="detalle-grid" style={{ width: '100%' }}>
-              <div className="detalle-columna">
+            <div className="detalle-columna" style={{ gap: '8px' }}>
                 <article className="tarjeta-detalle">
                   <h3>Estado del envío</h3>
                   <p>
@@ -248,6 +248,30 @@ export default function DetalleEnvioSupervisor() {
                   <p><strong>Dimensiones:</strong> {envio.paquete ? `${envio.paquete.largo ?? '-'} x ${envio.paquete.ancho ?? '-'} x ${envio.paquete.alto ?? '-'} cm` : '-'}</p>
                   <p><strong>Valor declarado:</strong> ${envio.paquete?.valor_declarado ?? '-'}</p>
                 </article>
+
+              <article className="tarjeta-detalle">
+                <h3>Evidencia de entrega</h3>
+                {envio?.foto_entrega_url ? (
+                  <div style={{ marginTop: '8px' }}>
+                    <img
+                      src={envio.foto_entrega_url}
+                      alt="Evidencia de entrega"
+                      style={{
+                        width: '100%',
+                        maxHeight: '220px',
+                        objectFit: 'cover',
+                        borderRadius: '12px',
+                        border: '1px solid #e5e7eb',
+                      }}
+                    />
+                    <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
+                      Fotografía capturada por el repartidor al confirmar la entrega.
+                    </p>
+                  </div>
+                ) : (
+                  <p style={{ color: '#5a6d8a' }}>Aún no hay evidencia fotográfica registrada para este envío.</p>
+                )}
+              </article>
               </div>
 
               <div className="detalle-columna">
@@ -265,30 +289,6 @@ export default function DetalleEnvioSupervisor() {
                   <p><strong>Teléfono:</strong> {envio.destinatario?.telefono || '-'}</p>
                   <p><strong>Correo:</strong> {envio.destinatario?.correo || '-'}</p>
                   <p><strong>Destino:</strong> {envio.direccion_destino || '-'} ({envio.ciudad_destino || '-'})</p>
-                </article>
-
-                <article className="tarjeta-detalle">
-                  <h3>Evidencia de entrega</h3>
-                  {envio?.foto_entrega_url ? (
-                    <div style={{ marginTop: '8px' }}>
-                      <img
-                        src={envio.foto_entrega_url}
-                        alt="Evidencia de entrega"
-                        style={{
-                          width: '100%',
-                          maxHeight: '300px',
-                          objectFit: 'cover',
-                          borderRadius: '12px',
-                          border: '1px solid #e5e7eb',
-                        }}
-                      />
-                      <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
-                        Fotografía capturada por el repartidor al confirmar la entrega.
-                      </p>
-                    </div>
-                  ) : (
-                    <p style={{ color: '#5a6d8a' }}>Aún no hay evidencia fotográfica registrada para este envío.</p>
-                  )}
                 </article>
 
                 <article className="tarjeta-detalle">

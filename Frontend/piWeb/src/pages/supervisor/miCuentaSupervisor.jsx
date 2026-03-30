@@ -267,9 +267,9 @@ export default function MiCuentaSupervisor() {
         nuevaContrasena: '',
         confirmarContrasena: '',
       });
-      showToast('ok', 'Contrasena actualizada correctamente.');
+      showToast('ok', 'Contraseña actualizada correctamente.');
     } catch (passwordError) {
-      showToast('error', passwordError.message || 'No se pudo actualizar la contrasena.');
+      showToast('error', passwordError.message || 'No se pudo actualizar la contraseña.');
     } finally {
       setSavingPassword(false);
     }
@@ -297,9 +297,9 @@ export default function MiCuentaSupervisor() {
         confirmarContrasena: '',
       });
 
-      showToast('ok', `Contrasena actualizada para ${selectedManagedUser.nombre} ${selectedManagedUser.apellido}.`);
+      showToast('ok', `Contraseña actualizada para ${selectedManagedUser.nombre} ${selectedManagedUser.apellido}.`);
     } catch (adminPasswordError) {
-      showToast('error', adminPasswordError.message || 'No se pudo cambiar la contrasena del usuario.');
+      showToast('error', adminPasswordError.message || 'No se pudo cambiar la contraseña del usuario.');
     } finally {
       setSavingManagedPassword(false);
     }
@@ -320,7 +320,7 @@ export default function MiCuentaSupervisor() {
 
       showToast('ok', 'Imagen preparada correctamente. Guarda perfil para aplicar cambios.');
     } catch (imageError) {
-      showToast('error', imageError.message || 'No se pudo procesar la imagen seleccionada.');
+      showToast('error', imageError.message || 'No se pudo procesar la imágen seleccionada.');
     }
   }
 
@@ -366,7 +366,7 @@ export default function MiCuentaSupervisor() {
 
     const fullName = `${selectedManagedUser.nombre || ''} ${selectedManagedUser.apellido || ''}`.trim();
     const confirmed = window.confirm(
-      `Se eliminara el usuario ${fullName || selectedManagedUser.correo}. Esta accion lo dejara inactivo. ¿Deseas continuar?`
+      `Se eliminara el usuario ${fullName || selectedManagedUser.correo}. Esta acción lo dejara inactivo. ¿Deseas continuar?`
     );
 
     if (!confirmed) {
@@ -651,7 +651,7 @@ export default function MiCuentaSupervisor() {
 
                   <div className="perfil-mini-meta">
                     <p><strong>Correo:</strong> {perfil.correo || '-'}</p>
-                    <p><strong>Telefono:</strong> {perfil.telefono || '-'}</p>
+                    <p><strong>Teléfono:</strong> {perfil.telefono || '-'}</p>
                     <p><strong>Ciudad:</strong> {perfil.ciudad || '-'}</p>
                     <p><strong>Registro:</strong> {perfil.fecha_registro ? new Date(perfil.fecha_registro).toLocaleDateString() : '-'}</p>
                   </div>
@@ -684,7 +684,7 @@ export default function MiCuentaSupervisor() {
                           />
                         </div>
                         <div className="perfil-input">
-                          <label>Telefono</label>
+                          <label>Teléfono</label>
                           <input
                             value={formPerfil.telefono}
                             onChange={(event) => setFormPerfil((prev) => ({ ...prev, telefono: event.target.value }))}
@@ -717,11 +717,11 @@ export default function MiCuentaSupervisor() {
                   </section>
 
                   <section className="perfil-section">
-                    <h3>Cambiar mi contrasena</h3>
+                    <h3>Cambiar mi contraseña</h3>
                     <form onSubmit={handleChangeOwnPassword}>
                       <div className="perfil-form-grid">
                         <div className="perfil-input">
-                          <label>Contrasena actual</label>
+                          <label>Contraseña actual</label>
                           <input
                             type="password"
                             value={passwordForm.contrasenaActual}
@@ -731,7 +731,7 @@ export default function MiCuentaSupervisor() {
                           />
                         </div>
                         <div className="perfil-input">
-                          <label>Nueva contrasena</label>
+                          <label>Nueva contraseña</label>
                           <input
                             type="password"
                             value={passwordForm.nuevaContrasena}
@@ -741,7 +741,7 @@ export default function MiCuentaSupervisor() {
                           />
                         </div>
                         <div className="perfil-input">
-                          <label>Confirmar contrasena</label>
+                          <label>Confirmar contraseña</label>
                           <input
                             type="password"
                             value={passwordForm.confirmarContrasena}
@@ -753,7 +753,7 @@ export default function MiCuentaSupervisor() {
                       </div>
                       <div className="perfil-actions">
                         <button type="submit" className="btn-main" disabled={savingPassword}>
-                          {savingPassword ? 'Actualizando...' : 'Actualizar contrasena'}
+                          {savingPassword ? 'Actualizando...' : 'Actualizar contraseña'}
                         </button>
                       </div>
                     </form>
@@ -761,7 +761,7 @@ export default function MiCuentaSupervisor() {
 
                   {isAdmin ? (
                     <section className="perfil-section">
-                      <h3>Gestion de perfiles (Operadores y Conductores)</h3>
+                      <h3>Gestión de perfiles (Operadores y Conductores)</h3>
 
                       <form onSubmit={handleCreateManagedUser} style={{ marginBottom: '12px' }}>
                         <div className="perfil-form-grid">
@@ -809,7 +809,7 @@ export default function MiCuentaSupervisor() {
                             />
                           </div>
                           <div className="perfil-input">
-                            <label>Telefono</label>
+                            <label>Teléfono</label>
                             <input
                               value={createUserForm.telefono}
                               onChange={(event) =>
@@ -829,7 +829,7 @@ export default function MiCuentaSupervisor() {
                             />
                           </div>
                           <div className="perfil-input">
-                            <label>Contrasena</label>
+                            <label>Contraseña</label>
                             <input
                               type="password"
                               value={createUserForm.contrasena}
@@ -840,7 +840,7 @@ export default function MiCuentaSupervisor() {
                             />
                           </div>
                           <div className="perfil-input">
-                            <label>Confirmar contrasena</label>
+                            <label>Confirmar contraseña</label>
                             <input
                               type="password"
                               value={createUserForm.confirmarContrasena}
@@ -934,15 +934,15 @@ export default function MiCuentaSupervisor() {
                                 <p><strong>Nombre:</strong> {`${selectedManagedUser.nombre} ${selectedManagedUser.apellido}`}</p>
                                 <p><strong>Rol:</strong> {userDisplayRole(selectedManagedUser.rol)}</p>
                                 <p><strong>Correo:</strong> {selectedManagedUser.correo || '-'}</p>
-                                <p><strong>Telefono:</strong> {selectedManagedUser.telefono || '-'}</p>
+                                <p><strong>Teléfono:</strong> {selectedManagedUser.telefono || '-'}</p>
                                 <p><strong>Ciudad:</strong> {selectedManagedUser.ciudad || '-'}</p>
-                                <p><strong>Contrasena actual:</strong> {selectedManagedUser.contrasena || '-'}</p>
+                                <p><strong>Contraseña actual:</strong> {selectedManagedUser.contrasena || '-'}</p>
                               </div>
 
                               <form onSubmit={handleAdminChangePassword}>
                                 <div className="perfil-form-grid">
                                   <div className="perfil-input">
-                                    <label>Nueva contrasena del usuario</label>
+                                    <label>Nueva contraseña del usuario</label>
                                     <input
                                       type="password"
                                       value={managedPasswordForm.nuevaContrasena}
@@ -952,7 +952,7 @@ export default function MiCuentaSupervisor() {
                                     />
                                   </div>
                                   <div className="perfil-input">
-                                    <label>Confirmar contrasena</label>
+                                    <label>Confirmar contraseña</label>
                                     <input
                                       type="password"
                                       value={managedPasswordForm.confirmarContrasena}
@@ -964,7 +964,7 @@ export default function MiCuentaSupervisor() {
                                 </div>
                                 <div className="perfil-actions">
                                   <button type="submit" className="btn-main" disabled={savingManagedPassword}>
-                                    {savingManagedPassword ? 'Guardando...' : 'Cambiar contrasena del usuario'}
+                                    {savingManagedPassword ? 'Guardando...' : 'Cambiar contraseña del usuario'}
                                   </button>
                                   <button
                                     type="button"

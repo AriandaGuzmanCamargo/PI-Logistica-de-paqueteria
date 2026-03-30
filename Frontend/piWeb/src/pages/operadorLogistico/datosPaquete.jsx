@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import MenuOperador from './menuOperador.jsx';
 import {
   asignarEnvioConConductor,
+  cancelarEnvioOperador,
   createEnvioWeb,
   getConductoresDisponibles,
 } from '../../services/operadorService';
@@ -16,6 +17,8 @@ export default function DatosPaquete() {
   const [error, setError] = useState('');
   const [warning, setWarning] = useState('');
   const [guia, setGuia] = useState('PAK00000000');
+  const [createdEnvioId, setCreatedEnvioId] = useState(null);
+  const [isDeletingRecent, setIsDeletingRecent] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({
     peso: '1',
@@ -134,6 +137,7 @@ export default function DatosPaquete() {
 
       const tracking = created?.paquete?.codigo_rastreo || 'SIN-GUIA';
       setGuia(tracking);
+      setCreatedEnvioId(created?.id_envio || null);
       setShowModal(true);
       sessionStorage.removeItem('registroEnvioDraft');
     } catch (apiError) {
@@ -145,6 +149,25 @@ export default function DatosPaquete() {
 
   function handleAceptar() {
     navigate(`/operador/envios?registro=ok&guia=${encodeURIComponent(guia)}`);
+  }
+
+  async function handleEliminarRecienAgregado() {
+    if (!createdEnvioId || isDeletingRecent) {
+      return;
+    }
+
+    try {
+      setError('');
+      setWarning('');
+      setIsDeletingRecent(true);
+      await cancelarEnvioOperador(createdEnvioId);
+      setShowModal(false);
+      navigate(`/operador/envios?registro=eliminado&guia=${encodeURIComponent(guia)}`);
+    } catch (deleteError) {
+      setWarning(deleteError.message || 'No se pudo eliminar el envio recien agregado.');
+    } finally {
+      setIsDeletingRecent(false);
+    }
   }
 
   return (
@@ -345,9 +368,18 @@ export default function DatosPaquete() {
       <div className="modal-exito__acciones">
         <button
           type="button"
+          className="boton-secundario"
+          onClick={handleEliminarRecienAgregado}
+          disabled={isDeletingRecent}
+        >
+          {isDeletingRecent ? 'Eliminando...' : 'Eliminar envio recien agregado'}
+        </button>
+        <button
+          type="button"
           className="boton-primario boton-primario--texto"
           id="boton-aceptar"
           onClick={handleAceptar}
+          disabled={isDeletingRecent}
         >
           Aceptar
         </button>

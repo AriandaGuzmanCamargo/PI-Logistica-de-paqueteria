@@ -226,13 +226,6 @@ export default function DashboardOperador() {
           </div>
         </div>
 
-        <aside className="panel-escaneo">
-          <h2>Escaneo de Paquetes</h2>
-          <div className="control-escaneo">
-            <input type="text" placeholder="||||||||||||" />
-            <button>Escanear</button>
-          </div>
-        </aside>
       </section>
     </main>
 

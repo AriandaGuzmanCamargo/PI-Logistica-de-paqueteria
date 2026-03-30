@@ -301,9 +301,12 @@ select:focus {
   padding-top: 12px;
   display: flex;
   justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.modal-exito__acciones .boton-primario {
+.modal-exito__acciones .boton-primario,
+.modal-exito__acciones .boton-secundario {
   min-width: 140px;
 }
 

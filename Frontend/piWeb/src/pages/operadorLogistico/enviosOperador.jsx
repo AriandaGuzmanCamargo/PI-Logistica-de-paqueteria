@@ -18,23 +18,39 @@ export default function EnviosOperador() {
 
   useEffect(() => {
     const parametros = new URLSearchParams(window.location.search);
-        const alertaRegistro = document.getElementById('alerta-registro');
-    
-        if (parametros.get('registro') === 'ok') {
-          const guia = parametros.get('guia');
-          if (guia) {
-            alertaRegistro.textContent = `Envío registrado correctamente con guía ${guia}.`;
-          }
-    
-          alertaRegistro.classList.remove('alerta-registro--oculta');
-          window.setTimeout(() => {
-            alertaRegistro.classList.add('alerta-registro--oculta');
-          }, 3500);
-    
-          if (window.history.replaceState) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-          }
-        }
+    const alertaRegistro = document.getElementById('alerta-registro');
+
+    if (!alertaRegistro) {
+      return;
+    }
+
+    const accionRegistro = parametros.get('registro');
+    const guia = parametros.get('guia');
+
+    if (accionRegistro === 'ok') {
+      if (guia) {
+        alertaRegistro.textContent = `Envío registrado correctamente con guía ${guia}.`;
+      } else {
+        alertaRegistro.textContent = 'Envío registrado correctamente.';
+      }
+    } else if (accionRegistro === 'eliminado') {
+      if (guia) {
+        alertaRegistro.textContent = `Envío ${guia} eliminado correctamente.`;
+      } else {
+        alertaRegistro.textContent = 'Envío eliminado correctamente.';
+      }
+    } else {
+      return;
+    }
+
+    alertaRegistro.classList.remove('alerta-registro--oculta');
+    window.setTimeout(() => {
+      alertaRegistro.classList.add('alerta-registro--oculta');
+    }, 3500);
+
+    if (window.history.replaceState) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   function handleBuscar() {

@@ -222,11 +222,6 @@ export default function Login() {
               {isLoading ? 'Validando...' : 'Iniciar Sesion'}
             </button>
             <a className="enlace-olvido" href="/recuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
-
-            <button className="boton boton--social boton--google">
-              <span className="boton__icono">G</span>
-              Iniciar sesión con Google
-            </button>
           </div>
         </section>
       </main>

@@ -206,6 +206,28 @@ export async function createEnvioWeb(payload) {
   return data.data;
 }
 
+export async function cancelarEnvioOperador(idEnvio) {
+  const user = ensureSession();
+
+  const response = await fetch(`/api/envios/${encodeURIComponent(idEnvio)}/cancelar`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idUsuario: user.id_usuario,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.message || 'No se pudo eliminar el envio recien registrado.');
+  }
+
+  return data.data;
+}
+
 export async function getConductoresDisponibles(fechaAsignacion) {
   const query = fechaAsignacion ? `?fecha=${encodeURIComponent(fechaAsignacion)}` : '';
   const response = await fetch(`/api/asignaciones/conductores-disponibles${query}`);

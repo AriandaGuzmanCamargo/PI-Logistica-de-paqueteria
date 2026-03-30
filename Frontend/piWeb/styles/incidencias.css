@@ -116,14 +116,7 @@
 .repartidor-celda {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-}
-
-.repartidor-celda img {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
+  gap: 0;
 }
 
 @media (max-width: 1200px) {

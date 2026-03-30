@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MenuSupervisor from './menuSupervisor.jsx';
 import {
   estadoIncidenciaClase,
@@ -240,7 +240,7 @@ export default function IncidenciasSupervisor() {
             <table>
               <thead>
                 <tr>
-                  <th>Guia</th>
+                  <th>Guía</th>
                   <th>Estado</th>
                   <th>Reportado por</th>
                   <th>Motivo</th>
@@ -275,7 +275,7 @@ export default function IncidenciasSupervisor() {
                       <td>{item.fecha_reporte ? new Date(item.fecha_reporte).toLocaleString() : '-'}</td>
                       <td>
                         <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.envio?.id_envio}`}>
-                          Ver envio
+                          Ver envío
                         </a>
                       </td>
                     </tr>

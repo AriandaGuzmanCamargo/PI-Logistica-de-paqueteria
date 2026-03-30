@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MenuSupervisor from './menuSupervisor.jsx';
 import {
   estadoEnvioClase,
@@ -105,7 +105,7 @@ export default function EnviosSupervisor() {
       <main className="panel-principal panel-principal--full panel-principal--supervisor">
         <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
           <div className="barra-superior__left">
-            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menï¿½">
+            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div className="header-logo">
@@ -115,7 +115,7 @@ export default function EnviosSupervisor() {
           </div>
         </header>
 
-        <h2 className="titulo-pagina-operador">Gestion de Envios</h2>
+        <h2 className="titulo-pagina-operador">Gestión de envíos</h2>
 
         <section className="modulo-envios">
           <div className="filtros-envios">
@@ -141,7 +141,7 @@ export default function EnviosSupervisor() {
               <div className="buscador-envios">
                 <input
                   type="text"
-                  placeholder="Buscar guia, remitente o destinatario..."
+                  placeholder="Buscar guía, remitente o destinatario..."
                   value={busquedaInput}
                   onChange={(e) => setBusquedaInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -159,7 +159,7 @@ export default function EnviosSupervisor() {
               <table>
                 <thead>
                   <tr>
-                    <th>Guia</th>
+                    <th>Guía</th>
                     <th>Cliente</th>
                     <th>Estado</th>
                     <th>Ruta</th>
@@ -170,11 +170,11 @@ export default function EnviosSupervisor() {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>Cargando envios...</td>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>Cargando envíos...</td>
                     </tr>
                   ) : enviosFiltrados.length === 0 ? (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>No hay envios para mostrar.</td>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '16px' }}>No hay envíos para mostrar.</td>
                     </tr>
                   ) : (
                     enviosFiltrados.map((item) => (

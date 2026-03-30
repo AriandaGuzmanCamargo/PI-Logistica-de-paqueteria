@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MenuSupervisor from './menuSupervisor.jsx';
 import {
   estadoEnvioClase,
@@ -26,7 +26,7 @@ export default function EntregasRepartidorSupervisor() {
         setError('');
 
         if (!idConductor) {
-          throw new Error('No se recibio idConductor en la URL.');
+          throw new Error('No se recibió el idConductor en la URL.');
         }
 
         const data = await getDetalleConductorSupervisor(idConductor);
@@ -163,7 +163,7 @@ export default function EntregasRepartidorSupervisor() {
               <div style={{ marginBottom: 18 }}>
                 <input
                   type="text"
-                  placeholder="Buscar guia, destinatario o direccion..."
+                  placeholder="Buscar guía, destinatario o dirección..."
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
                   style={{
@@ -185,7 +185,7 @@ export default function EntregasRepartidorSupervisor() {
                 <table style={{ minWidth: 900 }}>
                   <thead>
                     <tr>
-                      <th>Guia</th>
+                      <th>Guía</th>
                       <th>Destinatario</th>
                       <th>Destino</th>
                       <th>Estado</th>

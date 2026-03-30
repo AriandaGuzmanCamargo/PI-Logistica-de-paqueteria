@@ -14,7 +14,7 @@ function estadoConfig(estado) {
   if (estado === 'sin_asignacion') {
     return {
       className: 'grep-estado grep-estado--sin',
-      text: 'Sin asignacion',
+      text: 'Sin asignación',
     };
   }
 

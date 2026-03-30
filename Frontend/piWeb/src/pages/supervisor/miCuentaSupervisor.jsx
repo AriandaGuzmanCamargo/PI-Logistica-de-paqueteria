@@ -635,7 +635,7 @@ export default function MiCuentaSupervisor() {
               <div className="header-logo">
                 <img src="/piWeb/images/logoSinFondo.png" alt="Metzvia" />
               </div>
-              <h1 className="barra-superior__titulo">{isAdmin ? 'Admin' : 'Supervisor'}</h1>
+              <h1 className="barra-superior__titulo">Supervisor</h1>
             </div>
           </header>
 

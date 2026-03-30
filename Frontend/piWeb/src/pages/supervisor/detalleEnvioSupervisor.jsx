@@ -63,13 +63,13 @@ export default function DetalleEnvioSupervisor() {
             envios.find((e) => normalizeEstadoEnvio(e.estado_envio) !== 'entregado') || envios[0];
 
           if (!elegible?.id_envio) {
-            throw new Error('Este repartidor no tiene envios asignados para reasignar.');
+          throw new Error('Este repartidor no tiene envíos asignados para reasignar.');
           }
           idEnvio = String(elegible.id_envio);
         }
 
         if (!idEnvio) {
-          throw new Error('No se recibio id de envio en la URL.');
+        throw new Error('No se recibió el id de envío en la URL.');
         }
 
         const data = await getDetalleEnvioSupervisor(idEnvio);
@@ -78,7 +78,7 @@ export default function DetalleEnvioSupervisor() {
         }
       } catch (loadError) {
         if (isMounted) {
-          setError(loadError.message || 'No se pudo cargar el detalle del envio.');
+          setError(loadError.message || 'No se pudo cargar el detalle del envío.');
           setEnvio(null);
         }
       } finally {
@@ -168,7 +168,7 @@ export default function DetalleEnvioSupervisor() {
 
       await refreshDetalle();
     } catch (actionError) {
-      setError(actionError.message || 'No se pudo cancelar la asignacion actual.');
+      setError(actionError.message || 'No se pudo cancelar la asignación actual.');
     } finally {
       setIsSaving(false);
     }
@@ -191,7 +191,7 @@ export default function DetalleEnvioSupervisor() {
 
       await refreshDetalle();
     } catch (actionError) {
-      setError(actionError.message || 'No se pudo reasignar el envio al conductor.');
+      setError(actionError.message || 'No se pudo reasignar el envío al conductor.');
     } finally {
       setIsSaving(false);
     }
@@ -207,7 +207,7 @@ export default function DetalleEnvioSupervisor() {
       <main className="panel-principal panel-principal--full panel-principal--supervisor">
         <header className="barra-superior barra-superior--con-logo barra-superior--supervisor-fija">
           <div className="barra-superior__left">
-            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menï¿½">
+            <button id="btnMenu" className="btn-menu-hamburguesa" aria-label="Abrir menú">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div className="header-logo">
@@ -217,19 +217,19 @@ export default function DetalleEnvioSupervisor() {
           </div>
         </header>
 
-        <h2 className="titulo-pagina-operador">Detalle del Envio</h2>
+        <h2 className="titulo-pagina-operador">Detalle del envío</h2>
 
         {error ? <p style={{ color: '#b71c1c' }}>{error}</p> : null}
         {loading ? <p style={{ color: '#5a6d8a' }}>Cargando detalle...</p> : null}
 
         {!loading && envio ? (
-          <section className="modulo-detalle">
-            <h2 className="titulo-detalle">Guia: <strong>{guia}</strong></h2>
+          <section className="modulo-detalle" style={{ maxWidth: 'none', width: '100%', margin: 0 }}>
+            <h2 className="titulo-detalle">Guía: <strong>{guia}</strong></h2>
 
-            <div className="detalle-grid">
+            <div className="detalle-grid" style={{ width: '100%' }}>
               <div className="detalle-columna">
                 <article className="tarjeta-detalle">
-                  <h3>Estado del envio</h3>
+                  <h3>Estado del envío</h3>
                   <p>
                     <span className={`estado ${estadoEnvioClase(envio.estado_envio)}`}>
                       * {estadoEnvioTexto(envio.estado_envio)}
@@ -254,7 +254,7 @@ export default function DetalleEnvioSupervisor() {
                 <article className="tarjeta-detalle">
                   <h3>Remitente</h3>
                   <p><strong>Nombre:</strong> {envio.remitente?.nombre || '-'}</p>
-                  <p><strong>Telefono:</strong> {envio.remitente?.telefono || '-'}</p>
+                  <p><strong>Teléfono:</strong> {envio.remitente?.telefono || '-'}</p>
                   <p><strong>Correo:</strong> {envio.remitente?.correo || '-'}</p>
                   <p><strong>Origen:</strong> {envio.direccion_origen || '-'} ({envio.ciudad_origen || '-'})</p>
                 </article>
@@ -262,13 +262,37 @@ export default function DetalleEnvioSupervisor() {
                 <article className="tarjeta-detalle">
                   <h3>Destinatario</h3>
                   <p><strong>Nombre:</strong> {envio.destinatario?.nombre || '-'}</p>
-                  <p><strong>Telefono:</strong> {envio.destinatario?.telefono || '-'}</p>
+                  <p><strong>Teléfono:</strong> {envio.destinatario?.telefono || '-'}</p>
                   <p><strong>Correo:</strong> {envio.destinatario?.correo || '-'}</p>
                   <p><strong>Destino:</strong> {envio.direccion_destino || '-'} ({envio.ciudad_destino || '-'})</p>
                 </article>
 
                 <article className="tarjeta-detalle">
-                  <h3>Asignacion</h3>
+                  <h3>Evidencia de entrega</h3>
+                  {envio?.foto_entrega_url ? (
+                    <div style={{ marginTop: '8px' }}>
+                      <img
+                        src={envio.foto_entrega_url}
+                        alt="Evidencia de entrega"
+                        style={{
+                          width: '100%',
+                          maxHeight: '300px',
+                          objectFit: 'cover',
+                          borderRadius: '12px',
+                          border: '1px solid #e5e7eb',
+                        }}
+                      />
+                      <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
+                        Fotografía capturada por el repartidor al confirmar la entrega.
+                      </p>
+                    </div>
+                  ) : (
+                    <p style={{ color: '#5a6d8a' }}>Aún no hay evidencia fotográfica registrada para este envío.</p>
+                  )}
+                </article>
+
+                <article className="tarjeta-detalle">
+                  <h3>Asignación</h3>
                   {envio.asignacion ? (
                     <>
                       <p><strong>Conductor:</strong> {envio.asignacion.conductor_nombre || '-'}</p>
@@ -286,7 +310,7 @@ export default function DetalleEnvioSupervisor() {
                       </div>
                     </>
                   ) : (
-                    <p>Sin asignacion activa.</p>
+                    <p>Sin asignación activa.</p>
                   )}
 
                   <div style={{ marginTop: '12px' }}>
@@ -321,30 +345,6 @@ export default function DetalleEnvioSupervisor() {
                       </p>
                     ) : null}
                   </div>
-                </article>
-
-                <article className="tarjeta-detalle">
-                  <h3>Evidencia de entrega</h3>
-                  {envio?.foto_entrega_url ? (
-                    <div style={{ marginTop: '8px' }}>
-                      <img
-                        src={envio.foto_entrega_url}
-                        alt="Evidencia de entrega"
-                        style={{
-                          width: '100%',
-                          maxHeight: '300px',
-                          objectFit: 'cover',
-                          borderRadius: '12px',
-                          border: '1px solid #e5e7eb',
-                        }}
-                      />
-                      <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
-                        Fotografia capturada por el repartidor al confirmar la entrega.
-                      </p>
-                    </div>
-                  ) : (
-                    <p style={{ color: '#5a6d8a' }}>Aun no hay evidencia fotografica registrada para este envio.</p>
-                  )}
                 </article>
 
                 <article className="tarjeta-detalle tarjeta-detalle--acciones">

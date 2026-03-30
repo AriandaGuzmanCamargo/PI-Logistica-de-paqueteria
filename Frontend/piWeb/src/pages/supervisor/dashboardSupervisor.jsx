@@ -312,7 +312,7 @@ export default function DashboardSupervisor() {
           <table>
             <thead>
               <tr>
-                <th>Guia</th>
+                <th>Guía</th>
                 <th>Destinatario</th>
                 <th>Destino</th>
                 <th>Estado</th>
@@ -320,7 +320,7 @@ export default function DashboardSupervisor() {
               </tr>
             </thead>
             <tbody>
-              ${rows || '<tr><td colspan="5">Sin envios para el filtro actual.</td></tr>'}
+              ${rows || '<tr><td colspan="5">Sin envíos para el filtro actual.</td></tr>'}
             </tbody>
           </table>
         </body>
@@ -482,10 +482,10 @@ export default function DashboardSupervisor() {
           {/* Lista de envíos */}
           <div className="envios-sv__lista">
             {loading ? (
-              <p style={{ padding: '16px', color: '#5a6d8a' }}>Cargando envios...</p>
+              <p style={{ padding: '16px', color: '#5a6d8a' }}>Cargando envíos...</p>
             ) : enviosFiltrados.length === 0 ? (
               <p style={{ padding: '16px', color: '#5a6d8a' }}>
-                No hay envios para mostrar con los filtros actuales. Usa "Todos" o limpia la busqueda.
+                No hay envíos para mostrar con los filtros actuales. Usa "Todos" o limpia la busqueda.
               </p>
             ) : (
               enviosFiltrados.slice(0, 5).map((item) => (

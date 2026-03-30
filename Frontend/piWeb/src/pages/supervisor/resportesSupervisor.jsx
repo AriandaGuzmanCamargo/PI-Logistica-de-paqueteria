@@ -34,7 +34,7 @@ function badgeClassForEstado(estado) {
 
 function textoEstadoConductor(estado) {
   if (estado === 'en_ruta') return 'En ruta';
-  if (estado === 'sin_asignacion') return 'Sin asignacion';
+  if (estado === 'sin_asignacion') return 'Sin asignación';
   return 'Fuera de servicio';
 }
 
@@ -330,7 +330,7 @@ export default function ResportesSupervisor() {
           </div>
 
           <div class="grid">
-            <div class="card"><div class="label">Envios Totales</div><div class="value">${resumen.total}</div></div>
+            <div class="card"><div class="label">Envíos Totales</div><div class="value">${resumen.total}</div></div>
             <div class="card"><div class="label">Entregados</div><div class="value">${resumen.entregados}</div></div>
             <div class="card"><div class="label">En ruta</div><div class="value">${resumen.enRuta}</div></div>
             <div class="card"><div class="label">Retrasados</div><div class="value">${resumen.retrasados}</div></div>
@@ -339,11 +339,11 @@ export default function ResportesSupervisor() {
           </div>
 
           <div class="section">
-            <h2>Envios del periodo</h2>
+            <h2>Envíos del período</h2>
             <table>
               <thead>
                 <tr>
-                  <th>Guia</th>
+                  <th>Guía</th>
                   <th>Destinatario</th>
                   <th>Origen</th>
                   <th>Destino</th>
@@ -352,18 +352,18 @@ export default function ResportesSupervisor() {
                 </tr>
               </thead>
               <tbody>
-                ${enviosRows || '<tr><td class="empty" colspan="6">Sin envios para el rango seleccionado.</td></tr>'}
+                ${enviosRows || '<tr><td class="empty" colspan="6">Sin envíos para el rango seleccionado.</td></tr>'}
               </tbody>
             </table>
           </div>
 
           <div class="section">
-            <h2>Incidencias del periodo</h2>
+            <h2>Incidencias del período</h2>
             <table>
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Guia</th>
+                  <th>Guía</th>
                   <th>Tipo</th>
                   <th>Reportado por</th>
                   <th>Estado</th>
@@ -411,7 +411,7 @@ export default function ResportesSupervisor() {
 
         <div className="rep-header-toolbar">
           <p className="rep-header-toolbar__aviso" role="status">
-            Periodo mostrado: <strong>{rangoTexto}</strong>
+            Período mostrado: <strong>{rangoTexto}</strong>
           </p>
           <div className="rep-header-toolbar__acciones">
             <select
@@ -421,9 +421,9 @@ export default function ResportesSupervisor() {
               aria-label="Rango de fechas del reporte"
             >
               <option value="hoy">Hoy</option>
-              <option value="7d">Ultimos 7 dias</option>
-              <option value="30d">Ultimos 30 dias</option>
-              <option value="90d">Ultimos 90 dias</option>
+              <option value="7d">Últimos 7 días</option>
+              <option value="30d">Últimos 30 días</option>
+              <option value="90d">Últimos 90 días</option>
             </select>
             <button type="button" className="rep-header__exportar" onClick={exportarPdf}>
               Exportar PDF
@@ -440,7 +440,7 @@ export default function ResportesSupervisor() {
             </span>
             <div>
               <p className="rep-card__numero">{loading ? '...' : resumen.total}</p>
-              <p className="rep-card__label">Envios Totales</p>
+              <p className="rep-card__label">Envíos Totales</p>
             </div>
           </article>
           <article className="rep-card rep-card--verde">
@@ -519,7 +519,7 @@ export default function ResportesSupervisor() {
               <span className="rep-leyenda"><span className="rep-leyenda__dot rep-leyenda__dot--azul"></span> Entregado</span>
               <span className="rep-leyenda"><span className="rep-leyenda__dot rep-leyenda__dot--verde"></span> En ruta</span>
             </div>
-            <p className="rep-panel__promedio">Promedio diario: {loading ? '...' : `${entregasPorDia.promedio} envios`}</p>
+            <p className="rep-panel__promedio">Promedio diario: {loading ? '...' : `${entregasPorDia.promedio} envíos`}</p>
           </div>
 
           <div className="rep-panel">
@@ -530,7 +530,7 @@ export default function ResportesSupervisor() {
               <thead>
                 <tr>
                   <th>Repartidor</th>
-                  <th>Envios activos</th>
+                  <th>Envíos activos</th>
                   <th>Ruta activa</th>
                   <th>Estado</th>
                 </tr>
@@ -571,7 +571,7 @@ export default function ResportesSupervisor() {
         <section className="rep-grid-bottom">
           <div className="rep-panel">
             <div className="rep-panel__header">
-              <h3>Estados de Envios</h3>
+              <h3>Estados de envíos</h3>
             </div>
             <div className="rep-estados">
               <div className="rep-estados__donut">
@@ -583,7 +583,7 @@ export default function ResportesSupervisor() {
                 </svg>
                 <div className="rep-estados__centro">
                   <span className="rep-estados__total">{loading ? '...' : resumen.total}</span>
-                  <span className="rep-estados__sub">Envios</span>
+                  <span className="rep-estados__sub">Envíos</span>
                 </div>
               </div>
               <div className="rep-estados__leyenda">
@@ -596,11 +596,11 @@ export default function ResportesSupervisor() {
             <p className="rep-panel__promedio">Incidencias registradas: {loading ? '...' : resumen.incidencias}</p>
             <table className="rep-tabla-mini">
               <thead>
-                <tr><th>Guia</th><th>Cliente</th><th>Destino</th><th>Estado</th></tr>
+                <tr><th>Guía</th><th>Cliente</th><th>Destino</th><th>Estado</th></tr>
               </thead>
               <tbody>
                 {enviosRecientes.length === 0 ? (
-                  <tr><td colSpan="4">Sin envios recientes.</td></tr>
+                  <tr><td colSpan="4">Sin envíos recientes.</td></tr>
                 ) : (
                   enviosRecientes.map((item) => (
                     <tr key={item.id_envio}>
@@ -623,7 +623,7 @@ export default function ResportesSupervisor() {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Guia</th>
+                  <th>Guía</th>
                   <th>Tipo</th>
                   <th>Reportado por</th>
                   <th>Fecha</th>

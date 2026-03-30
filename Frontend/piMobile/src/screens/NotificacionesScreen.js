@@ -55,8 +55,15 @@ export default function NotificacionesScreen({ navigation }) {
     }, [loadNotificaciones])
   );
 
+  const role = String(getCurrentUser()?.rol || '').toLowerCase();
+  const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cliente' : 'Usuario';
+
   return (
     <MainLayout title="Notificaciones" navigation={navigation} backTo="MenuUsuario" activeTab="ConfiguracionUsuario">
+      <View style={styles.roleWrap}>
+        <Text style={styles.roleText}>Mostrando notificaciones para rol: {roleLabel}</Text>
+      </View>
+
       {isLoading ? (
         <View style={styles.stateWrap}>
           <ActivityIndicator size="large" color="#007AFF" />

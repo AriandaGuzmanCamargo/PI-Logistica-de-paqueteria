@@ -173,6 +173,11 @@ function ensureEditableStatus(status) {
   }
 }
 
+function hasActiveAssignment(shipment) {
+  const estadoAsignacion = String(shipment?.estado_asignacion || '').toLowerCase();
+  return Boolean(shipment?.id_conductor_asignado) && ['programada', 'en_proceso'].includes(estadoAsignacion);
+}
+
 async function ensureClientOwnsShipment(userId, idEnvio) {
   const parsedUserId = Number(userId);
   const parsedShipmentId = Number(idEnvio);
@@ -222,6 +227,12 @@ async function ensureClientOwnsShipment(userId, idEnvio) {
   if (shipment.remitente_id !== clientId) {
     const error = new Error('No puedes modificar un envio que no creaste.');
     error.statusCode = 403;
+    throw error;
+  }
+
+  if (hasActiveAssignment(shipment)) {
+    const error = new Error('No puedes editar ni cancelar un envio que ya fue asignado.');
+    error.statusCode = 409;
     throw error;
   }
 

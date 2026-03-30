@@ -83,7 +83,8 @@ export default function DetalleEnvioScreen({ navigation, route }) {
     );
   }
 
-  const canModify = detalle.estado_envio === 'pendiente';
+  const isAssigned = Boolean(detalle?.asignacion?.id_asignacion);
+  const canModify = detalle.estado_envio === 'pendiente' && !isAssigned;
 
   const handleSaveChanges = async () => {
     try {
@@ -184,6 +185,7 @@ export default function DetalleEnvioScreen({ navigation, route }) {
         )}
         <Text style={styles.row}>Origen: {detalle.direccion_origen || 'Sin dirección de origen'}</Text>
         <Text style={styles.row}>Remitente: {detalle.remitente?.nombre || 'Sin remitente'}</Text>
+        <Text style={styles.row}>Pago: Contraentrega</Text>
       </View>
 
       {canModify ? (
@@ -202,11 +204,15 @@ export default function DetalleEnvioScreen({ navigation, route }) {
             <Text style={styles.actionBtnText}>{isSaving ? 'Procesando...' : 'Eliminar (Cancelar)'}</Text>
           </TouchableOpacity>
         </View>
-      ) : null}
-
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('PagoOpciones')}>
-        <Text style={styles.btnText}>Ir a pagos</Text>
-      </TouchableOpacity>
+      ) : (
+        <View style={styles.card}>
+          <Text style={styles.row}>
+            {isAssigned
+              ? 'Este envío ya fue asignado. Ya no se puede editar ni eliminar.'
+              : 'Este envío ya no se puede editar ni eliminar por su estado actual.'}
+          </Text>
+        </View>
+      )}
 
       <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('MisEnvios')}>
         <Text style={styles.btnText}>Volver a mis envíos</Text>

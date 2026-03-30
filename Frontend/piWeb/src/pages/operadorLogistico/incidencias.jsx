@@ -7,6 +7,41 @@ import {
   updateIncidenciaStatus,
 } from '../../services/operadorService';
 
+function IconKpiTotal() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconKpiAbierta() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 9v4M12 17h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function IconKpiProceso() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconKpiCerrada() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+      <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function Incidencias() {
   const [incidencias, setIncidencias] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -101,11 +136,43 @@ export default function Incidencias() {
       <h2 className="titulo-pagina-operador">Incidencias</h2>
 
       <section className="modulo-incidencias">
-        <div className="incidencias-resumen">
-          <div className="incidencias-resumen__item"><strong>Total:</strong> {loading ? '...' : resumen.total}</div>
-          <div className="incidencias-resumen__item"><strong>Abiertas:</strong> {loading ? '...' : resumen.abiertas}</div>
-          <div className="incidencias-resumen__item"><strong>En proceso:</strong> {loading ? '...' : resumen.proceso}</div>
-          <div className="incidencias-resumen__item"><strong>Cerradas:</strong> {loading ? '...' : resumen.cerradas}</div>
+        <div className="incidencias-resumen" role="list">
+          <article className="incidencias-kpi incidencias-kpi--total" role="listitem" aria-label={`Total de incidencias: ${loading ? 'cargando' : resumen.total}`}>
+            <div className="incidencias-kpi__icon-wrap">
+              <IconKpiTotal />
+            </div>
+            <div className="incidencias-kpi__body">
+              <span className="incidencias-kpi__value">{loading ? '…' : resumen.total}</span>
+              <span className="incidencias-kpi__label">Total</span>
+            </div>
+          </article>
+          <article className="incidencias-kpi incidencias-kpi--abierta" role="listitem" aria-label={`Incidencias abiertas: ${loading ? 'cargando' : resumen.abiertas}`}>
+            <div className="incidencias-kpi__icon-wrap">
+              <IconKpiAbierta />
+            </div>
+            <div className="incidencias-kpi__body">
+              <span className="incidencias-kpi__value">{loading ? '…' : resumen.abiertas}</span>
+              <span className="incidencias-kpi__label">Abiertas</span>
+            </div>
+          </article>
+          <article className="incidencias-kpi incidencias-kpi--proceso" role="listitem" aria-label={`En proceso: ${loading ? 'cargando' : resumen.proceso}`}>
+            <div className="incidencias-kpi__icon-wrap">
+              <IconKpiProceso />
+            </div>
+            <div className="incidencias-kpi__body">
+              <span className="incidencias-kpi__value">{loading ? '…' : resumen.proceso}</span>
+              <span className="incidencias-kpi__label">En proceso</span>
+            </div>
+          </article>
+          <article className="incidencias-kpi incidencias-kpi--cerrada" role="listitem" aria-label={`Cerradas: ${loading ? 'cargando' : resumen.cerradas}`}>
+            <div className="incidencias-kpi__icon-wrap">
+              <IconKpiCerrada />
+            </div>
+            <div className="incidencias-kpi__body">
+              <span className="incidencias-kpi__value">{loading ? '…' : resumen.cerradas}</span>
+              <span className="incidencias-kpi__label">Cerradas</span>
+            </div>
+          </article>
         </div>
 
         {error ? <p style={{ color: '#b71c1c', margin: '0 14px 10px' }}>{error}</p> : null}

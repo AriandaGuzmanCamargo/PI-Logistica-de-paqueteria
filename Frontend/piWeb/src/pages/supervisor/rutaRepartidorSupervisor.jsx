@@ -25,7 +25,7 @@ export default function RutaRepartidorSupervisor() {
         setError('');
 
         if (!idConductor) {
-          throw new Error('No se recibio idConductor en la URL.');
+          throw new Error('No se recibió idConductor en la URL.');
         }
 
         const data = await getDetalleConductorSupervisor(idConductor);
@@ -91,9 +91,9 @@ export default function RutaRepartidorSupervisor() {
               </div>
               <div className="info-lista info-lista--dos-columnas">
                 <p><span>Correo:</span> {conductor?.correo || '-'}</p>
-                <p><span>Telefono:</span> {conductor?.telefono || '-'}</p>
+                <p><span>Teléfono:</span> {conductor?.telefono || '-'}</p>
                 <p><span>Estado:</span> {conductor?.estado || '-'}</p>
-                <p><span>Envios activos:</span> {detalle?.resumen?.total_envios ?? 0}</p>
+                <p><span>Envíos activos:</span> {detalle?.resumen?.total_envios ?? 0}</p>
               </div>
             </article>
 
@@ -102,11 +102,11 @@ export default function RutaRepartidorSupervisor() {
               {rutaActual ? (
                 <div className="info-lista info-lista--dos-columnas">
                   <p><span>Nombre ruta:</span> {rutaActual.ruta_nombre || '-'}</p>
-                  <p><span>Vehiculo:</span> {rutaActual.vehiculo_placa || '-'}</p>
+                  <p><span>Vehículo:</span> {rutaActual.vehiculo_placa || '-'}</p>
                   <p><span>Origen:</span> {rutaActual.ruta_origen || '-'}</p>
                   <p><span>Destino:</span> {rutaActual.ruta_destino || '-'}</p>
                   <p><span>Salida:</span> {rutaActual.fecha_salida ? new Date(rutaActual.fecha_salida).toLocaleString() : '-'}</p>
-                  <p><span>Estado asignacion:</span> {rutaActual.estado_asignacion || '-'}</p>
+                  <p><span>Estado asignación:</span> {rutaActual.estado_asignacion || '-'}</p>
                 </div>
               ) : (
                 <p>Este conductor no tiene una ruta activa actualmente.</p>
@@ -119,17 +119,17 @@ export default function RutaRepartidorSupervisor() {
                 <table>
                   <thead>
                     <tr>
-                      <th>Guia</th>
+                      <th>Guía</th>
                       <th>Destinatario</th>
                       <th>Destino</th>
                       <th>Estado</th>
-                      <th>Accion</th>
+                      <th>Acción</th>
                     </tr>
                   </thead>
                   <tbody>
                     {detalle.envios.length === 0 ? (
                       <tr>
-                        <td colSpan="5" style={{ textAlign: 'center', padding: '14px' }}>Sin envios activos.</td>
+                        <td colSpan="5" style={{ textAlign: 'center', padding: '14px' }}>Sin envíos activos.</td>
                       </tr>
                     ) : (
                       detalle.envios.map((item) => (
@@ -143,7 +143,7 @@ export default function RutaRepartidorSupervisor() {
                             </span>
                           </td>
                           <td>
-                            <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>Ver envio</a>
+                            <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>Ver envío</a>
                           </td>
                         </tr>
                       ))

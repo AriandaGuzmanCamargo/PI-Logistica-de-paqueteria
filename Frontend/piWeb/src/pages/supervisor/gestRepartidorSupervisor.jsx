@@ -310,7 +310,7 @@ export default function GestRepartidorSupervisor() {
           </header>
 
           <div className="grep-header-title">
-            <h2 className="grep-titulo">Gestion de Repartidores</h2>
+            <h2 className="grep-titulo">Gestión de Repartidores</h2>
           </div>
 
           <div className="grep-barra">
@@ -329,7 +329,7 @@ export default function GestRepartidorSupervisor() {
               En ruta <span className="grep-chip__count">{loading ? '...' : resumen.enRuta}</span>
             </button>
             <button className="grep-chip grep-chip--sin" type="button" onClick={() => setFiltro('sin_asignacion')}>
-              Sin asignacion <span className="grep-chip__count">{loading ? '...' : resumen.sinAsignacion}</span>
+              Sin asignación <span className="grep-chip__count">{loading ? '...' : resumen.sinAsignacion}</span>
             </button>
             <button className="grep-filtro-btn" type="button" onClick={() => setFiltro('todos')}>Todos</button>
           </div>

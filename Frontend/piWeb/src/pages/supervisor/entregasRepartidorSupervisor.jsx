@@ -212,7 +212,7 @@ export default function EntregasRepartidorSupervisor() {
                           <td>{item.asignacion?.fecha_salida ? new Date(item.asignacion.fecha_salida).toLocaleString() : '-'}</td>
                           <td>
                             <a className="boton-detalles" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>
-                              Ver envio
+                              Ver envío
                             </a>
                           </td>
                         </tr>

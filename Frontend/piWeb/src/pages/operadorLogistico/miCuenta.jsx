@@ -131,10 +131,21 @@ export default function MiCuenta() {
         <div className="cuenta-perfil-principal">
           <img src={avatarUrl} alt="Foto de perfil" className="cuenta-perfil-principal__avatar" />
           <h2>{loading ? 'Cargando...' : nombreCompleto}</h2>
-          <p className="cuenta-perfil-principal__estado">
-            <span className="cuenta-perfil-principal__punto"></span>
-            {roleText(perfil?.rol)}
-          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+            <p className="cuenta-perfil-principal__estado" style={{ justifyContent: 'center' }}>
+              <span className="cuenta-perfil-principal__punto"></span>
+              {roleText(perfil?.rol)}
+            </p>
+            <button
+              type="button"
+              className="cuenta-perfil-principal__foto-btn"
+              onClick={openFilePicker}
+              disabled={loading || savingPhoto}
+              style={{ marginLeft: 0, marginTop: 8 }}
+            >
+              {savingPhoto ? 'Guardando foto...' : 'Cambiar foto de perfil'}
+            </button>
+          </div>
           <input
             ref={fileInputRef}
             type="file"
@@ -142,14 +153,6 @@ export default function MiCuenta() {
             style={{ display: 'none' }}
             onChange={handlePhotoChange}
           />
-          <button
-            type="button"
-            className="cuenta-perfil-principal__foto-btn"
-            onClick={openFilePicker}
-            disabled={loading || savingPhoto}
-          >
-            {savingPhoto ? 'Guardando foto...' : 'Cambiar foto de perfil'}
-          </button>
           <p className="cuenta-perfil-principal__hint">Solo puedes editar tu foto de perfil.</p>
         </div>
 

@@ -67,8 +67,8 @@ export default function FormDestinatarioScreen({ navigation, route }) {
         <TextInput style={styles.input} placeholder="Telefono (10 digitos)" placeholderTextColor="#9AA4BF" value={telefono} onChangeText={(value) => setTelefono(sanitizePhone(value))} keyboardType="numeric" maxLength={10} />
         <TextInput style={styles.input} placeholder="Correo electrónico" placeholderTextColor="#9AA4BF" value={correo} onChangeText={setCorreo} autoCapitalize="none" keyboardType="email-address" />
         <TextInput style={styles.input} placeholder="Direccion de entrega" placeholderTextColor="#9AA4BF" multiline value={direccion} onChangeText={setDireccion} />
-        <TextInput style={styles.input} placeholder="Referencia de entrega (portón, color de casa, etc.)" placeholderTextColor="#9AA4BF" multiline value={referencia} onChangeText={(value) => setReferencia(sanitizeText(value))} />
-        <Text style={styles.helperText}>Formato requerido: Calle y numero, Colonia, CP 12345</Text>
+        <Text style={styles.helperText}>Formato requerido: Calle [numero opcional], Colonia, CP</Text>
+        <TextInput style={styles.input} placeholder="Referencia de entrega (portón, color de casa, etc.)" placeholderTextColor="#9AA4BF" multiline value={referencia} onChangeText={setReferencia} />
         <TextInput style={styles.input} placeholder="Ciudad de destino" placeholderTextColor="#9AA4BF" value={ciudad} onChangeText={(value) => setCiudad(sanitizeText(value))} />
       </View>
 

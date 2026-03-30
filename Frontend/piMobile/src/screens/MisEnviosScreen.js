@@ -32,6 +32,7 @@ export default function MisEnviosScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [envios, setEnvios] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState('todos');
 
   const loadEnvios = useCallback(async () => {
     try {
@@ -59,12 +60,41 @@ export default function MisEnviosScreen({ navigation }) {
     }, [loadEnvios])
   );
 
+  const filteredEnvios = envios.filter((envio) => {
+    const status = String(envio?.estado_envio || '').toLowerCase();
+
+    if (selectedFilter === 'activos') {
+      return status !== 'entregado' && status !== 'cancelado';
+    }
+
+    if (selectedFilter === 'entregados') {
+      return status === 'entregado';
+    }
+
+    return true;
+  });
+
   return (
     <MainLayout title="Mis Envíos" navigation={navigation} backTo="MenuUsuario" activeTab="RastrearEnvio">
       <View style={styles.tabsRow}>
-        <Text style={styles.tabActive}>Todos</Text>
-        <Text style={styles.tab}>Activos</Text>
-        <Text style={styles.tab}>Entregados</Text>
+        <TouchableOpacity
+          style={[styles.tabBtn, selectedFilter === 'todos' && styles.tabBtnActive]}
+          onPress={() => setSelectedFilter('todos')}
+        >
+          <Text style={[styles.tab, selectedFilter === 'todos' && styles.tabActive]}>Todos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabBtn, selectedFilter === 'activos' && styles.tabBtnActive]}
+          onPress={() => setSelectedFilter('activos')}
+        >
+          <Text style={[styles.tab, selectedFilter === 'activos' && styles.tabActive]}>Activos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabBtn, selectedFilter === 'entregados' && styles.tabBtnActive]}
+          onPress={() => setSelectedFilter('entregados')}
+        >
+          <Text style={[styles.tab, selectedFilter === 'entregados' && styles.tabActive]}>Entregados</Text>
+        </TouchableOpacity>
       </View>
 
       {isLoading ? (
@@ -80,14 +110,18 @@ export default function MisEnviosScreen({ navigation }) {
         </View>
       ) : null}
 
-      {!isLoading && !errorMessage && envios.length === 0 ? (
+      {!isLoading && !errorMessage && filteredEnvios.length === 0 ? (
         <View style={styles.stateWrap}>
-          <Text style={styles.stateText}>Aún no tienes envíos registrados.</Text>
+          <Text style={styles.stateText}>
+            {selectedFilter === 'todos'
+              ? 'Aún no tienes envíos registrados.'
+              : `No hay envíos en ${selectedFilter}.`}
+          </Text>
         </View>
       ) : null}
 
       {!isLoading && !errorMessage
-        ? envios.map((envio) => (
+        ? filteredEnvios.map((envio) => (
             <View style={styles.card} key={envio.id_envio}>
               <Text style={styles.id}>{envio.paquete?.codigo_rastreo || `ENV-${envio.id_envio}`}</Text>
               <Text style={styles.date}>{formatDate(envio.fecha_creacion)}</Text>

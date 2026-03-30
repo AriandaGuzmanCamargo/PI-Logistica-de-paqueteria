@@ -29,7 +29,7 @@ function prettifyRouteName(routeName = '') {
   const routeMap = {
     Dashboard: 'Inicio',
     DashboardR: 'Repartidor',
-    MenuUsuario: 'Menú Usuario',
+    MenuUsuario: 'Inicio',
     RastrearEnvio: 'Rastrear Envío',
     MisEnvios: 'Mis Envíos',
     Notificaciones: 'Notificaciones',
@@ -71,9 +71,6 @@ export default function MainLayout({
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.screenWrap}>
-        <View style={styles.bgBubbleTop} />
-        <View style={styles.bgBubbleBottom} />
-
         <View style={styles.shell}>
           <LinearGradient
             colors={['#1A2D50', '#2F66B0', '#7399CC']}

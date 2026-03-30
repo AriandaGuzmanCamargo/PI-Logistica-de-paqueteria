@@ -7,13 +7,25 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 4,
   },
+  tabBtn: {
+    borderRadius: 999,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#EEF2FB',
+    borderWidth: 1,
+    borderColor: '#DDE3F0',
+  },
+  tabBtnActive: {
+    backgroundColor: '#DDE8FA',
+    borderColor: '#AFC3EB',
+  },
   tab: {
     color: '#8891AE',
-    fontSize: 11,
+    fontSize: 12,
+    fontWeight: '600',
   },
   tabActive: {
     color: colors.primaryDark,
-    fontSize: 11,
     fontWeight: '700',
   },
   card: {

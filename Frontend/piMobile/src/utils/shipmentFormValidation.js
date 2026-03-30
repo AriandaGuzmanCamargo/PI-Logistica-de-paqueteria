@@ -118,12 +118,12 @@ export function validateAddress(value, label = 'Direccion') {
 		throw new Error(`${label} es obligatoria.`);
 	}
 
-	const hasStreetAndNumber = /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s.\-]+\s\d+[A-Za-z0-9-]*/.test(normalized);
+	const hasStreetName = /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{3,}/.test(normalized);
 	const hasTwoCommas = (normalized.match(/,/g) || []).length >= 2;
 	const hasPostalCode = /\b\d{5}\b/.test(normalized);
 
-	if (!hasStreetAndNumber || !hasTwoCommas || !hasPostalCode) {
-		throw new Error(`${label} invalida. Usa formato: Calle y numero, Colonia, CP 12345.`);
+	if (!hasStreetName || !hasTwoCommas || !hasPostalCode) {
+		throw new Error(`${label} invalida. Usa formato: Calle [numero opcional], Colonia, CP.`);
 	}
 
 	if (normalized.length < 15) {

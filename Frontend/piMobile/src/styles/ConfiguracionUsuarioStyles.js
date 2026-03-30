@@ -38,18 +38,6 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 13,
   },
-  switchOn: {
-    width: 40,
-    height: 22,
-    borderRadius: 999,
-    backgroundColor: '#61C5AD',
-  },
-  switchOff: {
-    width: 40,
-    height: 22,
-    borderRadius: 999,
-    backgroundColor: '#CFD7EB',
-  },
 });
 
 export default styles;

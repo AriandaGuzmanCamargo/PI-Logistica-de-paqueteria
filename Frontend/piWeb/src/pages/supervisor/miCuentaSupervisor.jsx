@@ -11,6 +11,41 @@ import {
   getWebUser,
 } from '../../services/supervisorService';
 
+const ESTADOS_MX = [
+  'Aguascalientes',
+  'Baja California',
+  'Baja California Sur',
+  'Campeche',
+  'Chiapas',
+  'Chihuahua',
+  'CDMX',
+  'Coahuila',
+  'Colima',
+  'Durango',
+  'Estado de México',
+  'Guanajuato',
+  'Guerrero',
+  'Hidalgo',
+  'Jalisco',
+  'Michoacán',
+  'Morelos',
+  'Nayarit',
+  'Nuevo León',
+  'Oaxaca',
+  'Puebla',
+  'Querétaro',
+  'Quintana Roo',
+  'San Luis Potosí',
+  'Sinaloa',
+  'Sonora',
+  'Tabasco',
+  'Tamaulipas',
+  'Tlaxcala',
+  'Veracruz',
+  'Yucatán',
+  'Zacatecas',
+];
+
 function userDisplayRole(rol) {
   if (rol === 'admin') return 'Administrador';
   if (rol === 'supervisor') return 'Supervisor';
@@ -691,11 +726,16 @@ export default function MiCuentaSupervisor() {
                           />
                         </div>
                         <div className="perfil-input">
-                          <label>Ciudad</label>
-                          <input
+                          <label>Estado</label>
+                          <select
                             value={formPerfil.ciudad}
                             onChange={(event) => setFormPerfil((prev) => ({ ...prev, ciudad: event.target.value }))}
-                          />
+                          >
+                            <option value="">Selecciona un estado...</option>
+                            {ESTADOS_MX.map((estado) => (
+                              <option key={estado} value={estado}>{estado}</option>
+                            ))}
+                          </select>
                         </div>
                         <div className="perfil-input">
                           <label>Foto de perfil (URL)</label>
@@ -819,14 +859,19 @@ export default function MiCuentaSupervisor() {
                             />
                           </div>
                           <div className="perfil-input">
-                            <label>Ciudad</label>
-                            <input
+                            <label>Estado</label>
+                            <select
                               value={createUserForm.ciudad}
                               onChange={(event) =>
                                 setCreateUserForm((prev) => ({ ...prev, ciudad: event.target.value }))
                               }
                               required
-                            />
+                            >
+                              <option value="">Selecciona un estado...</option>
+                              {ESTADOS_MX.map((estado) => (
+                                <option key={estado} value={estado}>{estado}</option>
+                              ))}
+                            </select>
                           </div>
                           <div className="perfil-input">
                             <label>Contraseña</label>

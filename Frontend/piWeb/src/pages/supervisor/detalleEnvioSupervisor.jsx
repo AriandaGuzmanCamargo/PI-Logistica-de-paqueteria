@@ -297,54 +297,58 @@ export default function DetalleEnvioSupervisor() {
                     <>
                       <p><strong>Conductor:</strong> {envio.asignacion.conductor_nombre || '-'}</p>
                       <p><strong>Correo:</strong> {envio.asignacion.conductor_correo || '-'}</p>
-                      <p><strong>Estado:</strong> {envio.asignacion.estado_asignacion || '-'}</p>
-                      <div style={{ marginTop: '8px' }}>
-                        <button
-                          type="button"
-                          className="boton-detalles"
-                          onClick={handleQuitarDelRepartidor}
-                          disabled={isSaving}
-                        >
-                          {isSaving ? 'Procesando...' : 'Quitar del repartidor'}
-                        </button>
-                      </div>
+                      <p><strong>Estado:</strong> {normalizeEstadoEnvio(envio.estado_envio) === 'entregado' || normalizeEstadoEnvio(envio.estado_envio) === 'cancelado' ? (normalizeEstadoEnvio(envio.estado_envio) === 'entregado' ? 'Entregado' : 'Cancelado') : (envio.asignacion.estado_asignacion || '-')}</p>
+                      {normalizeEstadoEnvio(envio.estado_envio) !== 'entregado' && normalizeEstadoEnvio(envio.estado_envio) !== 'cancelado' && (
+                        <div style={{ marginTop: '8px' }}>
+                          <button
+                            type="button"
+                            className="boton-detalles"
+                            onClick={handleQuitarDelRepartidor}
+                            disabled={isSaving}
+                          >
+                            {isSaving ? 'Procesando...' : 'Quitar del repartidor'}
+                          </button>
+                        </div>
+                      )}
                     </>
                   ) : (
                     <p>Sin asignación activa.</p>
                   )}
 
-                  <div style={{ marginTop: '12px' }}>
-                    <p><strong>Reasignar a:</strong></p>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <select
-                        value={selectedDriverId}
-                        onChange={(e) => setSelectedDriverId(e.target.value)}
-                        disabled={isSaving || isLoadingDrivers}
-                      >
-                        <option value="">
-                          {isLoadingDrivers ? 'Cargando conductores...' : 'Seleccionar conductor'}
-                        </option>
-                        {availableDrivers.map((driver) => (
-                          <option key={driver.id_conductor} value={String(driver.id_conductor)}>
-                            {driver.nombre}
+                  {normalizeEstadoEnvio(envio.estado_envio) !== 'entregado' && normalizeEstadoEnvio(envio.estado_envio) !== 'cancelado' && (
+                    <div style={{ marginTop: '12px' }}>
+                      <p><strong>Reasignar a:</strong></p>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <select
+                          value={selectedDriverId}
+                          onChange={(e) => setSelectedDriverId(e.target.value)}
+                          disabled={isSaving || isLoadingDrivers}
+                        >
+                          <option value="">
+                            {isLoadingDrivers ? 'Cargando conductores...' : 'Seleccionar conductor'}
                           </option>
-                        ))}
-                      </select>
-                      <button
-                        type="button"
-                        className="boton-detalles"
-                        onClick={handleReasignarConductor}
-                        disabled={!selectedDriverId || isSaving || isLoadingDrivers}
-                      >
-                        {isSaving ? 'Procesando...' : 'Reasignar'}
-                      </button>
+                          {availableDrivers.map((driver) => (
+                            <option key={driver.id_conductor} value={String(driver.id_conductor)}>
+                              {driver.nombre}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          className="boton-detalles"
+                          onClick={handleReasignarConductor}
+                          disabled={!selectedDriverId || isSaving || isLoadingDrivers}
+                        >
+                          {isSaving ? 'Procesando...' : 'Reasignar'}
+                        </button>
+                      </div>
+                      {!isLoadingDrivers && availableDrivers.length === 0 ? (
+                        <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
+                          No hay conductores disponibles para la fecha seleccionada.
+                        </p>
+                      ) : null}
                     </div>
-                    {!isLoadingDrivers && availableDrivers.length === 0 ? (
-                      <p style={{ marginTop: '8px', color: '#5a6d8a' }}>
-                        No hay conductores disponibles para la fecha seleccionada.
-                      </p>
-                    ) : null}
-                  </div>
+                  )}
                 </article>
 
                 <article className="tarjeta-detalle tarjeta-detalle--acciones">

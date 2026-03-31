@@ -10,6 +10,7 @@ import {
 	updatePassword,
 	updatePasswordByAdmin,
 	updatePerfilUsuario,
+	recoverPasswordByEmailHandler,
 } from '../controllers/authController.js';
 
 const authRouter = Router();
@@ -17,6 +18,7 @@ const authRouter = Router();
 authRouter.post('/login', login);
 authRouter.post('/registro', register);
 authRouter.post('/recuperar-contrasena', recoverPassword);
+authRouter.post('/recuperar-contrasena-email', recoverPasswordByEmailHandler);
 authRouter.get('/perfil/:idUsuario', getPerfilUsuario);
 authRouter.patch('/perfil/:idUsuario', updatePerfilUsuario);
 authRouter.patch('/cambiar-contrasena/:idUsuario', updatePassword);

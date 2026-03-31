@@ -9,6 +9,7 @@ import {
   registerUser,
   requestPasswordRecovery,
   updateUserProfile,
+  recoverPasswordByEmail,
 } from '../services/authService.js';
 
 export async function login(req, res, next) {
@@ -181,6 +182,26 @@ export async function deleteUsuarioByAdmin(req, res, next) {
     res.json({
       ok: true,
       message: 'Usuario eliminado correctamente por admin.',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function recoverPasswordByEmailHandler(req, res, next) {
+  try {
+    const { correo, nuevaContrasena, confirmarContrasena } = req.body ?? {};
+
+    const data = await recoverPasswordByEmail({
+      correo,
+      nuevaContrasena,
+      confirmarContrasena,
+    });
+
+    res.json({
+      ok: true,
+      message: 'Contraseña recuperada correctamente.',
       data,
     });
   } catch (error) {

@@ -23,6 +23,25 @@ const styles = StyleSheet.create({
     padding: 12,
     color: colors.text,
   },
+  passwordInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface2,
+    borderWidth: 1.5,
+    borderColor: colors.line,
+    borderRadius: 10,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 12,
+    color: colors.text,
+    fontSize: 16,
+  },
+  eyeIcon: {
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btn: {
     backgroundColor: colors.gold,
     borderRadius: 10,

@@ -9,6 +9,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import colors from '../../theme/colors';
 import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
@@ -27,6 +28,9 @@ export default function CambiarContrasenaR({ navigation }) {
     message: '',
   });
   const { isDarkMode } = useDarkMode();
+  const [showActual, setShowActual] = useState(false);
+  const [showNueva, setShowNueva] = useState(false);
+  const [showConfirmacion, setShowConfirmacion] = useState(false);
 
   const showMessage = (title, message) => {
     setModalState({ visible: true, title, message });
@@ -73,34 +77,49 @@ export default function CambiarContrasenaR({ navigation }) {
         <View style={styles.content}>
           <View style={styles.card}>
             <Text style={styles.label}>Contraseña actual</Text>
-            <TextInput
-              value={actual}
-              onChangeText={setActual}
-              style={styles.input}
-              secureTextEntry
-              placeholder="Ingresa tu contraseña actual"
-              placeholderTextColor="#8A9ABB"
-            />
+            <View style={styles.passwordInputContainer}>
+              <TextInput
+                value={actual}
+                onChangeText={setActual}
+                style={styles.passwordInput}
+                secureTextEntry={!showActual}
+                placeholder="Ingresa tu contraseña actual"
+                placeholderTextColor="#8A9ABB"
+              />
+              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowActual(!showActual)}>
+                <Feather name={showActual ? 'eye' : 'eye-off'} size={s(20)} color="#8A9ABB" />
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.label}>Nueva contraseña</Text>
-            <TextInput
-              value={nueva}
-              onChangeText={setNueva}
-              style={styles.input}
-              secureTextEntry
-              placeholder="Ingresa tu nueva contraseña"
-              placeholderTextColor="#8A9ABB"
-            />
+            <View style={styles.passwordInputContainer}>
+              <TextInput
+                value={nueva}
+                onChangeText={setNueva}
+                style={styles.passwordInput}
+                secureTextEntry={!showNueva}
+                placeholder="Ingresa tu nueva contraseña"
+                placeholderTextColor="#8A9ABB"
+              />
+              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowNueva(!showNueva)}>
+                <Feather name={showNueva ? 'eye' : 'eye-off'} size={s(20)} color="#8A9ABB" />
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.label}>Confirmar contraseña</Text>
-            <TextInput
-              value={confirmacion}
-              onChangeText={setConfirmacion}
-              style={styles.input}
-              secureTextEntry
-              placeholder="Confirma tu nueva contraseña"
-              placeholderTextColor="#8A9ABB"
-            />
+            <View style={styles.passwordInputContainer}>
+              <TextInput
+                value={confirmacion}
+                onChangeText={setConfirmacion}
+                style={styles.passwordInput}
+                secureTextEntry={!showConfirmacion}
+                placeholder="Confirma tu nueva contraseña"
+                placeholderTextColor="#8A9ABB"
+              />
+              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmacion(!showConfirmacion)}>
+                <Feather name={showConfirmacion ? 'eye' : 'eye-off'} size={s(20)} color="#8A9ABB" />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.saveBtn} onPress={handleSaveChanges}>
               <Text style={styles.saveText}>Guardar cambios</Text>

@@ -692,3 +692,48 @@ export async function deleteManagedUserByAdmin({ idAdmin, idUsuarioObjetivo }) {
 
   return updated;
 }
+
+export async function recoverPasswordByEmail({ correo, nuevaContrasena, confirmarContrasena }) {
+  const correoLimpio = String(correo || '').trim().toLowerCase();
+  const nueva = String(nuevaContrasena || '').trim();
+  const confirmar = String(confirmarContrasena || '').trim();
+
+  if (!correoLimpio || !nueva || !confirmar) {
+    const error = new Error('Completa todos los campos.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva.length < 6) {
+    const error = new Error('La nueva contraseña debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva !== confirmar) {
+    const error = new Error('Las contraseñas no coinciden.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await findUserByEmail(correoLimpio);
+
+  if (!user) {
+    const error = new Error('El correo no está registrado.');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (user.rol !== 'cliente') {
+    const error = new Error('Solo las cuentas de usuarios pueden cambiar su contraseña.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  await updateUserPasswordById(user.id_usuario, nueva);
+
+  return {
+    id_usuario: user.id_usuario,
+    correo: user.correo,
+  };
+}

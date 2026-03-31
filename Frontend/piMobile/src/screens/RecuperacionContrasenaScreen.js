@@ -1,38 +1,69 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { recoverPasswordRequest } from '../services/authService';
+import { Feather } from '@expo/vector-icons';
+import { API_BASE_URL } from '../config/api';
 import styles from '../styles/RecuperacionContrasenaStyles';
+
+async function recoverPassword(correo, nuevaContrasena, confirmarContrasena) {
+  const response = await fetch(`${API_BASE_URL}/auth/recuperar-contrasena-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      correo,
+      nuevaContrasena,
+      confirmarContrasena,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Error al recuperar contraseña');
+  }
+
+  return response.json();
+}
 
 export default function RecuperacionContrasenaScreen({ navigation }) {
   const [correo, setCorreo] = useState('');
+  const [nuevaContrasena, setNuevaContrasena] = useState('');
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNuevaContrasena, setShowNuevaContrasena] = useState(false);
+  const [showConfirmarContrasena, setShowConfirmarContrasena] = useState(false);
 
-  const handleRecover = async () => {
+  const handleRecoverPassword = async () => {
     try {
-      const email = correo.trim().toLowerCase();
+      const correoLimpio = correo.trim().toLowerCase();
 
-      if (!email) {
-        throw new Error('Ingresa tu correo.');
+      if (!correoLimpio || !nuevaContrasena.trim() || !confirmarContrasena.trim()) {
+        throw new Error('Completa todos los campos.');
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!emailRegex.test(email)) {
+      if (!emailRegex.test(correoLimpio)) {
         throw new Error('Correo inválido.');
       }
 
-      setIsSubmitting(true);
-      await recoverPasswordRequest({ correo: email });
+      if (nuevaContrasena.length < 6) {
+        throw new Error('La nueva contraseña debe tener al menos 6 caracteres.');
+      }
 
-      Alert.alert('Solicitud enviada', 'Tu solicitud de recuperación fue registrada. Contacta al administrador.', [
+      if (nuevaContrasena !== confirmarContrasena) {
+        throw new Error('Las contraseñas no coinciden.');
+      }
+
+      setIsSubmitting(true);
+      await recoverPassword(correoLimpio, nuevaContrasena, confirmarContrasena);
+
+      Alert.alert('Contraseña actualizada', 'Tu contraseña se cambió correctamente.', [
         {
-          text: 'Volver al login',
+          text: 'Aceptar',
           onPress: () => navigation.navigate('Login'),
         },
       ]);
     } catch (error) {
-      Alert.alert('No se pudo recuperar', error.message || 'Intenta nuevamente.');
+      Alert.alert('No se pudo cambiar la contraseña', error.message || 'Intenta nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -58,26 +89,72 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
             </View>
 
             <View style={styles.card}>
-              <Text style={styles.title}>Recuperar Contraseña</Text>
-              <Text style={styles.subtitle}>Ingresa tu correo para recuperar tu contraseña.</Text>
+              <Text style={styles.title}>Cambiar Contraseña</Text>
+              <Text style={styles.subtitle}>Ingresa tu correo y una nueva contraseña.</Text>
 
               <TextInput
                 style={styles.input}
                 placeholder="Correo electrónico"
                 placeholderTextColor="#9AA4BF"
+                keyboardType="email-address"
+                autoCapitalize="none"
                 value={correo}
                 onChangeText={setCorreo}
-                autoCapitalize="none"
-                keyboardType="email-address"
+                editable={!isSubmitting}
               />
-              <TouchableOpacity style={styles.primaryBtn} onPress={handleRecover} disabled={isSubmitting}>
+
+              <View style={styles.passwordGroupBox}>
+                <View style={[styles.passwordInputContainer, styles.passwordRowWithDivider]}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Nueva contraseña"
+                    placeholderTextColor="#9AA4BF"
+                    secureTextEntry={!showNuevaContrasena}
+                    value={nuevaContrasena}
+                    onChangeText={setNuevaContrasena}
+                    editable={!isSubmitting}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowNuevaContrasena(!showNuevaContrasena)}
+                    disabled={isSubmitting}
+                  >
+                    <Feather name={showNuevaContrasena ? 'eye' : 'eye-off'} size={20} color="#6B7393" />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.passwordInputContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Confirmar contraseña"
+                    placeholderTextColor="#9AA4BF"
+                    secureTextEntry={!showConfirmarContrasena}
+                    value={confirmarContrasena}
+                    onChangeText={setConfirmarContrasena}
+                    editable={!isSubmitting}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowConfirmarContrasena(!showConfirmarContrasena)}
+                    disabled={isSubmitting}
+                  >
+                    <Feather name={showConfirmarContrasena ? 'eye' : 'eye-off'} size={20} color="#6B7393" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.primaryBtn, isSubmitting && styles.primaryBtnDisabled]}
+                onPress={handleRecoverPassword}
+                disabled={isSubmitting}
+              >
                 <LinearGradient
                   colors={['#E9CD7A', '#DBAC35', '#E9CD7A']}
                   start={{ x: 0, y: 0.5 }}
                   end={{ x: 1, y: 0.5 }}
                   style={styles.primaryBtnGradient}
                 >
-                  {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryBtnText}>Enviar Enlace de Recuperación</Text>}
+                  {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryBtnText}>Cambiar Contraseña</Text>}
                 </LinearGradient>
               </TouchableOpacity>
 

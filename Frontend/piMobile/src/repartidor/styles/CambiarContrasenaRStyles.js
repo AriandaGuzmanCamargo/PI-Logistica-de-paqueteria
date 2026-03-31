@@ -81,6 +81,28 @@ export default function getCambiarContrasenaRStyles(s, isDarkMode = false) {
       color: isDarkMode ? '#D6E3FA' : '#5A6E98',
       fontSize: s(14),
     },
+    passwordInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: isDarkMode ? '#344766' : '#D7DFEF',
+      borderRadius: s(8),
+      backgroundColor: isDarkMode ? '#151F33' : '#F8FBFF',
+      minHeight: s(42),
+      paddingHorizontal: s(10),
+    },
+    passwordInput: {
+      flex: 1,
+      color: isDarkMode ? '#D6E3FA' : '#5A6E98',
+      fontSize: s(14),
+      paddingVertical: s(8),
+    },
+    eyeIcon: {
+      paddingHorizontal: s(8),
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: s(42),
+    },
     saveBtn: {
       marginTop: s(8),
       borderRadius: s(8),

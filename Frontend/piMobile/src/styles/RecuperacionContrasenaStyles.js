@@ -113,6 +113,35 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 13,
     color: '#3E4768',
+    marginBottom: 12,
+  },
+  passwordGroupBox: {
+    marginBottom: 12,
+    backgroundColor: '#F3F5FB',
+    borderWidth: 1,
+    borderColor: '#E1E4F1',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  passwordInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  passwordRowWithDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E4F1',
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 13,
+    color: '#3E4768',
+    fontSize: 16,
+  },
+  eyeIcon: {
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   primaryBtn: {
     borderRadius: 10,
@@ -123,6 +152,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 13,
     alignItems: 'center',
+  },
+  primaryBtnDisabled: {
+    opacity: 0.7,
   },
   primaryBtnText: {
     color: colors.white,

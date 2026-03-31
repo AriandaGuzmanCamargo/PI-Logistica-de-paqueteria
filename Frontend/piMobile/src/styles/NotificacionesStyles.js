@@ -38,6 +38,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
     lineHeight: 20,
   },
+  deliveryMeta: {
+    color: colors.muted,
+    marginTop: 6,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  deliveryPhoto: {
+    width: '100%',
+    height: 180,
+    borderRadius: 10,
+    marginTop: 10,
+    backgroundColor: '#E7ECF4',
+  },
   stateWrap: {
     alignItems: 'center',
     justifyContent: 'center',

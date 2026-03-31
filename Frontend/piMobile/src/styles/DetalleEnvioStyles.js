@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 14,
   },
+  deliveryImage: {
+    width: '100%',
+    height: 190,
+    borderRadius: 12,
+    marginTop: 8,
+    backgroundColor: colors.surface2,
+  },
   input: {
     backgroundColor: colors.surface2,
     borderWidth: 1.5,

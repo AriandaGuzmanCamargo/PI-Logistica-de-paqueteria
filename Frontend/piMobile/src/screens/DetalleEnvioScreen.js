@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput, Image } from 'react-native';
 import MainLayout from '../components/MainLayout';
 import { getDetalleEnvio, updateEnvioByCliente, cancelEnvioByCliente } from '../services/enviosService';
 import { getCurrentUser } from '../services/sessionService';
@@ -13,6 +13,21 @@ function formatDate(isoString) {
     month: 'short',
     day: 'numeric',
   });
+}
+
+function formatDateTime(isoString) {
+  if (!isoString) return 'Sin fecha';
+  const date = new Date(isoString);
+  const day = date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const time = date.toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return `${day} · ${time}`;
 }
 
 function formatStatus(status) {
@@ -187,6 +202,19 @@ export default function DetalleEnvioScreen({ navigation, route }) {
         <Text style={styles.row}>Remitente: {detalle.remitente?.nombre || 'Sin remitente'}</Text>
         <Text style={styles.row}>Pago: Contraentrega</Text>
       </View>
+
+      {String(detalle.estado_envio || '').toLowerCase() === 'entregado' ? (
+        <View style={styles.card}>
+          <Text style={styles.title}>Evidencia de Entrega</Text>
+          <Text style={styles.row}>Fecha y hora: {formatDateTime(detalle.fecha_entrega_real)}</Text>
+          <Text style={styles.row}>Recibió: {detalle.recibio_entrega_nombre || 'No especificado'}</Text>
+          {detalle.foto_entrega_url ? (
+            <Image source={{ uri: detalle.foto_entrega_url }} style={styles.deliveryImage} resizeMode="cover" />
+          ) : (
+            <Text style={styles.row}>Sin foto registrada</Text>
+          )}
+        </View>
+      ) : null}
 
       {canModify ? (
         <View style={styles.actionsWrap}>

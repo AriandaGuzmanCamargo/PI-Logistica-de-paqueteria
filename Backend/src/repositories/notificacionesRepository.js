@@ -1,5 +1,27 @@
 import { pool } from '../db/pool.js';
 
+async function ensureDeliveryNotificationColumns() {
+  await pool.query(
+    `ALTER TABLE notificaciones
+     ADD COLUMN IF NOT EXISTS id_envio INT`
+  );
+
+  await pool.query(
+    `ALTER TABLE notificaciones
+     ADD COLUMN IF NOT EXISTS foto_entrega_url TEXT`
+  );
+
+  await pool.query(
+    `ALTER TABLE notificaciones
+     ADD COLUMN IF NOT EXISTS fecha_evento TIMESTAMP`
+  );
+
+  await pool.query(
+    `ALTER TABLE notificaciones
+     ADD COLUMN IF NOT EXISTS recibio_entrega_nombre VARCHAR(120)`
+  );
+}
+
 export async function findUserById(userId) {
   const result = await pool.query(
     `SELECT id_usuario, rol
@@ -13,13 +35,19 @@ export async function findUserById(userId) {
 }
 
 export async function listNotificationsByUser(userId) {
+  await ensureDeliveryNotificationColumns();
+
   const result = await pool.query(
     `SELECT
         id_notificacion,
         titulo,
         mensaje,
         leida,
-        fecha
+        fecha,
+        id_envio,
+        foto_entrega_url,
+        fecha_evento,
+        recibio_entrega_nombre
      FROM notificaciones
      WHERE id_usuario = $1
      ORDER BY fecha DESC`,
@@ -30,6 +58,8 @@ export async function listNotificationsByUser(userId) {
 }
 
 export async function listNotificationsForOperator() {
+  await ensureDeliveryNotificationColumns();
+
   const result = await pool.query(
     `SELECT
         n.id_notificacion,
@@ -37,6 +67,10 @@ export async function listNotificationsForOperator() {
         n.mensaje,
         n.leida,
         n.fecha,
+        n.id_envio,
+        n.foto_entrega_url,
+        n.fecha_evento,
+        n.recibio_entrega_nombre,
         u.id_usuario
      FROM notificaciones n
      JOIN usuarios u ON u.id_usuario = n.id_usuario
@@ -52,6 +86,8 @@ export async function listNotificationsByRoles(roles) {
     return [];
   }
 
+  await ensureDeliveryNotificationColumns();
+
   const result = await pool.query(
     `SELECT
         n.id_notificacion,
@@ -59,6 +95,10 @@ export async function listNotificationsByRoles(roles) {
         n.mensaje,
         n.leida,
         n.fecha,
+        n.id_envio,
+        n.foto_entrega_url,
+        n.fecha_evento,
+        n.recibio_entrega_nombre,
         n.id_usuario
      FROM notificaciones n
      JOIN usuarios u ON u.id_usuario = n.id_usuario
@@ -86,24 +126,49 @@ export async function findUserIdsByRoles(roles) {
   return result.rows.map((row) => row.id_usuario);
 }
 
-export async function createNotificationsForUsers(userIds, { titulo, mensaje }) {
+export async function createNotificationsForUsers(
+  userIds,
+  { titulo, mensaje, idEnvio, fotoEntregaUrl, fechaEvento, recibioEntregaNombre } = {}
+) {
+  await ensureDeliveryNotificationColumns();
+
   if (!Array.isArray(userIds) || userIds.length === 0) {
     return 0;
   }
 
   const title = String(titulo || '').trim();
   const message = String(mensaje || '').trim();
+  const shipmentId = Number.isInteger(Number(idEnvio)) ? Number(idEnvio) : null;
+  const deliveryPhoto =
+    typeof fotoEntregaUrl === 'string' && fotoEntregaUrl.trim().length > 0
+      ? fotoEntregaUrl.trim()
+      : null;
+  const eventDate = fechaEvento || null;
+  const receiverName =
+    typeof recibioEntregaNombre === 'string' && recibioEntregaNombre.trim().length > 0
+      ? recibioEntregaNombre.trim().slice(0, 120)
+      : null;
 
   if (!title || !message) {
     return 0;
   }
 
   const result = await pool.query(
-    `INSERT INTO notificaciones (id_usuario, titulo, mensaje, leida, fecha)
-     SELECT DISTINCT u.id_usuario, $2, $3, FALSE, NOW()
+    `INSERT INTO notificaciones (
+      id_usuario,
+      titulo,
+      mensaje,
+      leida,
+      fecha,
+      id_envio,
+      foto_entrega_url,
+      fecha_evento,
+      recibio_entrega_nombre
+     )
+     SELECT DISTINCT u.id_usuario, $2, $3, FALSE, NOW(), $4, $5, $6, $7
      FROM unnest($1::int[]) AS u(id_usuario)
      RETURNING id_notificacion`,
-    [userIds, title, message]
+    [userIds, title, message, shipmentId, deliveryPhoto, eventDate, receiverName]
   );
 
   return result.rowCount || 0;

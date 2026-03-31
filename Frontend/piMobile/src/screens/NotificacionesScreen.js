@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import MainLayout from '../components/MainLayout';
 import { getCurrentUser } from '../services/sessionService';
@@ -22,6 +22,23 @@ function formatRelativeDate(isoString) {
   const diffDays = Math.floor(diffHours / 24);
   if (diffDays === 1) return 'Ayer';
   return `Hace ${diffDays} días`;
+}
+
+function formatDateTime(isoString) {
+  if (!isoString) return 'Sin fecha';
+
+  const date = new Date(isoString);
+  const day = date.toLocaleDateString('es-MX', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+  const time = date.toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return `${day} · ${time}`;
 }
 
 export default function NotificacionesScreen({ navigation }) {
@@ -91,6 +108,22 @@ export default function NotificacionesScreen({ navigation }) {
                 <Text style={styles.time}>{formatRelativeDate(item.fecha)}</Text>
               </View>
               <Text style={styles.message}>{item.mensaje || 'Sin contenido'}</Text>
+
+              {item.fecha_evento ? (
+                <Text style={styles.deliveryMeta}>Entrega: {formatDateTime(item.fecha_evento)}</Text>
+              ) : null}
+
+              {item.recibio_entrega_nombre ? (
+                <Text style={styles.deliveryMeta}>Recibió: {item.recibio_entrega_nombre}</Text>
+              ) : null}
+
+              {item.foto_entrega_url ? (
+                <Image
+                  source={{ uri: item.foto_entrega_url }}
+                  style={styles.deliveryPhoto}
+                  resizeMode="cover"
+                />
+              ) : null}
             </View>
           ))
         : null}

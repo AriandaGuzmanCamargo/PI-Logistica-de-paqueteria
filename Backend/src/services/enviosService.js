@@ -14,7 +14,17 @@ import {
 } from '../repositories/enviosRepository.js';
 import { notifyUsersByIds, notifyUsersByRoles } from './notificacionesService.js';
 
-async function notifyShipmentStakeholders(idEnvio, { titulo, mensaje, includeRoles = [] } = {}) {
+async function notifyShipmentStakeholders(
+  idEnvio,
+  {
+    titulo,
+    mensaje,
+    includeRoles = [],
+    fotoEntregaUrl = null,
+    fechaEvento = null,
+    recibioEntregaNombre = null,
+  } = {}
+) {
   if (!idEnvio || !titulo || !mensaje) {
     return;
   }
@@ -31,11 +41,25 @@ async function notifyShipmentStakeholders(idEnvio, { titulo, mensaje, includeRol
   ]);
 
   if (userIds.length > 0) {
-    await notifyUsersByIds(userIds, { titulo, mensaje });
+    await notifyUsersByIds(userIds, {
+      titulo,
+      mensaje,
+      idEnvio,
+      fotoEntregaUrl,
+      fechaEvento,
+      recibioEntregaNombre,
+    });
   }
 
   if (Array.isArray(includeRoles) && includeRoles.length > 0) {
-    await notifyUsersByRoles(includeRoles, { titulo, mensaje });
+    await notifyUsersByRoles(includeRoles, {
+      titulo,
+      mensaje,
+      idEnvio,
+      fotoEntregaUrl,
+      fechaEvento,
+      recibioEntregaNombre,
+    });
   }
 }
 
@@ -473,17 +497,34 @@ export async function markShipmentDeliveredByDriver({ userId, idEnvio, fotoEntre
     recibioEntregaNombre: parsedReceiverName,
   });
 
+  const deliveredShipment = await getShipmentDetailById(parsedShipmentId);
+  const deliveryDate = deliveredShipment?.fecha_entrega_real
+    ? new Date(deliveredShipment.fecha_entrega_real)
+    : new Date();
+  const formattedDeliveryDate = deliveryDate.toLocaleDateString('es-MX', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+  const formattedDeliveryTime = deliveryDate.toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   try {
     await notifyShipmentStakeholders(parsedShipmentId, {
       titulo: 'Envio entregado',
-      mensaje: `El envio #${parsedShipmentId} fue entregado correctamente.`,
+      mensaje: `Tu envio #${parsedShipmentId} fue entregado el ${formattedDeliveryDate} a las ${formattedDeliveryTime}.`,
+      fotoEntregaUrl: deliveredShipment?.foto_entrega_url || parsedDeliveryPhoto,
+      fechaEvento: deliveredShipment?.fecha_entrega_real || deliveryDate.toISOString(),
+      recibioEntregaNombre: deliveredShipment?.recibio_entrega_nombre || parsedReceiverName,
       includeRoles: ['operador', 'admin', 'supervisor'],
     });
   } catch (notificationError) {
     console.error('No se pudo generar notificacion de envio entregado:', notificationError);
   }
 
-  return getShipmentDetailById(parsedShipmentId);
+  return deliveredShipment;
 }
 
 function roundTo2(value) {

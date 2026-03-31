@@ -15,6 +15,10 @@ function mapNotification(item) {
     mensaje: item.mensaje,
     leida: item.leida,
     fecha: item.fecha,
+    id_envio: item.id_envio ?? null,
+    foto_entrega_url: item.foto_entrega_url || null,
+    fecha_evento: item.fecha_evento || null,
+    recibio_entrega_nombre: item.recibio_entrega_nombre || null,
     id_usuario: item.id_usuario ?? null,
   };
 }
@@ -47,12 +51,12 @@ export async function getNotificationsByUser(userId) {
   return rows.map(mapNotification);
 }
 
-export async function notifyUsersByRoles(roles, { titulo, mensaje }) {
+export async function notifyUsersByRoles(roles, payload) {
   const userIds = await findUserIdsByRoles(roles);
-  return createNotificationsForUsers(userIds, { titulo, mensaje });
+  return createNotificationsForUsers(userIds, payload);
 }
 
-export async function notifyUsersByIds(userIds, { titulo, mensaje }) {
+export async function notifyUsersByIds(userIds, payload) {
   if (!Array.isArray(userIds) || userIds.length === 0) {
     return 0;
   }
@@ -63,7 +67,7 @@ export async function notifyUsersByIds(userIds, { titulo, mensaje }) {
       .filter((id) => Number.isInteger(id) && id > 0)
   )];
 
-  return createNotificationsForUsers(sanitizedUserIds, { titulo, mensaje });
+  return createNotificationsForUsers(sanitizedUserIds, payload);
 }
 
 export async function markNotificationAsRead({ userId, notificationId }) {

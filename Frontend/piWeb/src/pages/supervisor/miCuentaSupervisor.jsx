@@ -938,7 +938,7 @@ export default function MiCuentaSupervisor() {
 
                         <div className="perfil-actions">
                           <button type="submit" className="btn-main" disabled={savingCreateUser}>
-                            {savingCreateUser ? 'Creando...' : 'Agregar usuario'}
+                            {savingCreateUser ? 'Creando...' : 'Agregar'}
                           </button>
                         </div>
                       </form>

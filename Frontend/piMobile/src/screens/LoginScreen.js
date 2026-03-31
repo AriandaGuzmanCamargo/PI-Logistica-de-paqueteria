@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/LoginStyles';
 import { loginRequest } from '../services/authService';
 import { setCurrentUser } from '../services/sessionService';
@@ -8,6 +20,7 @@ import { setCurrentUser } from '../services/sessionService';
 export default function LoginScreen({ navigation }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,8 +77,19 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.waveThree} />
         <View style={styles.waveFour} />
 
-        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
+        <KeyboardAvoidingView
+          style={styles.keyboardWrap}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 18 : 0}
+        >
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            automaticallyAdjustKeyboardInsets
+          >
+            <View style={styles.content}>
             <View style={styles.hero}>
               <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
               <Text style={styles.heroText}>Metzvia</Text>
@@ -84,14 +108,29 @@ export default function LoginScreen({ navigation }) {
                 value={correo}
                 onChangeText={setCorreo}
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Contraseña"
-                placeholderTextColor="#9AA4BF"
-                secureTextEntry
-                value={contrasena}
-                onChangeText={setContrasena}
-              />
+              <View style={styles.passwordWrap}>
+                <TextInput
+                  style={[styles.input, styles.inputPassword]}
+                  placeholder="Contraseña"
+                  placeholderTextColor="#9AA4BF"
+                  secureTextEntry={!showPassword}
+                  value={contrasena}
+                  onChangeText={setContrasena}
+                />
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#6D79A2"
+                  />
+                </TouchableOpacity>
+              </View>
 
               {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
@@ -122,8 +161,9 @@ export default function LoginScreen({ navigation }) {
                 <Text style={styles.note}>¿No tienes cuenta? <Text style={styles.linkStrong}>Regístrate</Text></Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </ScrollView>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </LinearGradient>
     </SafeAreaView>
   );

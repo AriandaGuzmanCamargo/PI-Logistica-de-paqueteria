@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Platform,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   Text,
   TextInput,
@@ -70,7 +71,12 @@ export default function CambiarContrasenaR({ navigation }) {
 
         <TopHeaderR s={s} navigation={navigation} title="Cambiar Contraseña" />
 
-        <View style={styles.content}>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.card}>
             <Text style={styles.label}>Contraseña actual</Text>
             <TextInput
@@ -106,7 +112,7 @@ export default function CambiarContrasenaR({ navigation }) {
               <Text style={styles.saveText}>Guardar cambios</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
 
         <BottomNavR navigation={navigation} s={s} activeTab="Perfil" showRutaBadge />
 

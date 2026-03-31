@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
   gradientBackground: {
     flex: 1,
   },
+  keyboardWrap: {
+    flex: 1,
+  },
   waveOne: {
     position: 'absolute',
     width: '210%',
@@ -142,6 +145,18 @@ const styles = StyleSheet.create({
     padding: 13,
     color: '#3E4768',
     marginBottom: 12,
+  },
+  passwordWrap: {
+    position: 'relative',
+  },
+  inputPassword: {
+    paddingRight: 44,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    padding: 2,
   },
   errorText: {
     color: '#B71C1C',

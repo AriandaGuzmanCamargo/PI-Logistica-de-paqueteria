@@ -175,8 +175,8 @@ export async function updateUserProfile({ idUsuario, payload }) {
     throw error;
   }
 
-  if (!/^\d{8,15}$/.test(telefono)) {
-    const error = new Error('Telefono invalido. Usa solo digitos de 8 a 15 caracteres.');
+  if (!/^\d{10}$/.test(telefono)) {
+    const error = new Error('Telefono invalido. Debe tener exactamente 10 digitos numericos.');
     error.statusCode = 400;
     throw error;
   }
@@ -577,6 +577,18 @@ export async function createManagedUserByAdmin({ idAdmin, payload }) {
   if (rol === 'conductor') {
     if (!licencia || !tipoLicencia || !fechaContratacion) {
       const error = new Error('Para conductor debes capturar licencia, tipo de licencia y fecha de contratacion.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (licencia.length > 8) {
+      const error = new Error('La licencia permite maximo 8 caracteres.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (tipoLicencia.length > 8) {
+      const error = new Error('El tipo de licencia permite maximo 8 caracteres.');
       error.statusCode = 400;
       throw error;
     }

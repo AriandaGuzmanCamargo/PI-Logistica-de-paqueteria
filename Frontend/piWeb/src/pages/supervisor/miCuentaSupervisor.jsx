@@ -364,9 +364,33 @@ export default function MiCuentaSupervisor() {
 
     try {
       clearFeedback();
+
+      const telefonoLimpio = String(createUserForm.telefono || '').replace(/\D/g, '').slice(0, 10);
+      if (telefonoLimpio.length !== 10) {
+        showToast('error', 'El telefono debe tener exactamente 10 digitos numericos.');
+        return;
+      }
+
+      const licenciaLimpia = String(createUserForm.licencia || '').trim();
+      if (createUserForm.rol === 'conductor' && licenciaLimpia.length > 8) {
+        showToast('error', 'La licencia permite maximo 8 caracteres.');
+        return;
+      }
+
+      const tipoLicenciaLimpio = String(createUserForm.tipo_licencia || '').trim();
+      if (tipoLicenciaLimpio.length > 8) {
+        showToast('error', 'El tipo de licencia acepta maximo 8 caracteres.');
+        return;
+      }
+
       setSavingCreateUser(true);
 
-      const created = await crearUsuarioGestionPorAdmin(createUserForm);
+      const created = await crearUsuarioGestionPorAdmin({
+        ...createUserForm,
+        telefono: telefonoLimpio,
+        licencia: licenciaLimpia.slice(0, 8),
+        tipo_licencia: tipoLicenciaLimpio,
+      });
 
       setCreateUserForm({
         rol: 'operador',
@@ -851,9 +875,14 @@ export default function MiCuentaSupervisor() {
                           <div className="perfil-input">
                             <label>Teléfono</label>
                             <input
+                              inputMode="numeric"
+                              maxLength={10}
                               value={createUserForm.telefono}
                               onChange={(event) =>
-                                setCreateUserForm((prev) => ({ ...prev, telefono: event.target.value }))
+                                setCreateUserForm((prev) => ({
+                                  ...prev,
+                                  telefono: event.target.value.replace(/\D/g, '').slice(0, 10),
+                                }))
                               }
                               required
                             />
@@ -900,9 +929,13 @@ export default function MiCuentaSupervisor() {
                               <div className="perfil-input">
                                 <label>Licencia</label>
                                 <input
+                                  maxLength={8}
                                   value={createUserForm.licencia}
                                   onChange={(event) =>
-                                    setCreateUserForm((prev) => ({ ...prev, licencia: event.target.value }))
+                                    setCreateUserForm((prev) => ({
+                                      ...prev,
+                                      licencia: event.target.value.slice(0, 8),
+                                    }))
                                   }
                                   required
                                 />
@@ -912,7 +945,10 @@ export default function MiCuentaSupervisor() {
                                 <select
                                   value={createUserForm.tipo_licencia}
                                   onChange={(event) =>
-                                    setCreateUserForm((prev) => ({ ...prev, tipo_licencia: event.target.value }))
+                                    setCreateUserForm((prev) => ({
+                                      ...prev,
+                                      tipo_licencia: event.target.value.slice(0, 8),
+                                    }))
                                   }
                                 >
                                   <option value="A">A</option>

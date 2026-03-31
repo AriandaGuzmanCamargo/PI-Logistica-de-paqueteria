@@ -63,12 +63,11 @@ export default function GestRepartidorSupervisor() {
   }, []);
 
   const resumen = useMemo(() => {
-    const activos = conductores.filter((c) => c.estado !== 'fuera_servicio').length;
+    // const activos = conductores.filter((c) => c.estado !== 'fuera_servicio').length;
     const enRuta = conductores.filter((c) => c.estado === 'en_ruta').length;
     const sinAsignacion = conductores.filter((c) => c.estado === 'sin_asignacion').length;
 
     return {
-      activos,
       enRuta,
       sinAsignacion,
       total: conductores.length,
@@ -79,7 +78,7 @@ export default function GestRepartidorSupervisor() {
     return conductores.filter((item) => {
       const coincideFiltro =
         filtro === 'todos' ||
-        (filtro === 'activos' && item.estado !== 'fuera_servicio') ||
+        // (filtro === 'activos' && item.estado !== 'fuera_servicio') ||
         (filtro === 'en_ruta' && item.estado === 'en_ruta') ||
         (filtro === 'sin_asignacion' && item.estado === 'sin_asignacion');
 
@@ -322,9 +321,7 @@ export default function GestRepartidorSupervisor() {
                 onChange={(e) => setBusqueda(e.target.value)}
               />
             </div>
-            <button className="grep-chip grep-chip--activos" type="button" onClick={() => setFiltro('activos')}>
-              Activos <span className="grep-chip__count">{loading ? '...' : resumen.activos}</span>
-            </button>
+
             <button className="grep-chip grep-chip--enruta" type="button" onClick={() => setFiltro('en_ruta')}>
               En ruta <span className="grep-chip__count">{loading ? '...' : resumen.enRuta}</span>
             </button>

@@ -559,29 +559,30 @@ tbody tr:hover {
   display: inline-block;
 }
 
+
 .estado--pendiente {
-  background: #d7efe0;
-  color: #488968;
+  background: #fff3cd;
+  color: #b48a00;
 }
 
 .estado--transito {
-  background: #f7ecca;
-  color: #9b782d;
+  background: #d0f5e8;
+  color: #008c3a;
 }
 
 .estado--retrasado {
-  background: #f8d6e3;
-  color: #af4268;
+  background: #ffe0e6;
+  color: #c62828;
 }
 
 .estado--entregado {
-  background: #d7efe0;
-  color: #2f7f59;
+  background: #d0e7ff;
+  color: #1565c0;
 }
 
 .estado--cancelado {
-  background: #f9d9d9;
-  color: #b33f3f;
+  background: #ffe0e0;
+  color: #d32f2f;
 }
 
 .ui-spinner {

@@ -597,7 +597,7 @@ export default function RutaRepartidorSupervisor() {
                           <td>{item.direccion_destino || '-'} ({item.ciudad_destino || '-'})</td>
                           <td>
                             <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                              ● {estadoEnvioTexto(item.estado_envio)}
+                              {estadoEnvioTexto(item.estado_envio)}
                             </span>
                           </td>
                           <td>

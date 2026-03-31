@@ -74,6 +74,7 @@ const mapShipmentToRouteDelivery = (envio, index) => {
 	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
 	const clientName = envio?.destinatario?.nombre || 'Destinatario';
 	const address = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean).join(', ');
+	const originAddress = [envio?.direccion_origen, envio?.ciudad_origen].filter(Boolean).join(', ');
 	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
 	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
 	const done = estadoEnvio === 'entregado' || estadoPaquete === 'entregado';
@@ -84,12 +85,16 @@ const mapShipmentToRouteDelivery = (envio, index) => {
 		clientName,
 		name: clientName,
 		address,
+		originAddress,
+		creado_por_rol: envio?.creado_por_rol || null,
 		phone: envio?.destinatario?.telefono || '',
 		done,
 		canceled,
 		id_envio: envio?.id_envio || null,
 	};
 };
+
+const isOperatorCreatedShipment = (delivery) => String(delivery?.creado_por_rol || '').toLowerCase() === 'operador';
 
 export default function RutaR({ navigation, route }) {
 	const { width } = useWindowDimensions();
@@ -168,10 +173,7 @@ export default function RutaR({ navigation, route }) {
 		distanceMeters: null,
 		durationSeconds: null,
 	});
-	const [isLiveTracking, setIsLiveTracking] = useState(false);
-	const liveWatchRef = useRef(null);
 	const destinationRef = useRef(DEFAULT_DESTINATION);
-	const lastRouteCalcRef = useRef(0);
 
 	useEffect(() => {
 		destinationRef.current = mapState.destination;
@@ -182,11 +184,41 @@ export default function RutaR({ navigation, route }) {
 
 		try {
 			const Location = await getExpoLocationModule();
-
-			const currentPosition = await resolveCurrentPosition(DEFAULT_ORIGIN);
-			const origin = currentPosition.origin;
+			const operatorCreated = isOperatorCreatedShipment(deliveryData);
+			const normalizedOriginAddress = normalizeAddressQuery(deliveryData.originAddress);
+			let origin = null;
 			let destination = null;
-			let warning = currentPosition.warning || '';
+			let warning = '';
+
+			if (operatorCreated) {
+				origin = { ...DEFAULT_ORIGIN };
+			} else if (normalizedOriginAddress) {
+				try {
+					const originLocalResults = await Location.geocodeAsync(normalizedOriginAddress);
+					const localOrigin = Array.isArray(originLocalResults) ? originLocalResults[0] : null;
+
+					if (localOrigin?.latitude && localOrigin?.longitude) {
+						origin = {
+							latitude: localOrigin.latitude,
+							longitude: localOrigin.longitude,
+						};
+					}
+				} catch {
+					origin = null;
+				}
+
+				if (!origin) {
+					try {
+						origin = await geocodeAddress(deliveryData.originAddress);
+					} catch {
+						origin = { ...DEFAULT_ORIGIN };
+						warning = 'No se pudo geocodificar el origen del envio. Se usa una ubicacion aproximada de origen.';
+					}
+				}
+			} else {
+				origin = { ...DEFAULT_ORIGIN };
+				warning = 'El envio no tiene direccion de origen registrada. Se usa una ubicacion aproximada de origen.';
+			}
 
 			const normalizedAddress = normalizeAddressQuery(deliveryData.address);
 
@@ -209,7 +241,7 @@ export default function RutaR({ navigation, route }) {
 					destination = await geocodeAddress(deliveryData.address);
 				} catch {
 					destination = { ...DEFAULT_DESTINATION };
-					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion exacta.';
+					warning = warning || 'Usando ubicacion aproximada: no se pudo geocodificar la direccion de destino exacta.';
 				}
 			}
 
@@ -240,104 +272,7 @@ export default function RutaR({ navigation, route }) {
 
 	useEffect(() => {
 		resolveRoute();
-	}, [deliveryData.address]);
-
-	const stopLiveTracking = () => {
-		if (liveWatchRef.current) {
-			liveWatchRef.current.remove();
-			liveWatchRef.current = null;
-		}
-
-		setIsLiveTracking(false);
-	};
-
-	const startLiveTracking = async () => {
-		if (Platform.OS === 'web') {
-			Alert.alert('No disponible', 'El seguimiento en vivo esta disponible solo en Android/iOS.');
-			return;
-		}
-
-		if (liveWatchRef.current) {
-			return;
-		}
-
-		try {
-			const Location = await getExpoLocationModule();
-			const requestPermission = Location.requestForegroundPermissionsAsync;
-
-			if (typeof requestPermission !== 'function') {
-				Alert.alert('No disponible', 'Este dispositivo no permite solicitar permisos de ubicacion.');
-				return;
-			}
-
-			const permission = await requestPermission();
-
-			if (permission.status !== 'granted') {
-				Alert.alert('Permiso requerido', 'Debes habilitar ubicacion para seguimiento en vivo.');
-				return;
-			}
-
-			setIsLiveTracking(true);
-			lastRouteCalcRef.current = 0;
-
-			liveWatchRef.current = await Location.watchPositionAsync(
-				{
-					accuracy: Location.Accuracy.High,
-					timeInterval: 5000,
-					distanceInterval: 10,
-				},
-				async (position) => {
-					const origin = {
-						latitude: position.coords.latitude,
-						longitude: position.coords.longitude,
-					};
-
-					setMapState((prev) => ({
-						...prev,
-						origin,
-						warning: prev.warning?.includes('Permiso') ? '' : prev.warning,
-					}));
-
-					const destination = destinationRef.current;
-					if (!destination) {
-						return;
-					}
-
-					const now = Date.now();
-					if (now - lastRouteCalcRef.current < 4000) {
-						return;
-					}
-
-					lastRouteCalcRef.current = now;
-
-					try {
-						const routeData = await getDrivingRoute(origin, destination);
-						setMapState((prev) => ({
-							...prev,
-							origin,
-							routeCoordinates: routeData.coordinates,
-							distanceMeters: routeData.distanceMeters,
-							durationSeconds: routeData.durationSeconds,
-						}));
-					} catch {
-						// Keep last route if recalculation fails temporarily.
-					}
-				}
-			);
-		} catch (error) {
-			setIsLiveTracking(false);
-			Alert.alert('Seguimiento no disponible', error.message || 'No se pudo iniciar el seguimiento en vivo.');
-		}
-	};
-
-	useEffect(() => {
-		return () => {
-			if (liveWatchRef.current) {
-				liveWatchRef.current.remove();
-				liveWatchRef.current = null;
-			}
-		};
-	}, []);
+	}, [deliveryData.address, deliveryData.originAddress]);
 
 	const mapRegion = useMemo(() => {
 		if (mapState.origin && mapState.destination) {
@@ -474,18 +409,10 @@ export default function RutaR({ navigation, route }) {
 						{mapState.warning ? <Text style={styles.warningText}>{mapState.warning}</Text> : null}
 
 						<TouchableOpacity style={styles.refreshBtn} onPress={resolveRoute}>
-							<Text style={styles.refreshBtnText}>Actualizar ubicacion real</Text>
-						</TouchableOpacity>
+						<Text style={styles.refreshBtnText}>Actualizar ruta desde origen</Text>
+					</TouchableOpacity>
 
-						<TouchableOpacity
-							style={[styles.liveBtn, isLiveTracking && styles.liveBtnActive]}
-							onPress={isLiveTracking ? stopLiveTracking : startLiveTracking}
-						>
-							<Text style={styles.liveBtnText}>{isLiveTracking ? 'Detener seguimiento en vivo' : 'Iniciar seguimiento en vivo'}</Text>
-						</TouchableOpacity>
-
-						{isLiveTracking ? <Text style={styles.liveStatus}>Seguimiento en vivo activo</Text> : null}
-
+					<Text style={styles.liveStatus}>Ubicacion real desactivada: la ruta se simula segun el tipo de envio.</Text>
 						<TouchableOpacity style={styles.startBtn} onPress={openExternalNavigation}>
 							<Text style={styles.startBtnText}>Iniciar navegacion</Text>
 						</TouchableOpacity>

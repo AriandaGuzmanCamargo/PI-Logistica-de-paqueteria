@@ -14,6 +14,13 @@ async function ensureDeliveryReceiverColumn() {
   );
 }
 
+async function ensureShipmentCreatorRoleColumn() {
+  await pool.query(
+    `ALTER TABLE envios
+     ADD COLUMN IF NOT EXISTS creado_por_rol VARCHAR(20)`
+  );
+}
+
 export async function findUserById(userId) {
   const result = await pool.query(
     `SELECT id_usuario, nombre, apellido, rol
@@ -108,6 +115,8 @@ export async function findUserIdsByClientIds(clientIds) {
 }
 
 export async function listShipmentsByClientId(clientId) {
+  await ensureShipmentCreatorRoleColumn();
+
   const result = await pool.query(
     `SELECT
         e.id_envio,
@@ -120,6 +129,7 @@ export async function listShipmentsByClientId(clientId) {
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
         e.costo_total,
+        e.creado_por_rol,
         c_rem.nombre AS remitente_nombre,
         c_des.nombre AS destinatario_nombre,
         p.id_paquete,
@@ -139,6 +149,8 @@ export async function listShipmentsByClientId(clientId) {
 }
 
 export async function listShipmentsForOperator() {
+  await ensureShipmentCreatorRoleColumn();
+
   const result = await pool.query(
     `SELECT
         e.id_envio,
@@ -151,6 +163,7 @@ export async function listShipmentsForOperator() {
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
         e.costo_total,
+        e.creado_por_rol,
         c_rem.nombre AS remitente_nombre,
         c_des.nombre AS destinatario_nombre,
         p.id_paquete,
@@ -180,6 +193,8 @@ async function hasAssignmentTables() {
 }
 
 export async function listShipmentsAssignedToDriverByUserId(userId) {
+  await ensureShipmentCreatorRoleColumn();
+
   const hasTables = await hasAssignmentTables();
 
   if (!hasTables) {
@@ -199,6 +214,7 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
         e.costo_total,
+        e.creado_por_rol,
         c_rem.nombre AS remitente_nombre,
         c_des.nombre AS destinatario_nombre,
         p.id_paquete,
@@ -225,6 +241,7 @@ export async function listShipmentsAssignedToDriverByUserId(userId) {
 export async function findShipmentById(idEnvio) {
   await ensureDeliveryPhotoColumn();
   await ensureDeliveryReceiverColumn();
+  await ensureShipmentCreatorRoleColumn();
 
   const result = await pool.query(
     `SELECT
@@ -239,6 +256,7 @@ export async function findShipmentById(idEnvio) {
         e.fecha_entrega_real,
         e.foto_entrega_url,
         e.recibio_entrega_nombre,
+        e.creado_por_rol,
         e.costo_total,
         c_rem.id_cliente AS remitente_id,
         c_rem.nombre AS remitente_nombre,
@@ -464,6 +482,8 @@ export async function updateClientProfileById(clientId, payload) {
 }
 
 export async function createShipmentWithPackageByClient(payload) {
+  await ensureShipmentCreatorRoleColumn();
+
   const client = await pool.connect();
 
   try {
@@ -565,8 +585,9 @@ export async function createShipmentWithPackageByClient(payload) {
         ciudad_destino,
         fecha_estimada_entrega,
         costo_total,
+        creado_por_rol,
         estado_envio
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pendiente')
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pendiente')
       RETURNING id_envio`,
       [
         senderId,
@@ -577,6 +598,7 @@ export async function createShipmentWithPackageByClient(payload) {
         payload.destinatario.ciudad,
         payload.fecha_estimada_entrega,
         payload.costo_total,
+        payload.creado_por_rol || 'cliente',
       ]
     );
 
@@ -627,7 +649,7 @@ export async function createShipmentWithPackageByClient(payload) {
         estado_paquete,
         observaciones
       ) VALUES ($1, $2, $3, 'registrado', $4)`,
-      [idPaquete, idEnvio, payload.remitente.ciudad, 'Envio creado por cliente']
+      [idPaquete, idEnvio, payload.remitente.ciudad, `Envio creado por ${payload.creado_por_rol || 'cliente'}`]
     );
 
     await client.query('COMMIT');

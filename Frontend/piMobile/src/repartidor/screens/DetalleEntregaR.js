@@ -17,7 +17,7 @@ import BottomNavR from '../components/BottomNavR';
 import TopHeaderR from '../components/TopHeaderR';
 import { MapViewComponent, MarkerComponent, PolylineComponent } from '../components/mapsAdapter';
 import { useDarkMode } from '../context/DarkModeContext';
-import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, resolveCurrentPosition, toKm, toMinutes } from '../services/rutaMapService';
+import { geocodeAddress, getExpoLocationModule, getDrivingRoute, normalizeAddressQuery, toKm, toMinutes } from '../services/rutaMapService';
 import { cancelarEnvioComoConductor, getDetalleEnvio } from '../../services/enviosService';
 import { getCurrentUser } from '../../services/sessionService';
 
@@ -40,6 +40,8 @@ const DEFAULT_DESTINATION = {
 	longitude: -99.163537,
 };
 
+const isOperatorCreatedShipment = (delivery) => String(delivery?.creado_por_rol || '').toLowerCase() === 'operador';
+
 export default function DetalleEntregaR({ navigation, route }) {
 	const { width } = useWindowDimensions();
 	const { isDarkMode } = useDarkMode();
@@ -60,6 +62,7 @@ export default function DetalleEntregaR({ navigation, route }) {
 
 	const resolvedDelivery = useMemo(() => {
 		const detailAddress = [deliveryDetail?.direccion_destino, deliveryDetail?.ciudad_destino].filter(Boolean).join(', ');
+		const detailOriginAddress = [deliveryDetail?.direccion_origen, deliveryDetail?.ciudad_origen].filter(Boolean).join(', ');
 
 		return {
 			id:
@@ -68,6 +71,8 @@ export default function DetalleEntregaR({ navigation, route }) {
 				(Number.isInteger(Number(shipmentId)) ? `ENV-${shipmentId}` : FALLBACK_DELIVERY.id),
 			name: deliveryDetail?.destinatario?.nombre || delivery?.name || FALLBACK_DELIVERY.name,
 			address: detailAddress || delivery?.address || FALLBACK_DELIVERY.address,
+			originAddress: detailOriginAddress || delivery?.originAddress || '',
+			creado_por_rol: deliveryDetail?.creado_por_rol || delivery?.creado_por_rol || null,
 			phone: deliveryDetail?.destinatario?.telefono || delivery?.phone || FALLBACK_DELIVERY.phone,
 			id_envio: shipmentId || delivery?.id_envio || null,
 			estado_envio: deliveryDetail?.estado_envio || delivery?.estado_envio || null,
@@ -79,10 +84,42 @@ export default function DetalleEntregaR({ navigation, route }) {
 
 		try {
 			const Location = await getExpoLocationModule();
+			const operatorCreated = isOperatorCreatedShipment(resolvedDelivery);
+			const normalizedOriginAddress = normalizeAddressQuery(resolvedDelivery.originAddress);
+			let origin = null;
+			let warning = '';
+
+			if (operatorCreated) {
+				origin = { ...DEFAULT_ORIGIN };
+			} else if (normalizedOriginAddress) {
+				try {
+					const originLocalResults = await Location.geocodeAsync(normalizedOriginAddress);
+					const localOrigin = Array.isArray(originLocalResults) ? originLocalResults[0] : null;
+
+					if (localOrigin?.latitude && localOrigin?.longitude) {
+						origin = {
+							latitude: localOrigin.latitude,
+							longitude: localOrigin.longitude,
+						};
+					}
+				} catch {
+					origin = null;
+				}
+
+				if (!origin) {
+					try {
+						origin = await geocodeAddress(resolvedDelivery.originAddress);
+					} catch {
+						origin = { ...DEFAULT_ORIGIN };
+						warning = 'No se pudo geocodificar el origen del envio. Se usa una ubicacion aproximada de origen.';
+					}
+				}
+			} else {
+				origin = { ...DEFAULT_ORIGIN };
+				warning = 'El envio no tiene direccion de origen registrada. Se usa una ubicacion aproximada de origen.';
+			}
+
 			let destination = null;
-			const currentPosition = await resolveCurrentPosition(DEFAULT_ORIGIN);
-			const origin = currentPosition.origin;
-			let warning = currentPosition.warning || '';
 
 			const normalizedAddress = normalizeAddressQuery(resolvedDelivery.address);
 

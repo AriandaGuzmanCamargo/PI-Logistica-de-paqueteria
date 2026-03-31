@@ -66,6 +66,7 @@ async function notifyShipmentStakeholders(
 function mapShipment(item) {
   return {
     id_envio: item.id_envio,
+    creado_por_rol: item.creado_por_rol || null,
     estado_envio: item.estado_envio,
     direccion_origen: item.direccion_origen,
     direccion_destino: item.direccion_destino,
@@ -165,6 +166,7 @@ export async function getShipmentDetailById(idEnvio) {
 
   return {
     id_envio: item.id_envio,
+    creado_por_rol: item.creado_por_rol || null,
     estado_envio: item.estado_envio,
     direccion_origen: item.direccion_origen,
     direccion_destino: item.direccion_destino,
@@ -648,6 +650,7 @@ export async function createShipmentByClient({ userId, payload }) {
 
   const created = await createShipmentWithPackageByClient({
     id_cliente_remitente: senderClientId,
+    creado_por_rol: user.rol,
     remitente,
     destinatario,
     fecha_estimada_entrega: fechaEstimada,

@@ -24,6 +24,7 @@ function toDeliveryItem(envio, index) {
 	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
 	const nombre = envio?.destinatario?.nombre || 'Destinatario';
 	const addressParts = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean);
+	const originAddressParts = [envio?.direccion_origen, envio?.ciudad_origen].filter(Boolean);
 	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
 	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
 	const canceled = estadoEnvio === 'cancelado';
@@ -33,6 +34,8 @@ function toDeliveryItem(envio, index) {
 		id: codigo,
 		name: nombre,
 		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
+		originAddress: originAddressParts.length > 0 ? originAddressParts.join(', ') : '',
+		creado_por_rol: envio?.creado_por_rol || null,
 		phone: envio?.destinatario?.telefono || '',
 		done,
 		canceled,

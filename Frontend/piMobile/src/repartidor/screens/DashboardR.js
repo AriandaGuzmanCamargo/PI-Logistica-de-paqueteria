@@ -16,7 +16,6 @@ import {
 	getExpoLocationModule,
 	getDrivingRoute,
 	normalizeAddressQuery,
-	resolveCurrentPosition,
 	toKm,
 	toMinutes,
 } from '../services/rutaMapService';
@@ -50,6 +49,7 @@ function toDashboardDelivery(envio, index) {
 	const codigo = envio?.paquete?.codigo_rastreo || `ENV-${envio?.id_envio || index}`;
 	const nombre = envio?.destinatario?.nombre || 'Destinatario';
 	const addressParts = [envio?.direccion_destino, envio?.ciudad_destino].filter(Boolean);
+	const originAddressParts = [envio?.direccion_origen, envio?.ciudad_origen].filter(Boolean);
 	const estadoEnvio = String(envio?.estado_envio || '').toLowerCase();
 	const estadoPaquete = String(envio?.paquete?.estado_actual || '').toLowerCase();
 	const canceled = estadoEnvio === 'cancelado';
@@ -59,6 +59,8 @@ function toDashboardDelivery(envio, index) {
 		id: codigo,
 		name: nombre,
 		address: addressParts.length > 0 ? addressParts.join(', ') : 'Dirección pendiente',
+		originAddress: originAddressParts.length > 0 ? originAddressParts.join(', ') : '',
+		creado_por_rol: envio?.creado_por_rol || null,
 		done,
 		canceled,
 		estado_envio: estadoEnvio,
@@ -66,6 +68,8 @@ function toDashboardDelivery(envio, index) {
 		id_envio: envio?.id_envio,
 	};
 }
+
+const isOperatorCreatedShipment = (delivery) => String(delivery?.creado_por_rol || '').toLowerCase() === 'operador';
 
 export default function DashboardR({ navigation }) {
 	const [searchText, setSearchText] = useState('');
@@ -208,11 +212,43 @@ export default function DashboardR({ navigation }) {
 			setMiniMapState((prev) => ({ ...prev, loading: true, error: '', warning: '' }));
 
 			try {
-				const currentPosition = await resolveCurrentPosition(DEFAULT_ORIGIN);
 				const Location = await getExpoLocationModule();
-				const origin = currentPosition.origin;
+				const operatorCreated = isOperatorCreatedShipment(nextRouteDelivery);
+				const normalizedOriginAddress = normalizeAddressQuery(nextRouteDelivery.originAddress);
+				let origin = null;
+				let warning = '';
+
+				if (operatorCreated) {
+					origin = { ...DEFAULT_ORIGIN };
+				} else if (normalizedOriginAddress) {
+					try {
+						const originLocalResults = await Location.geocodeAsync(normalizedOriginAddress);
+						const localOrigin = Array.isArray(originLocalResults) ? originLocalResults[0] : null;
+
+						if (localOrigin?.latitude && localOrigin?.longitude) {
+							origin = {
+								latitude: localOrigin.latitude,
+								longitude: localOrigin.longitude,
+							};
+						}
+					} catch {
+						origin = null;
+					}
+
+					if (!origin) {
+						try {
+							origin = await geocodeAddress(nextRouteDelivery.originAddress);
+						} catch {
+							origin = { ...DEFAULT_ORIGIN };
+							warning = 'No se pudo geocodificar el origen del envio. Se usa una ubicacion aproximada de origen.';
+						}
+					}
+				} else {
+					origin = { ...DEFAULT_ORIGIN };
+					warning = 'El envio no tiene direccion de origen registrada. Se usa una ubicacion aproximada de origen.';
+				}
+
 				let destination = null;
-				let warning = currentPosition.warning || '';
 				const fullAddress = normalizeAddressQuery(nextRouteDelivery.address);
 				const cityOnly = normalizeAddressQuery(String(nextRouteDelivery.address || '').split(',').slice(-1)[0]);
 

@@ -478,6 +478,21 @@ body {
   gap: 14px;
 }
 
+/* Ajuste específico para la vista de ruta: evita que el contenido quede debajo del header fijo */
+.panel-principal--supervisor-ruta {
+  padding-top: 132px;
+}
+
+.panel-principal--supervisor-ruta .leaflet-container,
+.panel-principal--supervisor-ruta .leaflet-pane,
+.panel-principal--supervisor-ruta .leaflet-control {
+  z-index: 1;
+}
+
+.panel-principal--supervisor-ruta .barra-superior--supervisor-fija {
+  z-index: 220;
+}
+
 .barra-superior__estado { display: none; }
 
 .tabla-envios {
@@ -634,6 +649,10 @@ tbody tr:hover {
 
   .panel-principal--supervisor {
     padding-top: 96px;
+  }
+
+  .panel-principal--supervisor-ruta {
+    padding-top: 112px;
   }
 
   .barra-superior--supervisor-fija {

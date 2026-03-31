@@ -361,7 +361,11 @@ export async function listDriverAssignedShipmentsByConductorId(idConductor) {
      LEFT JOIN vehiculos v ON v.id_vehiculo = ar.id_vehiculo
      WHERE c.id_conductor = $1
        AND ar.estado_asignacion IN ('programada', 'en_proceso')
-     ORDER BY ar.fecha_salida DESC, e.fecha_creacion DESC`,
+     ORDER BY
+       CASE WHEN ar.estado_asignacion = 'en_proceso' THEN 0 ELSE 1 END,
+       ar.fecha_salida DESC,
+       ar.id_asignacion DESC,
+       e.fecha_creacion DESC`,
     [idConductor]
   );
 

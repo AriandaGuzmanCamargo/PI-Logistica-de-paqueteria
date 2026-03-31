@@ -212,7 +212,7 @@ export default function Login() {
               <button className="boton boton--primario" onClick={handleLogin} disabled={isLoading}>
                 {isLoading ? 'Validando...' : 'Iniciar Sesión'}
             </button>
-            <a className="enlace-olvido" href="/recuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
+            <a className="enlace-olvido" href="/recuperar-contrasena-admin">¿Olvidaste tu contraseña?</a>
           </div>
         </section>
       </main>

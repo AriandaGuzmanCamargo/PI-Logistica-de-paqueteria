@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 // --- Login ---
 import Login from './pages/login';
+import RecuperarContrasenaAdmin from './pages/recuperarContrasenaAdmin';
 
 // --- Operador Logístico ---
 import DashboardOperador from './pages/operadorLogistico/dashboardOperador';
@@ -45,6 +46,9 @@ export default function App() {
       <Route path="/login.html" element={<Navigate to="/login" replace />} />
       <Route path="/piWeb/login.html" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/recuperar-contrasena-admin" element={<RecuperarContrasenaAdmin />} />
+      <Route path="/recuperacion-contrasena" element={<Navigate to="/recuperar-contrasena-admin" replace />} />
+      <Route path="/recuperacionContraseña.html" element={<Navigate to="/recuperar-contrasena-admin" replace />} />
 
       {/* Operador Logístico */}
       <Route path="/operador/dashboard" element={<DashboardOperador />} />

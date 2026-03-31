@@ -267,9 +267,29 @@ export async function registerUser(payload) {
 
 export async function requestPasswordRecovery(payload) {
   const correo = String(payload?.correo || '').trim().toLowerCase();
+  const nueva = String(payload?.nuevaContrasena || '').trim();
+  const confirmar = String(payload?.confirmarContrasena || '').trim();
 
   if (!correo) {
     const error = new Error('El correo es obligatorio.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!nueva || !confirmar) {
+    const error = new Error('Completa la nueva contrasena y la confirmacion.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva.length < 6) {
+    const error = new Error('La nueva contrasena debe tener al menos 6 caracteres.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (nueva !== confirmar) {
+    const error = new Error('Las contrasenas no coinciden.');
     error.statusCode = 400;
     throw error;
   }
@@ -282,9 +302,18 @@ export async function requestPasswordRecovery(payload) {
     throw error;
   }
 
+  if (user.rol !== 'admin') {
+    const error = new Error('Solo las cuentas admin pueden restablecer contrasena desde este formulario.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  await updateUserPasswordById(user.id_usuario, nueva);
+
   return {
     correo,
-    message: 'Solicitud de recuperacion registrada. Contacta al administrador para restablecerla.',
+    id_usuario: user.id_usuario,
+    message: 'Contrasena de admin actualizada correctamente.',
   };
 }
 

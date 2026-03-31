@@ -21,6 +21,8 @@ const ACCESS_ROLE_MAP = {
   repartidor: 'conductor',
 };
 
+const WEB_ALLOWED_ROLES = new Set(['supervisor', 'operador', 'admin', 'administrador']);
+
 export async function loginUser({ correo, contrasena, tipoAcceso }) {
   if (!correo || !contrasena) {
     const error = new Error('Correo y contrasena son obligatorios.');
@@ -69,6 +71,10 @@ export async function loginUser({ correo, contrasena, tipoAcceso }) {
       error.statusCode = 403;
       throw error;
     }
+  } else if (!WEB_ALLOWED_ROLES.has(String(usuario.rol || '').trim().toLowerCase())) {
+    const error = new Error('Solo supervisores y operadores pueden ingresar al sistema web.');
+    error.statusCode = 403;
+    throw error;
   }
 
   return {

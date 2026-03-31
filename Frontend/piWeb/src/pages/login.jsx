@@ -38,16 +38,7 @@ export default function Login() {
       return '/supervisor/dashboard';
     }
 
-    if (
-      rol === 'operador' ||
-      rol === 'operadorlogistico' ||
-      rol === 'logistico' ||
-      rol === 'usuario' ||
-      rol === 'cliente' ||
-      rol === 'conductor' ||
-      rol === 'repartidor' ||
-      rol === 'chofer'
-    ) {
+    if (rol === 'operador' || rol === 'operadorlogistico' || rol === 'logistico') {
       return '/operador/dashboard';
     }
 

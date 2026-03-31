@@ -58,6 +58,43 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '700',
   },
+  historyWrap: {
+    marginTop: 8,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: '#E1E4F199',
+    borderRadius: 12,
+    padding: 10,
+  },
+  historyTitle: {
+    color: colors.primaryDark,
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  historyList: {
+    gap: 8,
+  },
+  historyItem: {
+    backgroundColor: '#F3F5FB',
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  historyCode: {
+    color: colors.text,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  historyState: {
+    color: '#7A86A8',
+    fontSize: 12,
+  },
   feedbackWrap: {
     marginTop: 8,
     backgroundColor: colors.surface,

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import MainLayout from '../components/MainLayout';
 import { getTrackingByCodigo } from '../services/trackingService.js';
+import { getCurrentUser } from '../services/sessionService';
+import { addTrackingHistoryEntry, getTrackingHistoryByUser } from '../services/trackingHistoryService';
 import styles from '../styles/DashboardStyles';
 
 const STATE_LABELS = {
@@ -27,20 +30,52 @@ export default function DashboardScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [trackingData, setTrackingData] = useState(null);
+  const [trackingHistory, setTrackingHistory] = useState([]);
 
-  const handleRastrear = async () => {
-    if (!codigo.trim()) {
+  const loadHistory = () => {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser?.id_usuario) {
+      setTrackingHistory([]);
+      return;
+    }
+
+    setTrackingHistory(getTrackingHistoryByUser(currentUser.id_usuario));
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadHistory();
+      return undefined;
+    }, [])
+  );
+
+  const handleRastrear = async (codigoParam) => {
+    const codigoBusqueda = String(codigoParam ?? codigo).trim();
+
+    if (!codigoBusqueda) {
       setErrorMessage('Ingresa un código de rastreo.');
       return;
     }
 
+    setCodigo(codigoBusqueda);
     setIsLoading(true);
     setErrorMessage('');
     setTrackingData(null);
 
     try {
-      const data = await getTrackingByCodigo(codigo);
+      const data = await getTrackingByCodigo(codigoBusqueda);
       setTrackingData(data);
+
+      const currentUser = getCurrentUser();
+      if (currentUser?.id_usuario) {
+        const updatedHistory = addTrackingHistoryEntry({
+          idUsuario: currentUser.id_usuario,
+          codigo: codigoBusqueda,
+          trackingData: data,
+        });
+        setTrackingHistory(updatedHistory);
+      }
     } catch (error) {
       setErrorMessage(error.message || 'No se encontró información de rastreo.');
     } finally {
@@ -92,6 +127,25 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.cardDesc}>Gestiona direcciones frecuentes.</Text>
         </TouchableOpacity>
       </View>
+
+      {trackingHistory.length > 0 ? (
+        <View style={styles.historyWrap}>
+          <Text style={styles.historyTitle}>Historial de búsqueda</Text>
+          <View style={styles.historyList}>
+            {trackingHistory.map((item) => (
+              <TouchableOpacity
+                key={item.codigo}
+                style={styles.historyItem}
+                onPress={() => handleRastrear(item.codigo)}
+                disabled={isLoading}
+              >
+                <Text style={styles.historyCode}>{item.codigo}</Text>
+                {item.estado ? <Text style={styles.historyState}>{STATE_LABELS[item.estado] || item.estado}</Text> : null}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      ) : null}
 
       {trackingData ? (
         <View style={styles.trackCard}>

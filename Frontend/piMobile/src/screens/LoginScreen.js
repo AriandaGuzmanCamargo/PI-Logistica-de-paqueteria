@@ -31,14 +31,14 @@ export default function LoginScreen({ navigation }) {
       const usuario = data?.usuario ?? null;
       const rol = String(usuario?.rol || '').toLowerCase();
 
-      setCurrentUser(usuario);
-
       if (rol === 'conductor') {
+        setCurrentUser(usuario);
         navigation.navigate('DashboardR');
         return;
       }
 
       if (rol === 'cliente') {
+        setCurrentUser(usuario);
         navigation.navigate('Dashboard');
         return;
       }

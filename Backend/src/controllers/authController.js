@@ -13,12 +13,13 @@ import {
 
 export async function login(req, res, next) {
   try {
-    const { correo, contrasena, tipoAcceso } = req.body ?? {};
+    const { correo, contrasena, tipoAcceso, origenAplicacion } = req.body ?? {};
 
     const usuario = await loginUser({
       correo,
       contrasena,
       tipoAcceso,
+      origenAplicacion,
     });
 
     res.json({

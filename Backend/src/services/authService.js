@@ -23,7 +23,7 @@ const ACCESS_ROLE_MAP = {
 
 const WEB_ALLOWED_ROLES = new Set(['supervisor', 'operador', 'admin', 'administrador']);
 
-export async function loginUser({ correo, contrasena, tipoAcceso }) {
+export async function loginUser({ correo, contrasena, tipoAcceso, origenAplicacion }) {
   if (!correo || !contrasena) {
     const error = new Error('Correo y contrasena son obligatorios.');
     error.statusCode = 400;
@@ -50,6 +50,8 @@ export async function loginUser({ correo, contrasena, tipoAcceso }) {
     throw error;
   }
 
+  const origenNormalizado = String(origenAplicacion || '').trim().toLowerCase();
+
   if (tipoAcceso) {
     const accesoNormalizado = String(tipoAcceso).trim().toLowerCase();
     const rolSolicitado = ACCESS_ROLE_MAP[accesoNormalizado];
@@ -71,8 +73,14 @@ export async function loginUser({ correo, contrasena, tipoAcceso }) {
       error.statusCode = 403;
       throw error;
     }
+  } else if (origenNormalizado === 'mobile' || origenNormalizado === 'movil') {
+    if (usuario.rol !== 'cliente' && usuario.rol !== 'conductor') {
+      const error = new Error('Este rol no tiene acceso desde la app movil.');
+      error.statusCode = 403;
+      throw error;
+    }
   } else if (!WEB_ALLOWED_ROLES.has(String(usuario.rol || '').trim().toLowerCase())) {
-    const error = new Error('Solo supervisores y operadores pueden ingresar al sistema web.');
+    const error = new Error('Solo administradores, supervisores y operadores pueden ingresar al sistema web.');
     error.statusCode = 403;
     throw error;
   }

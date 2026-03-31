@@ -8,7 +8,7 @@ export const clearCurrentUser = () => {
   currentUser = null;
 };
 
-export const loginRequest = async ({ correo, contrasena, tipoAcceso }) => {
+export const loginRequest = async ({ correo, contrasena }) => {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
@@ -17,7 +17,7 @@ export const loginRequest = async ({ correo, contrasena, tipoAcceso }) => {
     body: JSON.stringify({
       correo,
       contrasena,
-      tipoAcceso,
+      origenAplicacion: 'mobile',
     }),
   });
 

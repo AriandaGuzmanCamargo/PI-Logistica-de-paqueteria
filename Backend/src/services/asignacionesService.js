@@ -1,4 +1,9 @@
-import { findUserById } from '../repositories/enviosRepository.js';
+import {
+  findShipmentById,
+  findUserById,
+  findUserIdsByClientIds,
+} from '../repositories/enviosRepository.js';
+import { notifyUsersByIds } from './notificacionesService.js';
 import {
   cancelActiveAssignmentForShipment,
   createActiveAssignment,
@@ -37,6 +42,69 @@ function normalizeDate(dateValue) {
   }
 
   return parsed.toISOString().slice(0, 10);
+}
+
+async function collectNotificationUserIdsForShipment({
+  idEnvio,
+  idConductor = null,
+  idConductoresPrevios = [],
+}) {
+  const shipment = await findShipmentById(idEnvio);
+  const userIds = [];
+
+  if (shipment) {
+    const clientUserIds = await findUserIdsByClientIds([
+      shipment.remitente_id,
+      shipment.destinatario_id,
+    ]);
+    userIds.push(...clientUserIds);
+  }
+
+  const allConductorIds = [...new Set([
+    idConductor,
+    ...(Array.isArray(idConductoresPrevios) ? idConductoresPrevios : []),
+  ])]
+    .map((value) => toInteger(value))
+    .filter((value) => Number.isInteger(value) && value > 0);
+
+  if (allConductorIds.length > 0) {
+    const drivers = await Promise.all(allConductorIds.map((value) => findDriverByConductorId(value)));
+    drivers.forEach((driver) => {
+      if (driver?.id_usuario) {
+        userIds.push(driver.id_usuario);
+      }
+    });
+  }
+
+  return [...new Set(userIds.map((id) => Number(id)).filter((id) => Number.isInteger(id) && id > 0))];
+}
+
+async function notifyAssignmentStakeholders({
+  idEnvio,
+  titulo,
+  mensaje,
+  idConductor = null,
+  idConductoresPrevios = [],
+}) {
+  if (!idEnvio || !titulo || !mensaje) {
+    return;
+  }
+
+  const userIds = await collectNotificationUserIdsForShipment({
+    idEnvio,
+    idConductor,
+    idConductoresPrevios,
+  });
+
+  if (userIds.length === 0) {
+    return;
+  }
+
+  await notifyUsersByIds(userIds, {
+    titulo,
+    mensaje,
+    idEnvio,
+  });
 }
 
 export async function autoAssignShipment({ idEnvio, idUsuario }) {
@@ -128,6 +196,17 @@ export async function autoAssignShipment({ idEnvio, idUsuario }) {
   });
 
   await markShipmentAsInRoute(parsedShipmentId);
+
+  try {
+    await notifyAssignmentStakeholders({
+      idEnvio: parsedShipmentId,
+      idConductor: assignment.id_conductor,
+      titulo: 'Envio asignado',
+      mensaje: `El envio #${parsedShipmentId} fue asignado automaticamente a un conductor.`,
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de autoasignacion:', notificationError);
+  }
 
   return {
     id_envio: parsedShipmentId,
@@ -265,6 +344,17 @@ export async function assignShipmentToSelectedDriver({ idEnvio, idUsuario, idCon
   });
 
   await markShipmentAsInRoute(parsedShipmentId);
+
+  try {
+    await notifyAssignmentStakeholders({
+      idEnvio: parsedShipmentId,
+      idConductor: assignment.id_conductor,
+      titulo: 'Envio asignado',
+      mensaje: `El envio #${parsedShipmentId} fue asignado por ${actor.rol}.`,
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de asignacion manual:', notificationError);
+  }
 
   return {
     id_envio: parsedShipmentId,
@@ -507,6 +597,11 @@ export async function reassignShipmentByAdmin({ idEnvio, idUsuario, idConductor,
   }
 
   const cancelledAssignments = await cancelActiveAssignmentForShipment(parsedShipmentId);
+  const previousDriverIds = [...new Set(
+    cancelledAssignments
+      .map((row) => toInteger(row?.id_conductor))
+      .filter((value) => Number.isInteger(value) && value > 0)
+  )];
   await markShipmentAsPending(parsedShipmentId);
 
   if (parsedDriverId === null) {
@@ -514,6 +609,17 @@ export async function reassignShipmentByAdmin({ idEnvio, idUsuario, idConductor,
       const error = new Error('El envio no tenia una asignacion activa para cancelar.');
       error.statusCode = 409;
       throw error;
+    }
+
+    try {
+      await notifyAssignmentStakeholders({
+        idEnvio: parsedShipmentId,
+        idConductoresPrevios: previousDriverIds,
+        titulo: 'Envio sin asignacion',
+        mensaje: `El envio #${parsedShipmentId} quedo sin conductor asignado por ${actor.rol}.`,
+      });
+    } catch (notificationError) {
+      console.error('No se pudo generar notificacion de desasignacion:', notificationError);
     }
 
     return {
@@ -554,6 +660,18 @@ export async function reassignShipmentByAdmin({ idEnvio, idUsuario, idConductor,
   });
 
   await markShipmentAsInRoute(parsedShipmentId);
+
+  try {
+    await notifyAssignmentStakeholders({
+      idEnvio: parsedShipmentId,
+      idConductor: assignment.id_conductor,
+      idConductoresPrevios: previousDriverIds,
+      titulo: 'Envio reasignado',
+      mensaje: `El envio #${parsedShipmentId} fue reasignado por ${actor.rol}.`,
+    });
+  } catch (notificationError) {
+    console.error('No se pudo generar notificacion de reasignacion:', notificationError);
+  }
 
   return {
     id_envio: parsedShipmentId,

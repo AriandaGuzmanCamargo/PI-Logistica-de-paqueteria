@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	StatusBar,
 	Text,
+	TouchableOpacity,
 	View,
 	useWindowDimensions,
 } from 'react-native';
@@ -16,7 +17,11 @@ import getNotificacionesRStyles from '../styles/NotificacionesRStyles';
 import TopHeaderR from '../components/TopHeaderR';
 import { useDarkMode } from '../context/DarkModeContext';
 import { getCurrentUser } from '../../services/sessionService';
-import { getNotificacionesByUsuario } from '../../services/notificacionesService';
+import {
+	getNotificacionesByUsuario,
+	marcarNotificacionComoLeida,
+	marcarTodasComoLeidas,
+} from '../../services/notificacionesService';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -38,22 +43,32 @@ function formatRelativeDate(isoString) {
   return `Hace ${diffDays} dias`;
 }
 
-function NotificationCard({ item, styles }) {
+function NotificationCard({ item, styles, onPress, onOpenShipment }) {
 
 	return (
-		<View style={styles.notificationCard}>
+		<TouchableOpacity
+			style={[styles.notificationCard, item?.leida ? styles.notificationCardRead : null]}
+			onPress={onPress}
+			activeOpacity={0.85}
+		>
 			<View style={[styles.notificationDot, styles.dotAssigned]} />
 			<View style={styles.notificationBody}>
 				<Text style={styles.notificationId}>{item.titulo || 'Notificacion'}</Text>
 				<Text style={styles.notificationText}>{item.mensaje || 'Sin detalle'}</Text>
 				<Text style={styles.notificationText}>{formatRelativeDate(item.fecha)}</Text>
+				{item?.id_envio ? (
+					<TouchableOpacity style={styles.linkBtn} onPress={onOpenShipment}>
+						<Text style={styles.linkBtnText}>Ver envio #{item.id_envio}</Text>
+					</TouchableOpacity>
+				) : null}
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 
 export default function NotificacionesR({ navigation }) {
 	const [isLoading, setIsLoading] = useState(true);
+	const [isUpdating, setIsUpdating] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const [notificaciones, setNotificaciones] = useState([]);
 
@@ -94,6 +109,63 @@ const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cli
 	const s = (size) => Math.round(size * scale);
 	const styles = getNotificacionesRStyles(s, isDarkMode);
 
+	const handleMarkAllRead = async () => {
+		try {
+			const user = getCurrentUser();
+
+			if (!user?.id_usuario) {
+				throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+			}
+
+			setIsUpdating(true);
+			await marcarTodasComoLeidas(user.id_usuario);
+			setNotificaciones((prev) => prev.map((item) => ({ ...item, leida: true })));
+		} catch (error) {
+			setErrorMessage(error.message || 'No se pudieron actualizar las notificaciones.');
+		} finally {
+			setIsUpdating(false);
+		}
+	};
+
+	const handleMarkOneRead = async (item) => {
+		if (!item || item.leida) {
+			return;
+		}
+
+		try {
+			const user = getCurrentUser();
+
+			if (!user?.id_usuario) {
+				throw new Error('No hay sesion activa. Inicia sesion nuevamente.');
+			}
+
+			await marcarNotificacionComoLeida({
+				idNotificacion: item.id_notificacion,
+				idUsuario: user.id_usuario,
+			});
+
+			setNotificaciones((prev) =>
+				prev.map((notification) =>
+					Number(notification.id_notificacion) === Number(item.id_notificacion)
+						? { ...notification, leida: true }
+						: notification
+				)
+			);
+		} catch (error) {
+			setErrorMessage(error.message || 'No se pudo marcar la notificacion como leida.');
+		}
+	};
+
+	const openShipmentFromNotification = (item) => {
+		const shipmentId = Number(item?.id_envio);
+
+		if (!Number.isInteger(shipmentId) || shipmentId <= 0) {
+			return;
+		}
+
+		navigation.navigate('DetalleEntregaR', { idEnvio: shipmentId });
+	};
+
 	return (
 		<View style={isWeb ? styles.webRoot : styles.nativeRoot}>
 			<SafeAreaView
@@ -114,6 +186,17 @@ const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cli
 					<View style={styles.sectionCard}>
 						<Text style={styles.sectionTitle}>Notificaciones</Text>
 						<Text style={styles.roleText}>Mostrando notificaciones para rol: {roleLabel}</Text>
+						{!isLoading && !errorMessage && notificaciones.length > 0 ? (
+							<View style={styles.actionsRow}>
+								<TouchableOpacity
+									style={[styles.actionBtn, isUpdating && styles.actionBtnDisabled]}
+									onPress={handleMarkAllRead}
+									disabled={isUpdating}
+								>
+									<Text style={styles.actionBtnText}>{isUpdating ? 'Actualizando...' : 'Marcar todas como leidas'}</Text>
+								</TouchableOpacity>
+							</View>
+						) : null}
 						<View style={styles.listWrap}>
 							{isLoading ? (
 								<View style={styles.stateWrap}>
@@ -136,7 +219,13 @@ const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cli
 
 							{!isLoading && !errorMessage
 								? notificaciones.map((item) => (
-										<NotificationCard key={item.id_notificacion} item={item} styles={styles} />
+										<NotificationCard
+											key={item.id_notificacion}
+											item={item}
+											styles={styles}
+											onPress={() => handleMarkOneRead(item)}
+											onOpenShipment={() => openShipmentFromNotification(item)}
+										/>
 								  ))
 								: null}
 						</View>

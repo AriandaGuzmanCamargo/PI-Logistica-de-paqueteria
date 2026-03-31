@@ -75,6 +75,25 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
       fontSize: s(12),
       fontWeight: '600',
     },
+    actionsRow: {
+      marginTop: s(2),
+      marginBottom: s(2),
+    },
+    actionBtn: {
+      alignSelf: 'flex-start',
+      backgroundColor: '#2F66B0',
+      borderRadius: s(8),
+      paddingVertical: s(7),
+      paddingHorizontal: s(10),
+    },
+    actionBtnDisabled: {
+      opacity: 0.65,
+    },
+    actionBtnText: {
+      color: '#FFFFFF',
+      fontSize: s(12),
+      fontWeight: '700',
+    },
     stateWrap: {
       paddingVertical: s(8),
       alignItems: 'center',
@@ -99,6 +118,10 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
       flexDirection: 'row',
       alignItems: 'flex-start',
       gap: s(8),
+    },
+    notificationCardRead: {
+      opacity: 0.85,
+      borderColor: isDarkMode ? '#425579' : '#C8D6EF',
     },
     notificationDot: {
       width: s(11),
@@ -125,6 +148,19 @@ export default function getNotificacionesRStyles(s, isDarkMode = false) {
       color: isDarkMode ? '#C9D6EE' : '#536A95',
       fontSize: s(13),
       lineHeight: s(18),
+    },
+    linkBtn: {
+      marginTop: s(6),
+      alignSelf: 'flex-start',
+      backgroundColor: isDarkMode ? '#243A61' : '#E8F0FF',
+      borderRadius: s(8),
+      paddingVertical: s(5),
+      paddingHorizontal: s(9),
+    },
+    linkBtnText: {
+      color: isDarkMode ? '#DFEAFF' : '#1E4C92',
+      fontSize: s(12),
+      fontWeight: '700',
     },
   });
 }

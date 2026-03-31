@@ -302,8 +302,14 @@ export async function requestPasswordRecovery(payload) {
     throw error;
   }
 
-  if (user.rol !== 'admin') {
-    const error = new Error('Solo las cuentas admin pueden restablecer contrasena desde este formulario.');
+  if (user.rol === 'conductor') {
+    const error = new Error('Las cuentas de conductor no pueden restablecer contrasena desde esta pantalla.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  if (!['cliente', 'admin'].includes(user.rol)) {
+    const error = new Error('Este rol no tiene permitido restablecer contrasena desde este formulario.');
     error.statusCode = 403;
     throw error;
   }
@@ -313,7 +319,9 @@ export async function requestPasswordRecovery(payload) {
   return {
     correo,
     id_usuario: user.id_usuario,
-    message: 'Contrasena de admin actualizada correctamente.',
+    message: user.rol === 'admin'
+      ? 'Contrasena de admin actualizada correctamente.'
+      : 'Contrasena actualizada correctamente.',
   };
 }
 

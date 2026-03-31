@@ -1,9 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import MainLayout from '../components/MainLayout';
 import { getCurrentUser } from '../services/sessionService';
-import { getNotificacionesByUsuario } from '../services/notificacionesService';
+import {
+  getNotificacionesByUsuario,
+  marcarNotificacionComoLeida,
+  marcarTodasComoLeidas,
+} from '../services/notificacionesService';
 import styles from '../styles/NotificacionesStyles';
 
 function formatRelativeDate(isoString) {
@@ -43,6 +47,7 @@ function formatDateTime(isoString) {
 
 export default function NotificacionesScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [notificaciones, setNotificaciones] = useState([]);
 
@@ -75,11 +80,85 @@ export default function NotificacionesScreen({ navigation }) {
   const role = String(getCurrentUser()?.rol || '').toLowerCase();
   const roleLabel = role === 'conductor' ? 'Conductor' : role === 'cliente' ? 'Cliente' : 'Usuario';
 
+  const handleMarkAllRead = async () => {
+    try {
+      const user = getCurrentUser();
+      if (!user?.id_usuario) {
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
+      }
+
+      setIsUpdating(true);
+      await marcarTodasComoLeidas(user.id_usuario);
+      setNotificaciones((prev) => prev.map((item) => ({ ...item, leida: true })));
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudieron actualizar las notificaciones.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleMarkOneRead = async (item) => {
+    if (!item || item.leida) {
+      return;
+    }
+
+    try {
+      const user = getCurrentUser();
+      if (!user?.id_usuario) {
+        throw new Error('No hay sesión activa. Inicia sesión nuevamente.');
+      }
+
+      await marcarNotificacionComoLeida({
+        idNotificacion: item.id_notificacion,
+        idUsuario: user.id_usuario,
+      });
+
+      setNotificaciones((prev) =>
+        prev.map((notification) =>
+          Number(notification.id_notificacion) === Number(item.id_notificacion)
+            ? { ...notification, leida: true }
+            : notification
+        )
+      );
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudo marcar la notificación como leída.');
+    }
+  };
+
+  const handleOpenShipment = (item) => {
+    const shipmentId = Number(item?.id_envio);
+
+    if (!Number.isInteger(shipmentId) || shipmentId <= 0) {
+      return;
+    }
+
+    if (role === 'cliente') {
+      navigation.navigate('DetalleEnvio', { idEnvio: shipmentId });
+      return;
+    }
+
+    if (role === 'conductor') {
+      navigation.navigate('DetalleEntregaR', { idEnvio: shipmentId });
+    }
+  };
+
   return (
     <MainLayout title="Notificaciones" navigation={navigation} backTo="MenuUsuario" activeTab="ConfiguracionUsuario">
       <View style={styles.roleWrap}>
         <Text style={styles.roleText}>Mostrando notificaciones para rol: {roleLabel}</Text>
       </View>
+
+      {!isLoading && !errorMessage && notificaciones.length > 0 ? (
+        <View style={styles.actionsRow}>
+          <TouchableOpacity
+            style={[styles.actionBtn, isUpdating && styles.actionBtnDisabled]}
+            onPress={handleMarkAllRead}
+            disabled={isUpdating}
+          >
+            <Text style={styles.actionBtnText}>{isUpdating ? 'Actualizando...' : 'Marcar todas como leídas'}</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
 
       {isLoading ? (
         <View style={styles.stateWrap}>
@@ -102,7 +181,12 @@ export default function NotificacionesScreen({ navigation }) {
 
       {!isLoading && !errorMessage
         ? notificaciones.map((item) => (
-            <View style={styles.card} key={item.id_notificacion}>
+            <TouchableOpacity
+              style={[styles.card, item.leida ? styles.cardRead : null]}
+              key={item.id_notificacion}
+              onPress={() => handleMarkOneRead(item)}
+              activeOpacity={0.85}
+            >
               <View style={styles.row}>
                 <Text style={styles.title}>{item.titulo || 'Notificación'}</Text>
                 <Text style={styles.time}>{formatRelativeDate(item.fecha)}</Text>
@@ -117,6 +201,12 @@ export default function NotificacionesScreen({ navigation }) {
                 <Text style={styles.deliveryMeta}>Recibió: {item.recibio_entrega_nombre}</Text>
               ) : null}
 
+              {item.id_envio ? (
+                <TouchableOpacity style={styles.linkBtn} onPress={() => handleOpenShipment(item)}>
+                  <Text style={styles.linkBtnText}>Ver envío #{item.id_envio}</Text>
+                </TouchableOpacity>
+              ) : null}
+
               {item.foto_entrega_url ? (
                 <Image
                   source={{ uri: item.foto_entrega_url }}
@@ -124,7 +214,7 @@ export default function NotificacionesScreen({ navigation }) {
                   resizeMode="cover"
                 />
               ) : null}
-            </View>
+            </TouchableOpacity>
           ))
         : null}
     </MainLayout>

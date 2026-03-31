@@ -2,27 +2,8 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-import { API_BASE_URL } from '../config/api';
+import { recoverPasswordRequest } from '../services/authService';
 import styles from '../styles/RecuperacionContrasenaStyles';
-
-async function recoverPassword(correo, nuevaContrasena, confirmarContrasena) {
-  const response = await fetch(`${API_BASE_URL}/auth/recuperar-contrasena-email`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      correo,
-      nuevaContrasena,
-      confirmarContrasena,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Error al recuperar contraseña');
-  }
-
-  return response.json();
-}
 
 export default function RecuperacionContrasenaScreen({ navigation }) {
   const [correo, setCorreo] = useState('');
@@ -54,7 +35,11 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
       }
 
       setIsSubmitting(true);
-      await recoverPassword(correoLimpio, nuevaContrasena, confirmarContrasena);
+      await recoverPasswordRequest({
+        correo: correoLimpio,
+        nuevaContrasena,
+        confirmarContrasena,
+      });
 
       Alert.alert('Contraseña actualizada', 'Tu contraseña se cambió correctamente.', [
         {
@@ -91,6 +76,7 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
             <View style={styles.card}>
               <Text style={styles.title}>Cambiar Contraseña</Text>
               <Text style={styles.subtitle}>Ingresa tu correo y una nueva contraseña.</Text>
+              <Text style={styles.subtitle}>Disponible para usuario cliente. Conductor no permitido.</Text>
 
               <TextInput
                 style={styles.input}

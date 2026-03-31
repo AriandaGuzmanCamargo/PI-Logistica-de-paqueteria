@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Alert,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { registerRequest } from '../services/authService';
 import styles from '../styles/RegistroStyles';
@@ -67,11 +79,22 @@ export default function RegistroScreen({ navigation }) {
         <View style={styles.waveThree} />
         <View style={styles.waveFour} />
 
-        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
-            <View style={styles.heroRow}>
-              <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            </View>
+        <KeyboardAvoidingView
+          style={styles.keyboardWrap}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 18 : 0}
+        >
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            automaticallyAdjustKeyboardInsets
+          >
+            <View style={styles.content}>
+              <View style={styles.heroRow}>
+                <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
+              </View>
 
             <View style={styles.card}>
               <Text style={styles.title}>Registrarse</Text>
@@ -95,8 +118,9 @@ export default function RegistroScreen({ navigation }) {
 
               <Text style={styles.note}>¿Ya tienes cuenta? <Text style={styles.linkStrong} onPress={() => navigation.navigate('Login')}>Inicia sesión</Text></Text>
             </View>
-          </View>
-        </ScrollView>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </LinearGradient>
     </SafeAreaView>
   );

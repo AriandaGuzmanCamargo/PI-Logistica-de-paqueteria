@@ -32,7 +32,7 @@ export default function RecuperarContrasenaAdmin() {
     const correoLimpio = correo.trim().toLowerCase();
 
     if (!correoLimpio || !nuevaContrasena || !confirmarContrasena) {
-      showToast('error', 'Completa correo, nueva contrasena y confirmacion.');
+      showToast('error', 'Completa correo, nueva contraseña y confirmación.');
       return;
     }
 
@@ -59,11 +59,11 @@ export default function RecuperarContrasenaAdmin() {
       }
 
       if (!response.ok || !data?.ok) {
-        showToast('error', data?.message || 'No se pudo actualizar la contrasena.');
+        showToast('error', data?.message || 'No se pudo actualizar la contraseña.');
         return;
       }
 
-      showToast('ok', data?.message || 'Contrasena actualizada correctamente.');
+      showToast('ok', data?.message || 'Contraseña actualizada correctamente.');
       setCorreo('');
       setNuevaContrasena('');
       setConfirmarContrasena('');
@@ -87,7 +87,7 @@ export default function RecuperarContrasenaAdmin() {
               <img src="/piWeb/images/logoSinFondo.png" alt="Sistema de Logistica" />
             </div>
             <h1>
-              Recuperacion de contrasena<br />
+              Recuperación de contraseña<br />
               para cuenta admin
             </h1>
           </div>
@@ -112,9 +112,9 @@ export default function RecuperarContrasenaAdmin() {
               </div>
             ) : null}
 
-            <h2>Olvidaste tu contrasena</h2>
+            <h2>Olvidaste tu contraseña</h2>
             <p className="tarjeta-formulario__subtitulo">
-              Este formulario solo permite actualizar la contrasena de usuarios con rol admin.
+              Este formulario solo permite actualizar la contraseña de usuarios con rol admin.
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -132,12 +132,12 @@ export default function RecuperarContrasenaAdmin() {
 
               <div className="grupo-campo grupo-campo--contrasena">
                 <span className="grupo-campo__icono">
-                  <img src="/piWeb/images/candado.png" alt="Nueva contrasena" />
+                  <img src="/piWeb/images/candado.png" alt="Nueva contraseña" />
                 </span>
                 <input
                   type="password"
                   className="input-contrasena"
-                  placeholder="Nueva contrasena"
+                  placeholder="Nueva contraseña"
                   value={nuevaContrasena}
                   onChange={(event) => setNuevaContrasena(event.target.value)}
                 />
@@ -145,24 +145,24 @@ export default function RecuperarContrasenaAdmin() {
 
               <div className="grupo-campo grupo-campo--contrasena">
                 <span className="grupo-campo__icono">
-                  <img src="/piWeb/images/candado.png" alt="Confirmar contrasena" />
+                  <img src="/piWeb/images/candado.png" alt="Confirmar contraseña" />
                 </span>
                 <input
                   type="password"
                   className="input-contrasena"
-                  placeholder="Confirmar nueva contrasena"
+                  placeholder="Confirmar nueva contraseña"
                   value={confirmarContrasena}
                   onChange={(event) => setConfirmarContrasena(event.target.value)}
                 />
               </div>
 
               <button className="boton boton--primario" type="submit" disabled={isLoading}>
-                {isLoading ? 'Guardando...' : 'Guardar nueva contrasena'}
+                {isLoading ? 'Guardando...' : 'Guardar nueva contraseña'}
               </button>
             </form>
 
             <p className="tarjeta-formulario__nota">
-              ¿Recordaste tu contrasena? <a href="/login">Inicia sesion</a>
+              ¿Recordaste tu contraseña? <a href="/login">Inicia sesión</a>
             </p>
           </div>
         </section>

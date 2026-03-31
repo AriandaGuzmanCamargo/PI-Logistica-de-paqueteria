@@ -24,6 +24,9 @@ export default function getPerfilRStyles(s, isDarkMode = false) {
 			borderRadius: s(20),
 			overflow: 'hidden',
 		},
+		scrollContent: {
+			paddingBottom: s(18),
+		},
 		topHeader: {
 			height: s(56),
 			backgroundColor: colors.primaryDark,
@@ -47,7 +50,6 @@ export default function getPerfilRStyles(s, isDarkMode = false) {
 			backgroundColor: isDarkMode ? '#1A2438' : '#CCD7EE',
 		},
 		profileWrap: {
-			flex: 1,
 			alignItems: 'center',
 			paddingHorizontal: s(16),
 			marginTop: s(-55),

@@ -50,10 +50,11 @@ export default function getCambiarContrasenaRStyles(s, isDarkMode = false) {
       fontWeight: '700',
     },
     content: {
-      flex: 1,
       backgroundColor: bgApp,
       paddingHorizontal: s(10),
       paddingTop: s(10),
+    },
+    contentContainer: {
       paddingBottom: s(12),
     },
     card: {

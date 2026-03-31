@@ -298,7 +298,7 @@ export default function DetalleEnvioSupervisor() {
                       <p><strong>Conductor:</strong> {envio.asignacion.conductor_nombre || '-'}</p>
                       <p><strong>Correo:</strong> {envio.asignacion.conductor_correo || '-'}</p>
                       <p><strong>Estado:</strong> {normalizeEstadoEnvio(envio.estado_envio) === 'entregado' || normalizeEstadoEnvio(envio.estado_envio) === 'cancelado' ? (normalizeEstadoEnvio(envio.estado_envio) === 'entregado' ? 'Entregado' : 'Cancelado') : (envio.asignacion.estado_asignacion || '-')}</p>
-                      {normalizeEstadoEnvio(envio.estado_envio) !== 'entregado' && normalizeEstadoEnvio(envio.estado_envio) !== 'cancelado' && (
+                      {normalizeEstadoEnvio(envio.estado_envio) === 'pendiente' && (
                         <div style={{ marginTop: '8px' }}>
                           <button
                             type="button"
@@ -315,7 +315,7 @@ export default function DetalleEnvioSupervisor() {
                     <p>Sin asignación activa.</p>
                   )}
 
-                  {normalizeEstadoEnvio(envio.estado_envio) !== 'entregado' && normalizeEstadoEnvio(envio.estado_envio) !== 'cancelado' && (
+                  {normalizeEstadoEnvio(envio.estado_envio) === 'pendiente' && (
                     <div style={{ marginTop: '12px' }}>
                       <p><strong>Reasignar a:</strong></p>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>

@@ -232,7 +232,7 @@ export default function DetalleEnvioSupervisor() {
                   <h3>Estado del envío</h3>
                   <p>
                     <span className={`estado ${estadoEnvioClase(envio.estado_envio)}`}>
-                      ● {estadoEnvioTexto(envio.estado_envio)}
+                      {estadoEnvioTexto(envio.estado_envio)}
                     </span>
                   </p>
                   <p><strong>Creado:</strong> {envio.fecha_creacion ? new Date(envio.fecha_creacion).toLocaleString() : '-'}</p>

@@ -464,14 +464,10 @@ export default function DashboardSupervisor() {
               <span className="filtro-sv__dot filtro-sv__dot--teal"></span> Entregado
             </button>
             <button
-              className="filtro-sv filtro-sv--more"
-              onClick={() => {
-                setEstadoLista('todos');
-                setBusqueda('');
-              }}
-              title="Limpiar filtros de la lista"
+              className={`filtro-sv ${estadoLista === 'cancelado' ? 'filtro-sv--activo' : ''}`}
+              onClick={() => setEstadoLista('cancelado')}
             >
-              &#8943;
+              <span className="filtro-sv__dot filtro-sv__dot--gris"></span> Cancelado
             </button>
           </div>
 
@@ -490,7 +486,7 @@ export default function DashboardSupervisor() {
                   <div className="envio-card__top">
                     <div className="envio-card__info">
                       <span className="envio-card__id">{item.paquete?.codigo_rastreo || `ENV-${item.id_envio}`}</span>
-                      <span className="envio-card__dots">&#9679; &#9679; &#9679;</span>
+                      {/* Eliminados los tres puntos */}
                     </div>
                     <span className="envio-card__horario">
                       {item.fecha_estimada_entrega ? new Date(item.fecha_estimada_entrega).toLocaleString() : 'Sin fecha estimada'}
@@ -505,8 +501,14 @@ export default function DashboardSupervisor() {
                     </p>
                   </div>
                   <div className="envio-card__footer">
-                    <span className={`estado ${estadoEnvioClase(item.estado_envio)}`}>
-                      ● {estadoEnvioTexto(item.estado_envio)}
+                    <span
+                      className={`envio-card__estado envio-card__estado--${
+                        (String(item.estado_envio || '').toLowerCase() === 'en_ruta' || String(item.estado_envio || '').toLowerCase() === 'en_transito')
+                          ? 'enruta'
+                          : String(item.estado_envio || '').toLowerCase()
+                      }`}
+                    >
+                      {estadoEnvioTexto(item.estado_envio)}
                     </span>
                     <div className="envio-card__acciones">
                       <a className="envio-card__btn" href={`/supervisor/detalle-envio?id=${item.id_envio}`}>Ver detalle</a>

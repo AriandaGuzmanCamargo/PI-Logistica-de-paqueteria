@@ -220,6 +220,7 @@
 .filtro-sv__dot--verde { background: #4caf50; }
 .filtro-sv__dot--rojo { background: #e53935; }
 .filtro-sv__dot--teal { background: #26a69a; }
+.filtro-sv__dot--gris { background: #ffe0e0; }
 .filtro-sv--more {
   border: none;
   font-size: 18px;
@@ -281,10 +282,11 @@
   padding: 4px 14px;
   border-radius: 20px;
 }
-.envio-card__estado--pendiente { background: #fff3cd; color: #c49000; }
-.envio-card__estado--enruta { background: #d0f0d0; color: #2e7d32; }
-.envio-card__estado--retrasado { background: #fdd; color: #d32f2f; }
-.envio-card__estado--entregado { background: #d0ece8; color: #00796b; }
+.envio-card__estado--pendiente { background: #fff3cd; color: #b48a00; }      /* Amarillo */
+.envio-card__estado--enruta { background: #d0f5e8; color: #008c3a; }         /* Verde fuerte */
+.envio-card__estado--retrasado { background: #ffe0e6; color: #c62828; }      /* Rojo */
+.envio-card__estado--entregado { background: #d0e7ff; color: #1565c0; }      /* Azul */
+.envio-card__estado--cancelado { background: #ffe0e0; color: #d32f2f; }      /* Rojo claro, único */
 .envio-card__acciones { display: flex; gap: 6px; }
 .envio-card__btn {
   background: #f0f3fc;

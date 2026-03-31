@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
   gradientBackground: {
     flex: 1,
   },
+  keyboardWrap: {
+    flex: 1,
+  },
   waveOne: {
     position: 'absolute',
     width: '210%',

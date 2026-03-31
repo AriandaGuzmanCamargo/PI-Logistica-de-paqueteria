@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator, ScrollView } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { API_BASE_URL } from '../config/api';
@@ -82,11 +94,22 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
         <View style={styles.waveThree} />
         <View style={styles.waveFour} />
 
-        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
-            <View style={styles.heroRow}>
-              <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
-            </View>
+        <KeyboardAvoidingView
+          style={styles.keyboardWrap}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 18 : 0}
+        >
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            automaticallyAdjustKeyboardInsets
+          >
+            <View style={styles.content}>
+              <View style={styles.heroRow}>
+                <Image source={require('../../images/logoSinFondo.png')} style={styles.brandLogo} resizeMode="contain" />
+              </View>
 
             <View style={styles.card}>
               <Text style={styles.title}>Cambiar Contraseña</Text>
@@ -160,8 +183,9 @@ export default function RecuperacionContrasenaScreen({ navigation }) {
 
               <Text style={styles.note}>¿Recordaste tu contraseña? <Text style={styles.link} onPress={() => navigation.navigate('Login')}>Inicia sesión</Text></Text>
             </View>
-          </View>
-        </ScrollView>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </LinearGradient>
     </SafeAreaView>
   );

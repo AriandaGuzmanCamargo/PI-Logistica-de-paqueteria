@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   saveBtn: {
-    backgroundColor: '#1565C0',
+    backgroundColor: '#1D4E89',
   },
   cancelBtn: {
-    backgroundColor: '#B71C1C',
+    backgroundColor: '#B42318',
   },
   actionBtnText: {
     color: colors.white,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   stateError: {
-    color: '#D32F2F',
+    color: '#B42318',
     fontWeight: '600',
   },
 });

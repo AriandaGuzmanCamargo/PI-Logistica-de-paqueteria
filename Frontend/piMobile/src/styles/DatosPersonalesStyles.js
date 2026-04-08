@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   stateError: {
-    color: '#D32F2F',
+    color: '#B42318',
     fontWeight: '600',
   },
 });

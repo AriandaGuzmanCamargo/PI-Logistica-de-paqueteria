@@ -4,9 +4,9 @@ import colors from '../theme/colors';
 const styles = StyleSheet.create({
   notice: {
     marginTop: 20,
-    backgroundColor: '#FFF7DE',
+    backgroundColor: '#FFF4D8',
     borderWidth: 1,
-    borderColor: '#F3DD9A',
+    borderColor: '#E2C36A',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',

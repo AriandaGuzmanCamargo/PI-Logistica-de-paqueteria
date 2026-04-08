@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderColor: '#AFC3EB',
   },
   tab: {
-    color: '#8891AE',
+    color: '#7F8A9D',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   date: {
-    color: '#8A93AE',
+    color: '#7F8A9D',
     marginTop: 3,
     fontSize: 12,
   },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   stateError: {
-    color: '#D32F2F',
+    color: '#B42318',
     fontWeight: '600',
   },
 });

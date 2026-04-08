@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   arrow: {
-    color: '#9AA4BF',
+    color: '#97A3B8',
     fontSize: 16,
   },
   value: {

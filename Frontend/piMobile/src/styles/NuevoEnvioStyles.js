@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   tab: {
-    color: '#8891AE',
+    color: '#7F8A9D',
     fontSize: 11,
   },
   tabActive: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   errorText: {
-    color: '#B84B4B',
+    color: '#B42318',
     fontWeight: '600',
   },
   arrow: {

@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chip: {
-    backgroundColor: '#F2C44E',
+    backgroundColor: '#E2B84B',
     color: '#FFFFFF',
     fontSize: 10,
     fontWeight: '700',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   errorText: {
-    color: '#C64949',
+    color: '#B42318',
     fontSize: 12,
     fontWeight: '600',
     marginTop: -2,

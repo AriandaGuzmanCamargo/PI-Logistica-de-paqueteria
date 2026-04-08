@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#1D4E89',
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     alignSelf: 'flex-start',
     backgroundColor: '#EAF3FF',
-    color: '#0B63CE',
+    color: '#1D4E89',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 20,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   stateError: {
-    color: '#B84B4B',
+    color: '#B42318',
     fontWeight: '600',
   },
   modalOverlay: {

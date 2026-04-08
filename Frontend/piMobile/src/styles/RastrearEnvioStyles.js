@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   searchWrap: {
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#E1E4F199',
+    borderColor: '#D7DFEA99',
     borderRadius: 12,
     padding: 10,
     flexDirection: 'row',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   historyWrap: {
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#E1E4F199',
+    borderColor: '#D7DFEA99',
     borderRadius: 12,
     padding: 10,
     marginTop: 12,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   historyItem: {
-    backgroundColor: '#F3F5FB',
+    backgroundColor: '#EEF3F8',
     borderWidth: 1,
     borderColor: colors.line,
     borderRadius: 8,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tab: {
-    color: '#8891AE',
+    color: '#7F8A9D',
     fontSize: 11,
   },
   tabActive: {
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   date: {
-    color: '#8A93AE',
+    color: '#7F8A9D',
     fontSize: 12,
     marginTop: 4,
     marginBottom: 8,
@@ -141,17 +141,17 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   timelineLocation: {
-    color: '#9AA4BF',
+    color: '#97A3B8',
     fontSize: 12,
     marginTop: 2,
   },
   timelineDate: {
-    color: '#9AA4BF',
+    color: '#97A3B8',
     fontSize: 11,
     marginTop: 2,
   },
   timelineObservacion: {
-    color: '#8891AE',
+    color: '#7F8A9D',
     fontSize: 11,
     marginTop: 2,
     fontStyle: 'italic',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   errorText: {
-    color: '#D32F2F',
+    color: '#B42318',
     fontSize: 13,
     fontWeight: '500',
   },
@@ -189,14 +189,14 @@ const styles = StyleSheet.create({
   descriptionWrap: {
     backgroundColor: '#EBF4FF',
     borderWidth: 1,
-    borderColor: '#E1E4F199',
+    borderColor: '#D7DFEA99',
     borderRadius: 12,
     padding: 12,
     marginTop: 2,
     marginBottom: 25,
   },
   descriptionText: {
-    color: '#6B7393',
+    color: '#5F6B84',
     fontSize: 13,
     lineHeight: 20,
     textAlign: 'left',

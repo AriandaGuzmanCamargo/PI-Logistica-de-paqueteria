@@ -4,7 +4,7 @@ import colors from '../theme/colors';
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1A2D50',
+    backgroundColor: '#0F2742',
   },
   gradientBackground: {
     flex: 1,
@@ -82,11 +82,11 @@ const styles = StyleSheet.create({
     fontFamily: 'serif',
   },
   card: {
-    backgroundColor: '#F9F9FD',
+    backgroundColor: '#F7F9FC',
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#E1E4F1',
+    borderColor: '#D7DFEA',
     width: '100%',
     shadowColor: '#3B486D',
     shadowOpacity: 0.16,
@@ -95,19 +95,19 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   title: {
-    color: '#3D4567',
+    color: '#25324A',
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
   },
   subtitle: {
     textAlign: 'center',
-    color: '#6B7393',
+    color: '#5F6B84',
     marginBottom: 20,
     marginTop: 4,
   },
   roleLabel: {
-    color: '#586487',
+    color: '#43516F',
     fontWeight: '600',
     marginBottom: 8,
   },
@@ -125,25 +125,25 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   roleBtnActive: {
-    borderColor: '#3178c5',
-    backgroundColor: '#E8F0FF',
+    borderColor: '#1D4E89',
+    backgroundColor: '#EAF2FF',
   },
   roleBtnText: {
     textAlign: 'center',
-    color: '#5B6484',
+    color: '#52607F',
     fontWeight: '600',
   },
   roleBtnTextActive: {
-    color: '#1E40AF',
+    color: '#1D4E89',
     fontWeight: '700',
   },
   input: {
-    backgroundColor: '#F3F5FB',
+    backgroundColor: '#EEF3F8',
     borderWidth: 1,
-    borderColor: '#E1E4F1',
+    borderColor: '#D7DFEA',
     borderRadius: 8,
     padding: 13,
-    color: '#3E4768',
+    color: '#25324A',
     marginBottom: 12,
   },
   passwordWrap: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   errorText: {
-    color: '#B71C1C',
+    color: '#B42318',
     marginTop: -4,
     marginBottom: 10,
     fontWeight: '600',
@@ -191,10 +191,10 @@ const styles = StyleSheet.create({
   note: {
     textAlign: 'center',
     marginTop: 14,
-    color: '#5F678A',
+    color: '#52607F',
   },
   linkStrong: {
-    color: '#D4A235',
+    color: '#C99A2E',
     fontWeight: '700',
   },
 });

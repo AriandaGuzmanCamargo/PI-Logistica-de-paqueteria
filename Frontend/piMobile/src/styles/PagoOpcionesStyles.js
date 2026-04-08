@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   notice: {
-    backgroundColor: '#FFF7DE',
+    backgroundColor: '#FFF4D8',
     borderWidth: 1,
-    borderColor: '#F3DD9A',
+    borderColor: '#E2C36A',
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',

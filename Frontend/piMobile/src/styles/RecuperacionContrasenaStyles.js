@@ -4,7 +4,7 @@ import colors from '../theme/colors';
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1A2D50',
+    backgroundColor: '#0F2742',
   },
   gradientBackground: {
     flex: 1,
@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   card: {
-    backgroundColor: '#F9F9FD',
+    backgroundColor: '#F7F9FC',
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#E1E4F1',
+    borderColor: '#D7DFEA',
     shadowColor: '#3B486D',
     shadowOpacity: 0.16,
     shadowRadius: 14,
@@ -99,30 +99,30 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#3D4567',
+    color: '#25324A',
     fontWeight: '700',
     textAlign: 'center',
   },
   subtitle: {
-    color: '#6B7393',
+    color: '#5F6B84',
     textAlign: 'center',
     marginTop: 8,
     marginBottom: 18,
   },
   input: {
-    backgroundColor: '#F3F5FB',
+    backgroundColor: '#EEF3F8',
     borderWidth: 1,
-    borderColor: '#E1E4F1',
+    borderColor: '#D7DFEA',
     borderRadius: 8,
     padding: 13,
-    color: '#3E4768',
+    color: '#25324A',
     marginBottom: 12,
   },
   passwordGroupBox: {
     marginBottom: 12,
-    backgroundColor: '#F3F5FB',
+    backgroundColor: '#EEF3F8',
     borderWidth: 1,
-    borderColor: '#E1E4F1',
+    borderColor: '#D7DFEA',
     borderRadius: 8,
     overflow: 'hidden',
   },
@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
   },
   passwordRowWithDivider: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E1E4F1',
+    borderBottomColor: '#D7DFEA',
   },
   passwordInput: {
     flex: 1,
     padding: 13,
-    color: '#3E4768',
+    color: '#25324A',
     fontSize: 16,
   },
   eyeIcon: {
@@ -166,11 +166,11 @@ const styles = StyleSheet.create({
   },
   note: {
     textAlign: 'center',
-    color: '#5F678A',
+    color: '#52607F',
     marginTop: 14,
   },
   link: {
-    color: '#D4A235',
+    color: '#C99A2E',
     fontWeight: '700',
   },
 });

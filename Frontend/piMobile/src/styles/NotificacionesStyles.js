@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     alignSelf: 'flex-start',
-    backgroundColor: '#2F66B0',
+    backgroundColor: '#1D4E89',
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
   linkBtn: {
     marginTop: 8,
     alignSelf: 'flex-start',
-    backgroundColor: '#E8F0FF',
+    backgroundColor: '#EAF2FF',
     borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 10,
   },
   linkBtnText: {
-    color: '#1E4C92',
+    color: '#1D4E89',
     fontWeight: '700',
     fontSize: 12,
   },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   stateError: {
-    color: '#D32F2F',
+    color: '#B42318',
     fontWeight: '600',
   },
 });

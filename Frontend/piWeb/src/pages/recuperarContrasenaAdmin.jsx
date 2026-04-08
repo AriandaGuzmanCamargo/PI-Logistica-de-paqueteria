@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiFetch } from '../services/api.js';
 import { useNavigate } from 'react-router-dom';
 
 export default function RecuperarContrasenaAdmin() {
@@ -38,7 +39,7 @@ export default function RecuperarContrasenaAdmin() {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/auth/recuperar-contrasena', {
+      const response = await apiFetch('/api/auth/recuperar-contrasena', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

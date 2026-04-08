@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: pi-logistica-backend
+    env: node
+    rootDir: Backend
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../services/api.js';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function Login() {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/auth/login', {
+      const response = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

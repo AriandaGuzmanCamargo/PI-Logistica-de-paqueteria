@@ -1,3 +1,5 @@
+import { apiFetch } from './api.js';
+
 export function getWebUser() {
   const raw = localStorage.getItem('piWebUser');
 
@@ -23,7 +25,7 @@ function ensureSession() {
 export async function getEnviosSupervisor() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/envios/usuario/${user.id_usuario}`);
+  const response = await apiFetch(`/api/envios/usuario/${user.id_usuario}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -34,7 +36,7 @@ export async function getEnviosSupervisor() {
 }
 
 export async function getDetalleEnvioSupervisor(idEnvio) {
-  const response = await fetch(`/api/envios/detalle/${idEnvio}`);
+  const response = await apiFetch(`/api/envios/detalle/${idEnvio}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -47,7 +49,7 @@ export async function getDetalleEnvioSupervisor(idEnvio) {
 export async function getIncidenciasSupervisor() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/incidencias/usuario/${user.id_usuario}`);
+  const response = await apiFetch(`/api/incidencias/usuario/${user.id_usuario}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -60,7 +62,7 @@ export async function getIncidenciasSupervisor() {
 export async function getConductoresResumenSupervisor() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/asignaciones/conductores-resumen?idUsuario=${encodeURIComponent(user.id_usuario)}`);
+  const response = await apiFetch(`/api/asignaciones/conductores-resumen?idUsuario=${encodeURIComponent(user.id_usuario)}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -73,7 +75,7 @@ export async function getConductoresResumenSupervisor() {
 export async function getDetalleConductorSupervisor(idConductor) {
   const user = ensureSession();
 
-  const response = await fetch(
+  const response = await apiFetch(
     `/api/asignaciones/conductor-detalle?idUsuario=${encodeURIComponent(user.id_usuario)}&idConductor=${encodeURIComponent(idConductor)}`
   );
   const payload = await response.json();
@@ -88,7 +90,7 @@ export async function getDetalleConductorSupervisor(idConductor) {
 export async function getPerfilSupervisor() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`);
+  const response = await apiFetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -101,7 +103,7 @@ export async function getPerfilSupervisor() {
 export async function actualizarPerfilSupervisor(payload) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`, {
+  const response = await apiFetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -133,7 +135,7 @@ export async function actualizarPerfilSupervisor(payload) {
 export async function cambiarContrasenaSupervisor({ contrasenaActual, nuevaContrasena, confirmarContrasena }) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/cambiar-contrasena/${encodeURIComponent(user.id_usuario)}`, {
+  const response = await apiFetch(`/api/auth/cambiar-contrasena/${encodeURIComponent(user.id_usuario)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -158,7 +160,7 @@ export async function getUsuariosGestionAdmin(rol = 'todos') {
   const user = ensureSession();
 
   const rolQuery = rol && rol !== 'todos' ? `&rol=${encodeURIComponent(rol)}` : '';
-  const response = await fetch(
+  const response = await apiFetch(
     `/api/auth/usuarios-gestion?idAdmin=${encodeURIComponent(user.id_usuario)}${rolQuery}`
   );
   const payload = await response.json();
@@ -173,7 +175,7 @@ export async function getUsuariosGestionAdmin(rol = 'todos') {
 export async function cambiarContrasenaUsuarioPorAdmin({ idUsuario, nuevaContrasena, confirmarContrasena }) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/cambiar-contrasena-admin/${encodeURIComponent(idUsuario)}`, {
+  const response = await apiFetch(`/api/auth/cambiar-contrasena-admin/${encodeURIComponent(idUsuario)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -197,7 +199,7 @@ export async function cambiarContrasenaUsuarioPorAdmin({ idUsuario, nuevaContras
 export async function crearUsuarioGestionPorAdmin(payload) {
   const user = ensureSession();
 
-  const response = await fetch('/api/auth/usuarios-gestion', {
+  const response = await apiFetch('/api/auth/usuarios-gestion', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -220,7 +222,7 @@ export async function crearUsuarioGestionPorAdmin(payload) {
 export async function eliminarUsuarioGestionPorAdmin(idUsuario) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/usuarios-gestion/${encodeURIComponent(idUsuario)}`, {
+  const response = await apiFetch(`/api/auth/usuarios-gestion/${encodeURIComponent(idUsuario)}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -241,7 +243,7 @@ export async function eliminarUsuarioGestionPorAdmin(idUsuario) {
 
 export async function getConductoresDisponiblesSupervisor(fechaAsignacion) {
   const query = fechaAsignacion ? `?fecha=${encodeURIComponent(fechaAsignacion)}` : '';
-  const response = await fetch(`/api/asignaciones/conductores-disponibles${query}`);
+  const response = await apiFetch(`/api/asignaciones/conductores-disponibles${query}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -254,7 +256,7 @@ export async function getConductoresDisponiblesSupervisor(fechaAsignacion) {
 export async function reasignarEnvioSupervisor({ idEnvio, idConductor, fechaAsignacion }) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/asignaciones/reasignar/${idEnvio}`, {
+  const response = await apiFetch(`/api/asignaciones/reasignar/${idEnvio}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -330,7 +332,7 @@ export function estadoIncidenciaClase(estado) {
 export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
+  const response = await apiFetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

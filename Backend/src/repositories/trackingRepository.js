@@ -1,4 +1,4 @@
-import { pool } from '../db/pool.js';
+import { pool } from '../config/db.js';
 
 export async function findShipmentByTrackingCode(codigoRastreo) {
   const result = await pool.query(

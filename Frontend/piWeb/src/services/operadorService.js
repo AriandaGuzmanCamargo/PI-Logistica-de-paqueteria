@@ -1,3 +1,5 @@
+import { apiFetch } from './api.js';
+
 export function getWebUser() {
   const raw = localStorage.getItem('piWebUser');
 
@@ -23,7 +25,7 @@ function ensureSession() {
 export async function getPerfilOperador() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`);
+  const response = await apiFetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -36,7 +38,7 @@ export async function getPerfilOperador() {
 export async function actualizarFotoPerfilOperador(fotoPerfilUrl) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`, {
+  const response = await apiFetch(`/api/auth/perfil/${encodeURIComponent(user.id_usuario)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +73,7 @@ export async function actualizarFotoPerfilOperador(fotoPerfilUrl) {
 export async function getEnviosOperador() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/envios/usuario/${user.id_usuario}`);
+  const response = await apiFetch(`/api/envios/usuario/${user.id_usuario}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -82,7 +84,7 @@ export async function getEnviosOperador() {
 }
 
 export async function getDetalleEnvio(idEnvio) {
-  const response = await fetch(`/api/envios/detalle/${idEnvio}`);
+  const response = await apiFetch(`/api/envios/detalle/${idEnvio}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -93,7 +95,7 @@ export async function getDetalleEnvio(idEnvio) {
 }
 
 export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
-  const response = await fetch(`/api/asignaciones/auto/${idEnvio}`, {
+  const response = await apiFetch(`/api/asignaciones/auto/${idEnvio}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -113,7 +115,7 @@ export async function autoAsignarEnvio({ idEnvio, idUsuario }) {
 export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsignacion }) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/asignaciones/manual/${idEnvio}`, {
+  const response = await apiFetch(`/api/asignaciones/manual/${idEnvio}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ export async function asignarEnvioConConductor({ idEnvio, idConductor, fechaAsig
 export async function getIncidenciasOperador() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/incidencias/usuario/${user.id_usuario}`);
+  const response = await apiFetch(`/api/incidencias/usuario/${user.id_usuario}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -150,7 +152,7 @@ export async function getIncidenciasOperador() {
 export async function getNotificacionesOperador() {
   const user = ensureSession();
 
-  const response = await fetch(`/api/notificaciones/usuario/${encodeURIComponent(user.id_usuario)}`);
+  const response = await apiFetch(`/api/notificaciones/usuario/${encodeURIComponent(user.id_usuario)}`);
   const payload = await response.json();
 
   if (!response.ok || !payload.ok) {
@@ -163,7 +165,7 @@ export async function getNotificacionesOperador() {
 export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
+  const response = await apiFetch(`/api/incidencias/${encodeURIComponent(idIncidencia)}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -186,7 +188,7 @@ export async function updateIncidenciaStatus(idIncidencia, nuevoEstado) {
 export async function createEnvioWeb(payload) {
   const user = ensureSession();
 
-  const response = await fetch('/api/envios', {
+  const response = await apiFetch('/api/envios', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -209,7 +211,7 @@ export async function createEnvioWeb(payload) {
 export async function cancelarEnvioOperador(idEnvio) {
   const user = ensureSession();
 
-  const response = await fetch(`/api/envios/${encodeURIComponent(idEnvio)}/cancelar`, {
+  const response = await apiFetch(`/api/envios/${encodeURIComponent(idEnvio)}/cancelar`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -230,7 +232,7 @@ export async function cancelarEnvioOperador(idEnvio) {
 
 export async function getConductoresDisponibles(fechaAsignacion) {
   const query = fechaAsignacion ? `?fecha=${encodeURIComponent(fechaAsignacion)}` : '';
-  const response = await fetch(`/api/asignaciones/conductores-disponibles${query}`);
+  const response = await apiFetch(`/api/asignaciones/conductores-disponibles${query}`);
   const data = await response.json();
 
   if (!response.ok || !data.ok) {

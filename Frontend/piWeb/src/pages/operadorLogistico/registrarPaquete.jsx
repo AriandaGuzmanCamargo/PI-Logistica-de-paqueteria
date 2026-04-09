@@ -188,9 +188,9 @@ export default function RegistrarPaquete() {
         return 'La colonia del remitente debe tener mínimo 3 caracteres.';
       }
 
-      // Validar ciudad
+      // Validar municipio/alcaldia
       if (!remitente.ciudad || remitente.ciudad.trim().length === 0) {
-        return 'La ciudad del remitente es obligatoria.';
+        return 'El municipio/alcaldia del remitente es obligatorio.';
       }
 
       // Validar código postal (solo números)
@@ -227,9 +227,9 @@ export default function RegistrarPaquete() {
         return 'La colonia del destinatario debe tener mínimo 3 caracteres.';
       }
 
-      // Validar ciudad
+      // Validar municipio/alcaldia
       if (!destinatario.ciudad || destinatario.ciudad.trim().length === 0) {
-        return 'La ciudad del destinatario es obligatoria.';
+        return 'El municipio/alcaldia del destinatario es obligatorio.';
       }
 
       // Validar código postal (solo números)
@@ -283,8 +283,8 @@ export default function RegistrarPaquete() {
         correo: '',
         direccion: '',
         colonia: '',
-        ciudad: 'Ciudad de Mexico',
-        estado: 'CDMX',
+        ciudad: '',
+        estado: '',
         codigo_postal: '',
       },
       destinatario: {
@@ -293,8 +293,8 @@ export default function RegistrarPaquete() {
         correo: '',
         direccion: '',
         colonia: '',
-        ciudad: 'Ciudad de Mexico',
-        estado: 'CDMX',
+        ciudad: '',
+        estado: '',
         codigo_postal: '',
       },
     });
@@ -418,7 +418,7 @@ export default function RegistrarPaquete() {
 
             <div className="grupo-campos grupo-campos--tres">
               <label>
-                Ciudad
+                Municipio/Alcaldia
                 <input
                   type="text"
                   list="ciudades-remitente"
@@ -525,7 +525,7 @@ export default function RegistrarPaquete() {
 
             <div className="grupo-campos grupo-campos--tres">
               <label>
-                Ciudad
+                Municipio/Alcaldia
                 <input
                   type="text"
                   list="ciudades-destinatario"

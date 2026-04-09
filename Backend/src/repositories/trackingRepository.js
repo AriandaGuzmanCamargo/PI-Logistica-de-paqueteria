@@ -18,10 +18,16 @@ export async function findShipmentByTrackingCode(codigoRastreo) {
         e.fecha_creacion,
         e.fecha_estimada_entrega,
         e.fecha_entrega_real,
-        e.costo_total
+        e.costo_total,
+        c_rem.correo AS remitente_correo,
+        c_rem.telefono AS remitente_telefono,
+        c_des.correo AS destinatario_correo,
+        c_des.telefono AS destinatario_telefono
      FROM paquetes p
      JOIN envio_paquete ep ON ep.id_paquete = p.id_paquete
      JOIN envios e ON e.id_envio = ep.id_envio
+    JOIN clientes c_rem ON c_rem.id_cliente = e.id_cliente_remitente
+    JOIN clientes c_des ON c_des.id_cliente = e.id_cliente_destinatario
      WHERE p.codigo_rastreo = $1
      ORDER BY e.fecha_creacion DESC
      LIMIT 1`,

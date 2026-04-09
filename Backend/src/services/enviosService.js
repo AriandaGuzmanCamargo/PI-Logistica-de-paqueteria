@@ -12,6 +12,7 @@ import {
   updateClientProfileById,
   updateShipmentBasicDataById,
 } from '../repositories/enviosRepository.js';
+import { sendTrackingCreatedEmail } from './emailService.js';
 import { notifyUsersByIds, notifyUsersByRoles } from './notificacionesService.js';
 
 async function notifyShipmentStakeholders(
@@ -670,6 +671,36 @@ export async function createShipmentByClient({ userId, payload }) {
     });
   } catch (notificationError) {
     console.error('No se pudo generar notificacion de envio creado:', notificationError);
+  }
+
+  if (['operador', 'admin', 'supervisor'].includes(user.rol)) {
+    const emailTargets = [
+      {
+        correo: remitente.correo,
+        nombre: remitente.nombre,
+      },
+      {
+        correo: destinatario.correo,
+        nombre: destinatario.nombre,
+      },
+    ];
+
+    for (const target of emailTargets) {
+      if (!target.correo) {
+        continue;
+      }
+
+      try {
+        await sendTrackingCreatedEmail({
+          to: target.correo,
+          nombreCliente: target.nombre,
+          codigoRastreo: created.codigo_rastreo,
+          idEnvio: created.id_envio,
+        });
+      } catch (emailError) {
+        console.error('No se pudo enviar correo de tracking:', emailError);
+      }
+    }
   }
 
   return getShipmentDetailById(created.id_envio);

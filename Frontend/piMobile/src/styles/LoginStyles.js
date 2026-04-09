@@ -188,6 +188,21 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 13,
   },
+  secondaryBtn: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#C8D5EC',
+    borderRadius: 10,
+    backgroundColor: '#F0F4FB',
+    paddingVertical: 11,
+    paddingHorizontal: 12,
+  },
+  secondaryBtnText: {
+    color: '#2E4B7A',
+    textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 13,
+  },
   note: {
     textAlign: 'center',
     marginTop: 14,

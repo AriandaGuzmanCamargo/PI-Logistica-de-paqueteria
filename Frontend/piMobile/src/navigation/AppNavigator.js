@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/LoginScreen';
+import RastrearPublicoScreen from '../screens/RastrearPublicoScreen';
 import RegistroScreen from '../screens/RegistroScreen';
 import RecuperacionContrasenaScreen from '../screens/RecuperacionContrasenaScreen';
 import DashboardScreen from '../screens/DashboardScreen';
@@ -40,6 +41,7 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="RastrearPublico" component={RastrearPublicoScreen} />
       <Stack.Screen name="Registro" component={RegistroScreen} />
       <Stack.Screen name="RecuperacionContrasena" component={RecuperacionContrasenaScreen} />
       <Stack.Screen name="Dashboard" component={DashboardScreen} />

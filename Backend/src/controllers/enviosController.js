@@ -5,7 +5,7 @@ import {
   getShipmentsByUser,
   markShipmentDeliveredByDriver,
   updateShipmentByClient,
-} from '../services/enviosService.js';
+} from "../services/enviosService.js";
 
 export async function getEnviosByUsuario(req, res, next) {
   try {
@@ -46,7 +46,7 @@ export async function createEnvioByCliente(req, res, next) {
 
     res.status(201).json({
       ok: true,
-      message: 'Envio creado correctamente.',
+      message: "Envio creado correctamente.",
       data: envio,
     });
   } catch (error) {
@@ -67,7 +67,7 @@ export async function updateEnvioByCliente(req, res, next) {
 
     res.json({
       ok: true,
-      message: 'Envio actualizado correctamente.',
+      message: "Envio actualizado correctamente.",
       data: envio,
     });
   } catch (error) {
@@ -87,7 +87,7 @@ export async function cancelEnvioByCliente(req, res, next) {
 
     res.json({
       ok: true,
-      message: 'Envio cancelado correctamente.',
+      message: "Envio cancelado correctamente.",
       data: envio,
     });
   } catch (error) {
@@ -113,7 +113,7 @@ export async function marcarEnvioComoEntregado(req, res, next) {
 
     res.json({
       ok: true,
-      message: 'Envio marcado como entregado correctamente.',
+      message: "Envio marcado como entregado correctamente.",
       data: envio,
     });
   } catch (error) {

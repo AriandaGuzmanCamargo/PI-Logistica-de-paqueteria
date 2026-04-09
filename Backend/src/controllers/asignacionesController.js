@@ -5,7 +5,7 @@ import {
   getDriversSummary,
   getAvailableDrivers,
   reassignShipmentByAdmin,
-} from '../services/asignacionesService.js';
+} from "../services/asignacionesService.js";
 
 export async function autoAssignEnvio(req, res, next) {
   try {
@@ -20,9 +20,9 @@ export async function autoAssignEnvio(req, res, next) {
     res.json({
       ok: true,
       message:
-        result.action === 'already_assigned'
-          ? 'El envio ya tenia una asignacion activa.'
-          : 'Envio autoasignado correctamente.',
+        result.action === "already_assigned"
+          ? "El envio ya tenia una asignacion activa."
+          : "Envio autoasignado correctamente.",
       data: result,
     });
   } catch (error) {
@@ -59,9 +59,9 @@ export async function assignEnvioConConductor(req, res, next) {
     res.json({
       ok: true,
       message:
-        result.action === 'already_assigned'
-          ? 'El envio ya tenia una asignacion activa.'
-          : 'Envio asignado al conductor seleccionado.',
+        result.action === "already_assigned"
+          ? "El envio ya tenia una asignacion activa."
+          : "Envio asignado al conductor seleccionado.",
       data: result,
     });
   } catch (error) {
@@ -117,11 +117,11 @@ export async function reassignEnvioPorAdmin(req, res, next) {
     res.json({
       ok: true,
       message:
-        result.action === 'unassigned'
-          ? 'Asignacion del envio cancelada correctamente.'
-          : result.action === 'reassigned'
-            ? 'Envio reasignado al nuevo conductor correctamente.'
-            : 'Envio asignado al conductor seleccionado.',
+        result.action === "unassigned"
+          ? "Asignacion del envio cancelada correctamente."
+          : result.action === "reassigned"
+            ? "Envio reasignado al nuevo conductor correctamente."
+            : "Envio asignado al conductor seleccionado.",
       data: result,
     });
   } catch (error) {

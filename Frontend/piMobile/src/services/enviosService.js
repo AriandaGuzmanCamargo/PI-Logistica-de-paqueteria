@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../config/api.js';
+import { getCurrentToken } from './authService.js';
 
 export async function getEnviosByUsuario(idUsuario) {
   const response = await fetch(`${API_BASE_URL}/api/envios/usuario/${idUsuario}`);
@@ -108,10 +109,13 @@ export async function createEnvioByCliente({
   destinatario,
   paquete,
 }) {
+  const token = getCurrentToken();
+
   const response = await fetch(`${API_BASE_URL}/api/envios`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({
       idUsuario,

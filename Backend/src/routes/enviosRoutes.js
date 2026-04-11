@@ -7,10 +7,11 @@ import {
 	marcarEnvioComoEntregado,
 	updateEnvioByCliente,
 } from '../controllers/enviosController.js';
+import { requireAuth } from '../Middelware/authMiddleware.js';
 
 const enviosRouter = Router();
 
-enviosRouter.post('/', createEnvioByCliente);
+enviosRouter.post('/', requireAuth, createEnvioByCliente);
 enviosRouter.get('/usuario/:idUsuario', getEnviosByUsuario);
 enviosRouter.get('/detalle/:idEnvio', getDetalleEnvio);
 enviosRouter.patch('/:idEnvio', updateEnvioByCliente);

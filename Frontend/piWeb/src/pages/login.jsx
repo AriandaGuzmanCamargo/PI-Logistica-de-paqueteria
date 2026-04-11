@@ -103,6 +103,11 @@ export default function Login() {
       }
 
       localStorage.setItem('piWebUser', JSON.stringify(data.usuario));
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      } else {
+        localStorage.removeItem('token');
+      }
 
       if (redirectByRole(data.usuario?.rol)) {
         return;

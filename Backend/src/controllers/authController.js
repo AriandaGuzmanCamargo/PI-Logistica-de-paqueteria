@@ -16,7 +16,7 @@ export async function login(req, res, next) {
   try {
     const { correo, contrasena, tipoAcceso, origenAplicacion } = req.body ?? {};
 
-    const usuario = await loginUser({
+    const data = await loginUser({
       correo,
       contrasena,
       tipoAcceso,
@@ -26,7 +26,8 @@ export async function login(req, res, next) {
     res.json({
       ok: true,
       message: 'Login exitoso.',
-      usuario,
+      usuario: data.usuario,
+      token: data.token,
     });
   } catch (error) {
     next(error);

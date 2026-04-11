@@ -1,12 +1,22 @@
 import { API_BASE_URL } from '../config/api';
 
 let currentUser = null;
+let currentToken = null;
 
 export const getCurrentUser = () => currentUser;
+export const getCurrentToken = () => currentToken;
 
 export const clearCurrentUser = () => {
   currentUser = null;
+  currentToken = null;
 };
+
+function withAuthHeaders(baseHeaders = {}) {
+  return {
+    ...baseHeaders,
+    ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
+  };
+}
 
 export const loginRequest = async ({ correo, contrasena }) => {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -34,12 +44,15 @@ export const loginRequest = async ({ correo, contrasena }) => {
   }
 
   currentUser = data?.usuario ?? null;
+  currentToken = data?.token ?? null;
 
   return data;
 };
 
 export const getPerfilUsuarioRequest = async (idUsuario) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/perfil/${idUsuario}`);
+  const response = await fetch(`${API_BASE_URL}/api/auth/perfil/${idUsuario}`, {
+    headers: withAuthHeaders(),
+  });
   const data = await response.json();
 
   if (!response.ok) {
@@ -54,6 +67,7 @@ export const updatePerfilUsuarioRequest = async (idUsuario, payload) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      ...withAuthHeaders(),
     },
     body: JSON.stringify(payload),
   });
@@ -108,6 +122,7 @@ export const changePasswordRequest = async (idUsuario, payload) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      ...withAuthHeaders(),
     },
     body: JSON.stringify(payload),
   });

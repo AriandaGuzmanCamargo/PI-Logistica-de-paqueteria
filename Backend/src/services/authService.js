@@ -14,6 +14,12 @@ import {
   updateUserPhotoById,
   updateUserProfileById,
 } from '../repositories/authRepository.js';
+import {
+  hashPassword,
+  isBcryptHash,
+  signAuthToken,
+  verifyPassword,
+} from '../utils/authSecurity.js';
 
 const ACCESS_ROLE_MAP = {
   usuario: 'cliente',
@@ -44,10 +50,17 @@ export async function loginUser({ correo, contrasena, tipoAcceso, origenAplicaci
     throw error;
   }
 
-  if (usuario.contrasena !== contrasena) {
+  const isValidPassword = await verifyPassword(contrasena, usuario.contrasena);
+
+  if (!isValidPassword) {
     const error = new Error('Credenciales invalidas.');
     error.statusCode = 401;
     throw error;
+  }
+
+  if (!isBcryptHash(usuario.contrasena)) {
+    const upgradedHash = await hashPassword(contrasena);
+    await updateUserPasswordById(usuario.id_usuario, upgradedHash);
   }
 
   const origenNormalizado = String(origenAplicacion || '').trim().toLowerCase();
@@ -85,12 +98,19 @@ export async function loginUser({ correo, contrasena, tipoAcceso, origenAplicaci
     throw error;
   }
 
-  return {
+  const usuarioPayload = {
     id_usuario: usuario.id_usuario,
     nombre: usuario.nombre,
     apellido: usuario.apellido,
     correo: usuario.correo,
     rol: usuario.rol,
+  };
+
+  const token = signAuthToken(usuarioPayload);
+
+  return {
+    usuario: usuarioPayload,
+    token,
   };
 }
 
@@ -247,7 +267,7 @@ export async function registerUser(payload) {
     nombre,
     apellido,
     correo,
-    contrasena,
+    contrasena: await hashPassword(contrasena),
     telefono: null,
   });
 
@@ -314,7 +334,8 @@ export async function requestPasswordRecovery(payload) {
     throw error;
   }
 
-  await updateUserPasswordById(user.id_usuario, nueva);
+  const hashedPassword = await hashPassword(nueva);
+  await updateUserPasswordById(user.id_usuario, hashedPassword);
 
   return {
     correo,
@@ -366,13 +387,18 @@ export async function changePassword({ idUsuario, payload }) {
 
   const fullUser = await findUserByEmail(user.correo);
 
-  if (!fullUser || fullUser.contrasena !== actual) {
+  const isCurrentPasswordValid = fullUser
+    ? await verifyPassword(actual, fullUser.contrasena)
+    : false;
+
+  if (!isCurrentPasswordValid) {
     const error = new Error('La contrasena actual es incorrecta.');
     error.statusCode = 401;
     throw error;
   }
 
-  await updateUserPasswordById(parsedId, nueva);
+  const hashedPassword = await hashPassword(nueva);
+  await updateUserPasswordById(parsedId, hashedPassword);
 
   return { id_usuario: parsedId };
 }
@@ -412,7 +438,7 @@ export async function listManageableUsersForAdmin({ idAdmin, rol }) {
     nombre: user.nombre,
     apellido: user.apellido,
     correo: user.correo,
-    contrasena: user.contrasena,
+    contrasena: null,
     telefono: user.telefono,
     ciudad: user.ciudad || null,
     rol: user.rol,
@@ -487,7 +513,8 @@ export async function changePasswordByAdmin({ idAdmin, idUsuarioObjetivo, payloa
     throw error;
   }
 
-  await updateUserPasswordById(parsedTargetId, nueva);
+  const hashedPassword = await hashPassword(nueva);
+  await updateUserPasswordById(parsedTargetId, hashedPassword);
 
   return {
     id_usuario: parsedTargetId,
@@ -605,7 +632,7 @@ export async function createManagedUserByAdmin({ idAdmin, payload }) {
     nombre,
     apellido,
     correo,
-    contrasena,
+    contrasena: await hashPassword(contrasena),
     telefono,
     ciudad,
     rol,
@@ -750,7 +777,8 @@ export async function recoverPasswordByEmail({ correo, nuevaContrasena, confirma
     throw error;
   }
 
-  await updateUserPasswordById(user.id_usuario, nueva);
+  const hashedPassword = await hashPassword(nueva);
+  await updateUserPasswordById(user.id_usuario, hashedPassword);
 
   return {
     id_usuario: user.id_usuario,
